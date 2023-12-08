@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRouter = require('./routers/userRouter')
+const jwt = require("jsonwebtoken")
 require("dotenv").config();
 const io = require("socket.io")(3001, {
   maxHttpBufferSize: 1e7,
@@ -24,3 +25,12 @@ app.use("/user", userRouter);
 app.listen(process.env.PORT, () =>
   console.log("listening on port " + process.env.PORT)
 );
+app.post("/verify", async (req, res) => {
+    try {
+      const { token } = req.body;
+      const { userId } = await jwt.verify(token, process.env.SECRET);
+      res.status(200).json({ valid: true, userId });
+    } catch (err) {
+      res.status(401).json({ valid: false, error: err.message });
+    }
+  });
