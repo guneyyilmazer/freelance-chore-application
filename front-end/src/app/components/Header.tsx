@@ -1,7 +1,12 @@
-"use client"
+"use client";
 import React from "react";
-import Auth from '../components/Auth'
+import Cookies from "js-cookie";
+import Auth from "../components/Auth";
+import LogoutButton from "./LogoutButton";
+import { useSelector } from "react-redux";
 const Header = () => {
+  const user = useSelector((shop: any) => shop.app.user);
+  console.log(user)
   return (
     <nav className="flex justify-between">
       <div>
@@ -9,11 +14,22 @@ const Header = () => {
         <button className="mx-1">Jobs</button>
       </div>
       <div>
-        <button className="mx-1">Login</button>
-        <button className="mx-1">Logout</button>
+        {user.isLoggedIn=="" && (
+          <button
+            className="mx-1"
+            onClick={() => {
+              Cookies.remove("Auth_Token");
+
+              window.location.replace("/auth");
+            }}
+          >
+            Login
+          </button>
+        )}
+        <LogoutButton />
       </div>
     </nav>
   );
 };
 
-export default Auth(Header);
+export default Header;
