@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const jobTypes = new mongoose.Schema({
+const { jobTypes } = require("../jobTypes");
+const jobTypesSchema = new mongoose.Schema({
   cleaning: Boolean,
   cuttingGrass: Boolean,
   movingHeavyObjects: Boolean,
@@ -10,8 +11,8 @@ const postSchema = new mongoose.Schema({
   user: { type: String, required: true },
   title: { type: String, required: true },
   description: String,
-  type: { type: jobTypes, required: true },
-  money: { type: Number, required: true },
+  type: { type: jobTypesSchema, required: true },
+  price: { type: Number, required: true },
 });
 
 postSchema.statics.createPost = async function (
@@ -19,16 +20,8 @@ postSchema.statics.createPost = async function (
   title,
   description,
   type,
-  money
+  price
 ) {
-  const jobTypes = [
-    "cleaning",
-    "cuttingGrass",
-    "movingHeavyObjects",
-    "walkingTheDog",
-    "plumbering",
-  ];
-
   if (!jobTypes.filter((item) => item == type)) {
     throw new Error(process.env.JOB_TYPE_INVALID);
   }
@@ -37,7 +30,7 @@ postSchema.statics.createPost = async function (
     title,
     description,
     type,
-    money,
+    price,
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {
