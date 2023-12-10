@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Cookies from "js-cookie";
-import Auth from "../components/Auth";
 import LogoutButton from "./LogoutButton";
 import { useSelector } from "react-redux";
 const Header = () => {
@@ -10,11 +9,11 @@ const Header = () => {
   return (
     <nav className="flex justify-between">
       <div>
-        <button className="mx-1">Home</button>
+        <button className="mx-1" onClick={()=>window.location.replace("/")}>Home</button>
         <button className="mx-1">Jobs</button>
       </div>
       <div>
-        {user.isLoggedIn=="" && (
+        {!user.isLoggedIn && (
           <button
             className="mx-1"
             onClick={() => {

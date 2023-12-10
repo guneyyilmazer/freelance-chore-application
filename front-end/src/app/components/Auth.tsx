@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Cookies from "js-cookie";
 import AuthPage from "../pages/AuthPage";
-import { setUser } from "../features/appSlice";
+import { setUser,setIsLoggedIn } from "../features/appSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { BACKEND_SERVER_IP } from "../layout";
@@ -29,6 +29,7 @@ const logUserIn = async (dispatch: any) => {
   });
   const { userId, username, profilePicture } = await res.json();
   dispatch(setUser({ userId, username, profilePicture }));
+  dispatch(setIsLoggedIn(true))
 };
 const verify = async () => {
   const token = Cookies.get("Auth_Token");
@@ -53,7 +54,7 @@ const withAuth = (HocComponent: any) => {
       const res = await verify();
       if (!res.valid) {
         setState(1);
-        router.push("/auth");
+        /* router.push("/auth"); */
       } else {
         await logUserIn(dispatch);
 
