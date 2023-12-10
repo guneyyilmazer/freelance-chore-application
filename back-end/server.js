@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRouter = require('./routers/userRouter')
+const postRouter = require('./routers/postRouter')
 const jwt = require("jsonwebtoken")
 require("dotenv").config();
 const io = require("socket.io")(3001, {
@@ -22,6 +23,7 @@ mongoose
   .connect(process.env.MONGODB_URI, { maxIdleTimeMS: 60000 })
   .then(() => console.log("db connected"));
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 app.listen(process.env.PORT, () =>
   console.log("listening on port " + process.env.PORT)
 );

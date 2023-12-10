@@ -7,10 +7,47 @@ const jobTypes = new mongoose.Schema({
   plumbering: Boolean,
 });
 const postSchema = new mongoose.Schema({
+  user: { type: String, required: true },
   title: { type: String, required: true },
   description: String,
   type: { type: jobTypes, required: true },
   money: { type: Number, required: true },
 });
 
+postSchema.statics.createPost = async function (
+  userId,
+  title,
+  description,
+  type,
+  money
+) {
+  const jobTypes = [
+    "cleaning",
+    "cuttingGrass",
+    "movingHeavyObjects",
+    "walkingTheDog",
+    "plumbering",
+  ];
+
+  if (!jobTypes.filter((item) => item == type)) {
+    throw new Error(process.env.JOB_TYPE_INVALID);
+  }
+  await this.create({
+    user: userId,
+    title,
+    description,
+    type,
+    money,
+  });
+};
+postSchema.statics.deletePost = async function (userId, id) {
+  const post = await this.findOne({ _id: id });
+  if (!post) {
+    throw new Error(process.env.POST_NOT_FOUND);
+  }
+  if (post.user != userId) {
+    throw new Error(process.env.AUTHORIZATION_DENIED);
+  }
+  await this.deleteOne({ _id: id });
+};
 module.exports = new mongoose.model("Post", postSchema);
