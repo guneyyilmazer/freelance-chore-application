@@ -34,8 +34,16 @@ const getRandomPosts = async (req, res) => {
 };
 const createPost = async (req, res) => {
   try {
-    const { title, type, description, price } = req.body;
-    await PostModel.createPost(req.userId, title, description, type, price);
+    const { title, type, description, price, picture, pictures } = req.body;
+    await PostModel.createPost(
+      req.userId,
+      title,
+      description,
+      type,
+      price,
+      picture,
+      pictures
+    );
     res.status(200).json({ msg: "Post has been created successfully." });
   } catch (err) {
     res.status(400).json({ msg: err.message });

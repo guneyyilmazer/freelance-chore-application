@@ -13,6 +13,8 @@ const postSchema = new mongoose.Schema({
   description: String,
   type: { type: jobTypesSchema, required: true },
   price: { type: Number, required: true },
+  picture: String,
+  pictures: [String],
 });
 
 postSchema.statics.createPost = async function (
@@ -20,7 +22,9 @@ postSchema.statics.createPost = async function (
   title,
   description,
   type,
-  price
+  price,
+  picture,
+  pictures
 ) {
   if (!jobTypes.filter((item) => item == type)) {
     throw new Error(process.env.JOB_TYPE_INVALID);
@@ -31,6 +35,8 @@ postSchema.statics.createPost = async function (
     description,
     type,
     price,
+    picture,
+    pictures,
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {
