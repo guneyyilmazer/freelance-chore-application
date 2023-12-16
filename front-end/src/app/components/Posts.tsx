@@ -38,7 +38,6 @@ const Posts = ({ type }: { type: JobType }) => {
       }),
     });
     const { posts } = await res.json();
-    console.log(posts)
     setPosts(posts);
   };
   useEffect(() => {
