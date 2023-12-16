@@ -83,6 +83,7 @@ const PostCreateForm = () => {
               newList.push(base64);
             }
             setPictures(newList);
+            setMainPicture(newList[0]); //placeholder
           }}
           className="block mt-7 w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
@@ -114,7 +115,6 @@ const PostCreateForm = () => {
         )}
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-5 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
           onClick={handleSubmit}
         >
           Create

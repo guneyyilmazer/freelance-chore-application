@@ -1,9 +1,10 @@
 "use client";
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 const initialState = {
   user: {
-    userId: "",
+    userId: Cookies.get("userId") ? Cookies.get("userId") : "",
     username: "",
     profilePicture: "",
     isLoggedIn: false,
@@ -12,6 +13,12 @@ const initialState = {
   loading: true,
   loadedFirstMessages: false,
   socket: {},
+  chattingWith:
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("chattingWith")
+      : "",
+  room:
+    typeof window !== "undefined" ? window.localStorage.getItem("room") : "",
 };
 const appSlice = createSlice({
   name: "app",
@@ -51,6 +58,6 @@ export const {
   setLoading,
   setLoadedFirstMessages,
   setEmptyRoom,
-  setIsLoggedIn
+  setIsLoggedIn,
 } = appSlice.actions;
 export default appSlice.reducer;

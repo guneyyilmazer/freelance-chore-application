@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 import { Providers } from "./Providers";
 import { store } from "./app/store";
 export const BACKEND_SERVER_IP = "http://localhost:4000";
+export const SOCKET_IO_IP = "http://localhost:3001";
 /* export const metadata: Metadata = {
   title: "Freelance Chore App",
   description: "Created By Guney Yilmazer",

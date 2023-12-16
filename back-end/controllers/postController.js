@@ -19,6 +19,15 @@ const getPosts = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+const getPost = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const post = await PostModel.findOne({ _id });
+    res.status(200).json({ post });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 const getRandomPosts = async (req, res) => {
   try {
     const { page, amount } = req.body;
@@ -26,7 +35,6 @@ const getRandomPosts = async (req, res) => {
     const posts = await PostModel.find()
       .skip((page - 1) * amount)
       .limit(amount);
-    console.log(posts);
     res.status(200).json({ posts });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -128,6 +136,7 @@ const changePrice = async (req, res) => {
 
 module.exports = {
   getPosts,
+  getPost,
   getRandomPosts,
   createPost,
   deletePost,

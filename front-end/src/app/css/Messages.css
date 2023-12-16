@@ -1,0 +1,22 @@
+.message-sent {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: rgb(156, 156, 156);
+  border-radius: 15px;
+  text-align: end;
+  border-bottom-right-radius: 0px;
+  padding: 10px;
+  color: black;
+}
+.message-received {
+  background-color: rgb(50, 76, 51);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  border-bottom-left-radius: 0px;
+  padding: 10px;
+  color: black;
+}
+.username {
+  font-size: 11px;
+}

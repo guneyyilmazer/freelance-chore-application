@@ -38,6 +38,7 @@ const Posts = ({ type }: { type: JobType }) => {
       }),
     });
     const { posts } = await res.json();
+    console.log(posts)
     setPosts(posts);
   };
   useEffect(() => {
@@ -53,7 +54,11 @@ const Posts = ({ type }: { type: JobType }) => {
           >
             <h3 className="text-lg font-semibold">{item.title}</h3>
             <span className="text-sm">
-              Type:{item.type.cleaning && "cleaning"}
+              Type:{item.type.cleaning && "Cleaning"}
+              {item.type.cuttingGrass && "Cutting Grass"}
+              {item.type.movingHeavyObjects && "Moving Heavy Objects"}
+              {item.type.plumbering && "Plumbering"}
+              {item.type.walkingTheDog && "Walking The Dog"}
             </span>
             <span className="text-sm">Price:{item.price}$</span>
             <span className="text-sm">{item.description.slice(0, 50)}</span>
