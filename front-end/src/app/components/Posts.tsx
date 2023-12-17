@@ -10,6 +10,7 @@ type JobType = {
   cuttingGrass?: true;
   movingHeavyObjects?: true;
   plumbering?: true;
+  random?: true;
 };
 type post = {
   _id: string;

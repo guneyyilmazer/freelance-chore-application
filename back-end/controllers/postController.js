@@ -9,11 +9,13 @@ const getPosts = async (req, res) => {
       throw new Error("Job type is invalid");
     }
     const typeString = "type." + Object.keys(type)[0];
-    const posts = await PostModel.find({
-      [typeString]: true, // back ticks don't work, using property keys
-    })
-      .skip((page - 1) * amount)
-      .limit(amount);
+    const posts = !type.random
+      ? await PostModel.find({
+          [typeString]: true, // back ticks don't work, using property keys
+        })
+      : await PostModel.find({})
+          .skip((page - 1) * amount)
+          .limit(amount);
     res.status(200).json({ posts });
   } catch (err) {
     res.status(400).json({ error: err.message });
