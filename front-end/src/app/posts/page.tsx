@@ -26,7 +26,7 @@ const page = () => {
               ? { walkingTheDog: true }
               : type == "plumbering"
               ? { plumbering: true }
-              : {random:true}
+              : { random: true }
           }
         />
       </div>

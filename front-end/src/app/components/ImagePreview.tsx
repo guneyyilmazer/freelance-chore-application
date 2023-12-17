@@ -33,7 +33,7 @@ const ImagePreview = ({
         src={images[index]}
         alt=""
       />
-      <div className="mt-3">
+      <div className="mt-3 flex">
         {images.map((item, index) => (
           <img
             key={index}

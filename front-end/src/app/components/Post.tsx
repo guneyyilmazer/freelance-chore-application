@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
+import ImagePreview from "./ImagePreview";
+import Link from "next/link";
 type JobType = {
   cleaning?: true;
   walkingTheDog?: true;
@@ -21,6 +23,10 @@ type post = {
   type: JobType;
 };
 const Post = () => {
+  const [preview, setPreview] = useState(false);
+  const [previewPictures, setPreviewPictures] = useState<string[]>();
+  const [previewPicturesIndex, setPreviewPicturesIndex] = useState(0);
+
   useEffect(() => {
     getPost();
   }, []);
@@ -41,6 +47,7 @@ const Post = () => {
     });
     const { post } = await res.json();
     setPost(post);
+    setPreviewPictures(post.pictures);
   };
   return (
     <div className="flex text-center justify-center">
@@ -59,28 +66,51 @@ const Post = () => {
           <div className="flex justify-center my-4">
             <img
               className="max-h-72 rounded cursor-pointer hover:opacity-80"
+              onClick={() => {
+                setPreviewPictures([post.picture]);
+                setPreview(true);
+                setPreviewPicturesIndex(0);
+              }}
               src={post.picture}
             />
           </div>
-          <div className="flex justify-center">
-            {post.pictures.map((item) => (
+          <div className="flex justify-center flex-wrap">
+            {post.pictures.map((item, index) => (
               <img
-                className="w-10 cursor-pointer hover:opacity-80"
+                onClick={() => {
+                  setPreviewPictures(post.pictures);
+                  setPreviewPicturesIndex(index);
+                  setPreview(true);
+                }}
+                className="w-10 m-1 h-10 cursor-pointer hover:opacity-80"
                 src={item}
               />
             ))}
           </div>
           <div>
             {user.userId != post.user && (
-              <button
-                onClick={() => localStorage.setItem("chattingWith", post.user)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-5 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Send A Message
-              </button>
+              <div className="my-5">
+                <Link
+                  href="/messages"
+                  onClick={() => {
+                    localStorage.setItem("chattingWith", post.user);
+                  }}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Send A Message
+                </Link>
+              </div>
             )}
           </div>
         </div>
+      )}
+      {preview && previewPictures && (
+        <ImagePreview
+          setPreview={setPreview}
+          preview={preview}
+          previewPicturesIndex={previewPicturesIndex}
+          images={previewPictures}
+        />
       )}
     </div>
   );

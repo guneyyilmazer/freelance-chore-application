@@ -99,6 +99,10 @@ const DirectMessages = () => {
                     {item.lastMessage.content.length < 20
                       ? item.lastMessage.content
                       : item.lastMessage.content.slice(0, 20) + "..."}
+                    {item.lastMessage.content == " " &&
+                      (item.lastMessage.sender.userId == user.userId
+                        ? "you sent a picture"
+                        : "you received a picture")}
                   </span>
                   <span className="mx-3">{item.lastMessage.sent}</span>
                 </div>

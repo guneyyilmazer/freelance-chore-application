@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import LogoutButton from "./LogoutButton";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 const Header = () => {
   const [hamburgerMenuCollapsed, setHamburgerMenuCollapsed] = useState(false);
   const user = useSelector((shop: any) => shop.app.user);
@@ -9,53 +10,40 @@ const Header = () => {
     <header>
       <nav className="bg-green-200 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-green-950">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <button
-            onClick={() => {
-              window.location.replace("/");
-            }}
-            className="flex items-center"
-          >
+          <Link href="/" className="flex items-center">
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Brand
+              Home
             </span>
-          </button>
+          </Link>
           <div className="hidden md:flex">
-            <button
+            <Link
+              href="/posts"
               className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-              onClick={() => {
-                window.location.replace("/posts");
-              }}
             >
               Posts
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/post/create"
               className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-              onClick={() => {
-                window.location.replace("/post/create");
-              }}
             >
               Create A Listing
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/messages/dms"
               className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-              onClick={() => {
-                window.location.replace("/messages/dms");
-              }}
             >
               Messages
-            </button>
+            </Link>
           </div>
 
           <div className="flex items-center lg:order-2">
             {!user.isLoggedIn && (
-              <button
+              <Link
+                href="/auth"
                 className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-                onClick={() => {
-                  window.location.replace("/auth");
-                }}
               >
                 Login
-              </button>
+              </Link>
             )}
             <LogoutButton />
 

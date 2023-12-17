@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 type JobType = {
   cleaning?: true;
@@ -48,8 +49,8 @@ const Posts = ({ type }: { type: JobType }) => {
     <div className="flex m-10 justify-center flex-wrap">
       {posts.length != 0 &&
         posts.map((item: post) => (
-          <div
-            onClick={() => window.location.replace(`post/?id=${item._id}`)}
+          <Link
+            href={`post/?id=${item._id}`}
             className="shadow p-3 w-72 cursor-pointer hover:opacity-80 flex flex-col m-2"
           >
             <h3 className="text-lg font-semibold">{item.title}</h3>
@@ -63,14 +64,14 @@ const Posts = ({ type }: { type: JobType }) => {
             <span className="text-sm">Price:{item.price}$</span>
             <span className="text-sm">{item.description.slice(0, 50)}</span>
             <div className="flex justify-center my-4">
-              <img className="max-h-72 rounded" src={item.picture} />
+              <img className="h-72 rounded" src={item.picture} />
             </div>
             <div className="flex justify-center">
               {item.pictures.map((item) => (
-                <img className="w-10" src={item} />
+                <img className="h-10 w-10 m-1" src={item} />
               ))}
             </div>
-          </div>
+          </Link>
         ))}
     </div>
   );
