@@ -78,7 +78,6 @@ const Messages = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     loadRoom();
   }, [page]);
   const scrollDown = () => {
@@ -276,7 +275,7 @@ const Messages = () => {
             {item.sender.username != user.username && (
               <Link
                 className="flex items-center me-2"
-                href={`/users/${item.sender.userId}`}
+                href={`/user/?id=${item.sender.userId}`}
               >
                 <img
                   style={{ height: "35px", width: "35px" }}
@@ -329,7 +328,7 @@ const Messages = () => {
             {item.sender.username == user.username && (
               <Link
                 className="flex items-center"
-                href={`/users/${item.sender.userId}`}
+                href={`/user/?id=${item.sender.userId}`}
                 style={{ cursor: "default" }}
               >
                 <img

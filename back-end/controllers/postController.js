@@ -91,6 +91,28 @@ const changeTitle = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+const changeType = async (req, res) => {
+  try {
+    const { id, newType } = req.body;
+    const doesItExist = await PostModel.findOne({ _id: id });
+    if (!doesItExist) {
+      res.status(400).json({ error: "Post doesn't exist." });
+    }
+    if (doesItExist.user != req.userId) {
+      res.status(401).json({ error: process.env.AUTHORIZATION_DENIED });
+    }
+    const post = await PostModel.findOneAndUpdate(
+      { _id: id },
+      { type: newType },
+      { new: true }
+    );
+    res.status(200).json({
+      msg: "Successfully updated the type.",
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 const changeDescription = async (req, res) => {
   try {
     const { id, newDescription } = req.body;
@@ -143,6 +165,7 @@ module.exports = {
   createPost,
   deletePost,
   changeTitle,
+  changeType,
   changeDescription,
   changePrice,
 };

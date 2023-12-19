@@ -35,7 +35,7 @@ const ListOfSeen = ({ users, showSeen, setShowSeen }: any) => {
               <div key={index} className="my-1 flex w-52 justify-center text-white">
                 <Link
                   className="no-underline flex justify-center items-center text-white"
-                  href={`/users/${item.userId}`}
+                  href={`/user/?id=${item.userId}`}
                 >
                   <img
                     className="rounded-full"

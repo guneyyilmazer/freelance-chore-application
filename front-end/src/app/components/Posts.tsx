@@ -46,7 +46,7 @@ const Posts = ({ type }: { type: JobType }) => {
     getPosts();
   }, []);
   return (
-    <div className="flex m-10 justify-center flex-wrap">
+    <div className="flex m-10 text-center justify-center flex-wrap">
       {posts.length != 0 &&
         posts.map((item: post) => (
           <Link

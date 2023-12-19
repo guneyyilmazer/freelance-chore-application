@@ -83,6 +83,7 @@ const FindUsers = async (req, res) => {
   }
 };
 
+
 const UpdateProfilePicture = async (req, res) => {
   try {
     const { userId, profilePicture } = req.body;

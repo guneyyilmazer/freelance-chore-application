@@ -6,6 +6,7 @@ const {
   createPost,
   deletePost,
   changeTitle,
+  changeType,
   changeDescription,
   changePrice,
 } = require("../controllers/postController");
@@ -19,6 +20,7 @@ router.use(withAuth);
 router.post("/create", createPost);
 router.post("/delete", deletePost);
 router.patch("/changeTitle", changeTitle);
+router.patch("/changeType", changeType);
 router.patch("/changeDescription", changeDescription);
 router.patch("/changePrice", changePrice);
 module.exports = router;
