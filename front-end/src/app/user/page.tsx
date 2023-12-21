@@ -13,7 +13,7 @@ const page = () => {
   const searchParams = useSearchParams();
   useEffect(() => {
     getUser();
-  });
+  }, []);
   const getUser = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/loadUser`, {
       headers: {
@@ -34,31 +34,52 @@ const page = () => {
   };
   return (
     <div className="flex flex-col my-5 justify-center items-center">
-      <div className="my-5">{user?.username}</div>
-      <div>
-        <img
-          src={
-            user?.profilePicture
-              ? user.profilePicture
-              : DefaultProfilePicture.src
-          }
-        />
-      </div>
-      <div>
-        {user && user.userId != client.userId && (
-          <div className="my-5">
-            <Link
-              href="/messages"
-              onClick={() => {
-                localStorage.setItem("chattingWith", user.userId);
-              }}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Send A Message
-            </Link>
+      {user && (
+        <>
+          <div className="my-5">{user?.username}</div>
+          <div>
+            <img
+              src={
+                user?.profilePicture
+                  ? user.profilePicture
+                  : DefaultProfilePicture.src
+              }
+            />
           </div>
-        )}
-      </div>
+          <div className="flex flex-col my-5">
+            <span>State:{user.location.state}</span>
+            <span>City:{user.location.city}</span>
+            <span>
+              {user.accountType.freelancer && "Account type: Freelancer"}
+            </span>
+            <span>Hourly:{user.freelancerDetails?.hourlyWage}$</span>
+            <span>
+              Specilazes in: {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
+              {user.freelancerDetails?.jobType.cuttingGrass && "Cutting Grass"}
+              {user.freelancerDetails?.jobType.movingHeavyObjects &&
+                "Moving Heavy Objects"}
+              {user.freelancerDetails?.jobType.plumbering && "Plumbering"}
+              {user.freelancerDetails?.jobType.walkingTheDog &&
+                "Walking The Dog"}
+            </span>
+          </div>
+          <div>
+            {user && user.userId != client.userId && (
+              <div className="my-5">
+                <Link
+                  href="/messages"
+                  onClick={() => {
+                    localStorage.setItem("chattingWith", user.userId);
+                  }}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Send A Message
+                </Link>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -13,7 +13,14 @@ const Signup = async (req, res) => {
     const { type, location, freelancerDetails, username, email, password } =
       req.body;
     if (username.length > 4) {
-      const userId = await UserModel.signup(type,location,freelancerDetails, username, email, password);
+      const userId = await UserModel.signup(
+        type,
+        location,
+        freelancerDetails,
+        username,
+        email,
+        password
+      );
       const token = genToken(userId, username);
       res.status(200).json({ AuthValidation: token });
     } else {
@@ -48,6 +55,9 @@ const LoadUser = async (req, res) => {
         username: inDB.username,
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
+        location:inDB.location,
+        freelancerDetails:inDB.freelancerDetails,
+        accountType:inDB.accountType
       });
     } else if (token) {
       const { userId } = await jwt.verify(token, process.env.SECRET);
@@ -57,6 +67,9 @@ const LoadUser = async (req, res) => {
         username: inDB.username,
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
+        location:inDB.location,
+        freelancerDetails:inDB.freelancerDetails,
+        accountType:inDB.accountType
       });
     }
   } catch (err) {
