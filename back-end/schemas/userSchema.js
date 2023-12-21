@@ -2,7 +2,24 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 require("dotenv").config();
+const accountTypeSchema = new mongoose.Schema({
+  freelancer: Boolean,
+  hirer: Boolean,
+});
+const jobTypesSchema = new mongoose.Schema({
+  cleaning: Boolean,
+  cuttingGrass: Boolean,
+  movingHeavyObjects: Boolean,
+  walkingTheDog: Boolean,
+  plumbering: Boolean,
+});
 const userSchema = new mongoose.Schema({
+  accountType: { type: accountTypeSchema, required: true },
+  location: {
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+  },
+  freelancerDetails: { jobType: jobTypesSchema, hourlyWage: Number },
   profilePicture: String,
   username: { required: true, type: String },
   email: { required: true, type: String },
@@ -10,7 +27,14 @@ const userSchema = new mongoose.Schema({
 });
 
 //this function returns a userID after a successful signup attempt.
-userSchema.statics.signup = async function (username, email, password) {
+userSchema.statics.signup = async function (
+  type,
+  location,
+  freelancerDetails,
+  username,
+  email,
+  password
+) {
   if (!validator.isEmail(email)) {
     throw new Error(process.env.ERR_NOT_VALID_EMAIL);
   }
@@ -30,7 +54,14 @@ userSchema.statics.signup = async function (username, email, password) {
   }
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
-  const user = await this.create({ username, email, password: hash });
+  const user = await this.create({
+    accountType:type,
+    freelancerDetails,
+    location,
+    username,
+    email,
+    password: hash,
+  });
   return user._id;
 };
 //this function returns a userID after a successful login attempt.

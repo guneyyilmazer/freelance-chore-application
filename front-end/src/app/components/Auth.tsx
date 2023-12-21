@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import Cookies from "js-cookie";
-import AuthPage from "../pages/AuthPage";
 import { setUser, setIsLoggedIn } from "../features/appSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";

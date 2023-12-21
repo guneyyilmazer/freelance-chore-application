@@ -54,7 +54,7 @@ const PostCreateForm = () => {
           type="number"
         />
         <div className="flex my-5 flex-col">
-          <label htmlFor="types">Choose a gig type:</label>
+          <label htmlFor="jobs">Choose a gig type:</label>
 
           <select
             ref={typeRef}
