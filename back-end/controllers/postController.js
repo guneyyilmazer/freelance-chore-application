@@ -5,7 +5,7 @@ require("dotenv").config();
 const getPosts = async (req, res) => {
   try {
     const { page, amount, type } = req.body;
-    if (!jobTypes.filter((item) => item == Object.keys(type)[0])) {
+    if (!jobTypes.filter((item) => item == Object.keys(type)[0]).length && !type.random) {
       throw new Error("Job type is invalid");
     }
     const typeString = "type." + Object.keys(type)[0];

@@ -1,5 +1,6 @@
 const UserModel = require("../schemas/userSchema");
 const jwt = require("jsonwebtoken");
+const { jobTypes } = require("../jobTypes");
 require("dotenv").config();
 
 const genToken = (userId, username) => {
@@ -45,6 +46,26 @@ const Login = async (req, res) => {
     res.status(401).json({ error: err.message });
   }
 };
+const getFreelancers = async (req, res) => {
+  try {
+    const { page, amount, type } = req.body;
+    if (!jobTypes.filter((item) => item == Object.keys(type)[0]).length && !type.random) {
+      throw new Error("Job type is invalid");
+    }
+    const typeString = "freelancerDetails.jobType." + Object.keys(type)[0];
+    console.log([typeString]);
+    const freelancers = !type.random
+      ? await UserModel.find({
+          [typeString]: true, // back ticks don't work, using property keys
+        })
+      : await UserModel.find({})
+          .skip((page - 1) * amount)
+          .limit(amount);
+    res.status(200).json({ freelancers });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 
 const LoadUser = async (req, res) => {
   try {
@@ -55,9 +76,9 @@ const LoadUser = async (req, res) => {
         username: inDB.username,
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
-        location:inDB.location,
-        freelancerDetails:inDB.freelancerDetails,
-        accountType:inDB.accountType
+        location: inDB.location,
+        freelancerDetails: inDB.freelancerDetails,
+        accountType: inDB.accountType,
       });
     } else if (token) {
       const { userId } = await jwt.verify(token, process.env.SECRET);
@@ -67,9 +88,9 @@ const LoadUser = async (req, res) => {
         username: inDB.username,
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
-        location:inDB.location,
-        freelancerDetails:inDB.freelancerDetails,
-        accountType:inDB.accountType
+        location: inDB.location,
+        freelancerDetails: inDB.freelancerDetails,
+        accountType: inDB.accountType,
       });
     }
   } catch (err) {
@@ -80,10 +101,14 @@ const LoadUser = async (req, res) => {
 
 const FindUsers = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, freelancer } = req.body;
 
     const Users = await UserModel.find({
-      username: { $regex: username, $options: "i" },
+      username: {
+        $regex: username,
+        $options: "i",
+      },
+      "accountType.freelancer": freelancer,
     })
       .limit(50)
       .select("username")
@@ -152,6 +177,7 @@ const UpdateEmail = async (req, res) => {
 module.exports = {
   Signup,
   Login,
+  getFreelancers,
   LoadUser,
   FindUsers,
   UpdateProfilePicture,

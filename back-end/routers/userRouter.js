@@ -2,6 +2,7 @@ const express = require("express");
 const {
   Signup,
   Login,
+  getFreelancers,
   LoadUser,
   FindUsers,
   UpdateProfilePicture,
@@ -17,6 +18,7 @@ router.post("/signup", Signup);
 router.post("/login", Login);
 router.use(withAuth);
 router.post("/loadUser", LoadUser);
+router.post("/loadFreelancers", getFreelancers);
 router.post("/findUsers", FindUsers);
 router.post("/updateEmail", UpdateEmail);
 router.post("/updateProfilePicture", UpdateProfilePicture);

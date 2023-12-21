@@ -5,7 +5,7 @@ import SearchBarResults from "./SearchBarResults";
 import { user } from "../types/AllTypes";
 import { BACKEND_SERVER_IP } from "../layout";
 
-const SearchBar = () => {
+const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
   const [show, setShow] = useState(true);
   const [userNotFound, setUserNotFound] = useState(false);
 
@@ -42,6 +42,7 @@ const SearchBar = () => {
         method: "POST",
         body: JSON.stringify({
           username: inputRef.current!.value,
+          freelancer,
         }),
       });
       const response = await res.json();
@@ -66,7 +67,7 @@ const SearchBar = () => {
             borderBottom: "2px solid",
             borderColor: "Red",
           }}
-          placeholder="Search for users"
+          placeholder={`Search for ${freelancer ? "freelancers" : "users"}`}
         />
       </form>
       <div ref={ref} className="absolute w-[100%]">

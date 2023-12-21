@@ -2,6 +2,8 @@ import "../css/SearchBar.css";
 import { useEffect } from "react";
 import { user } from "../types/AllTypes";
 import DefaultProfilePicture from "../images/default.jpeg";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SearchBarResults = ({
   users,
@@ -15,17 +17,16 @@ const SearchBarResults = ({
   setShow: any;
   userNotFound: boolean;
 }) => {
-  useEffect(() => setShow(false), [location]);
+  const router = useRouter();
+  useEffect(() => setShow(false), [router]);
   return show ? (
     <div className="bg-gray-800 text-white">
       {!userNotFound ? (
         users.map((item, index) => (
-          <div
+          <Link
             key={index}
+            href={`/user/?id=${item._id}`}
             className=" results flex py-3 ps-2 items-center no-underline"
-            onClick={() => {
-              window.location.replace(`users/${item._id}`);
-            }}
           >
             <img
               style={{ height: "40px", width: "40px" }}
@@ -39,7 +40,7 @@ const SearchBarResults = ({
             <span className="ms-2 text-white no-underline">
               {item.username}
             </span>
-          </div>
+          </Link>
         ))
       ) : (
         <div className="text-center py-2">No results.</div>
