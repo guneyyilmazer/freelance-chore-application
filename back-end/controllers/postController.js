@@ -19,9 +19,11 @@ const getPosts = async (req, res) => {
       : await PostModel.find({})
           .skip((page - 1) * amount)
           .limit(amount);
-    const lastPosts = await PostModel.find({})
-      .skip((page - 1) * amount)
-      .select("title");
+    const lastPosts = !type.random
+      ? await PostModel.find({ [typeString]: true })
+      : await PostModel.find({})
+          .skip((page - 1) * amount)
+          .select("title");
     const lastPage =
       lastPosts.length < amount || !lastPosts.length ? true : false;
 
