@@ -5,7 +5,10 @@ require("dotenv").config();
 const getPosts = async (req, res) => {
   try {
     const { page, amount, type } = req.body;
-    if (!jobTypes.filter((item) => item == Object.keys(type)[0]).length && !type.random) {
+    if (
+      !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
+      !type.random
+    ) {
       throw new Error("Job type is invalid");
     }
     const typeString = "type." + Object.keys(type)[0];
@@ -16,7 +19,13 @@ const getPosts = async (req, res) => {
       : await PostModel.find({})
           .skip((page - 1) * amount)
           .limit(amount);
-    res.status(200).json({ posts });
+    const lastPosts = await PostModel.find({})
+      .skip((page - 1) * amount)
+      .select("title");
+    const lastPage =
+      lastPosts.length < amount || !lastPosts.length ? true : false;
+
+    res.status(200).json({ posts, lastPage });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
