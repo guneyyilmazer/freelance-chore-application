@@ -9,14 +9,8 @@ import EditDesc from "./EditDesc";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import EditJobType from "./EditJobType";
+import { JobType } from "../types/JobType";
 
-type JobType = {
-  cleaning?: true;
-  walkingTheDog?: true;
-  cuttingGrass?: true;
-  movingHeavyObjects?: true;
-  plumbering?: true;
-};
 type post = {
   _id: string;
   user: string;

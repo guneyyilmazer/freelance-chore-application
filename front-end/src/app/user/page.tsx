@@ -36,7 +36,7 @@ const page = () => {
     <div className="flex flex-col my-5 justify-center items-center">
       {user && (
         <>
-          <div className="my-5">{user?.username}</div>
+          <div className="my-5 text-xl">{user?.username}</div>
           <div>
             <img
               src={
@@ -47,14 +47,14 @@ const page = () => {
             />
           </div>
           <div className="flex flex-col my-5">
+            <span>{user.accountType.freelancer && "Freelancer"}</span>
             <span>State:{user.location.state}</span>
             <span>City:{user.location.city}</span>
-            <span>
-              {user.accountType.freelancer && "Account type: Freelancer"}
-            </span>
+
             <span>Hourly:{user.freelancerDetails?.hourlyWage}$</span>
             <span>
-              Specilazes in: {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
+              Specilazes in:{" "}
+              {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
               {user.freelancerDetails?.jobType.cuttingGrass && "Cutting Grass"}
               {user.freelancerDetails?.jobType.movingHeavyObjects &&
                 "Moving Heavy Objects"}
@@ -62,6 +62,10 @@ const page = () => {
               {user.freelancerDetails?.jobType.walkingTheDog &&
                 "Walking The Dog"}
             </span>
+            <div className="my-2">
+              <h3 className="">About Me</h3>
+              <span className="text-sm">{user.freelancerDetails?.aboutMe}</span>
+            </div>
           </div>
           <div>
             {user && user.userId != client.userId && (
@@ -76,6 +80,14 @@ const page = () => {
                   Send A Message
                 </Link>
               </div>
+            )}
+            {user && user.userId == client.userId && (
+              <Link
+                className="bg-green-900 p-2 rounded-md text-white"
+                href={"/user/editprofile"}
+              >
+                Edit Profile
+              </Link>
             )}
           </div>
         </>

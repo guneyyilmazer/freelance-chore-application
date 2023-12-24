@@ -49,7 +49,10 @@ const Login = async (req, res) => {
 const getFreelancers = async (req, res) => {
   try {
     const { page, amount, type } = req.body;
-    if (!jobTypes.filter((item) => item == Object.keys(type)[0]).length && !type.random) {
+    if (
+      !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
+      !type.random
+    ) {
       throw new Error("Job type is invalid");
     }
     const typeString = "freelancerDetails.jobType." + Object.keys(type)[0];
@@ -174,6 +177,30 @@ const UpdateEmail = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+const ChangeProfile = async (req, res) => {
+  try {
+    const { location, freelancerDetails, username } = req.body;
+    const checkDB = await UserModel.findOne({ username });
+    console.log(checkDB._id.toString() != req.userId.toString());
+    if(freelancerDetails.aboutMe > 100) throw new Error("About me needs to be under 100 characters")
+    if (checkDB) {
+      if (checkDB._id.toString() != req.userId.toString()) {
+        throw new Error(process.env.ERR_TAKEN_USERNAME);
+      } else {
+        // if its the user's nickname
+        const user = await UserModel.findOneAndUpdate(
+          { _id: req.userId },
+          { location, freelancerDetails, username }
+        );
+        res.status(200).json({ msg: "Profile updated successfully." });
+      }
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+    console.log(err.message);
+  }
+};
 module.exports = {
   Signup,
   Login,
@@ -183,4 +210,5 @@ module.exports = {
   UpdateProfilePicture,
   UpdateUsername,
   UpdateEmail,
+  ChangeProfile,
 };

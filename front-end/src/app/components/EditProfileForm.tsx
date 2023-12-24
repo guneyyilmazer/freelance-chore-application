@@ -4,23 +4,58 @@ import { useRef } from "react";
 import Cookies from "js-cookie";
 import { BACKEND_SERVER_IP } from "../layout";
 import { useSearchParams } from "next/navigation";
+import { user } from "../types/UserTypes";
+import { JobType } from "../types/JobType";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
-const Signup = () => {
+const EditProfile = () => {
+  const router = useRouter();
+  const client = useSelector((shop: any) => shop.app.user);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [formIndex, setFormIndex] = useState(0);
-  const [selectedState, setSelectedState] = useState(""); //SELECT STATE IN FUNCTION
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [jobType, setJobType] = useState({});
+  const [aboutMe, setAboutMe] = useState("");
+  const [jobType, setJobType] = useState<JobType>({});
   const [wage, setWage] = useState<number>();
+  const [user, setUser] = useState<user>();
   const stateRef = useRef<HTMLSelectElement>(null);
   const cityRef = useRef<HTMLSelectElement>(null);
   useEffect(() => {
-    getStates();
+    getUser();
   }, []);
+  useEffect(() => {
+    //calling the api after state change, because state works async
+    selectedState != "" && getStates();
+    selectedState != "" && getCities();
+    setSelectedCity("");
+  }, [selectedState]);
+  const getUser = async () => {
+    const res = await fetch(`${BACKEND_SERVER_IP}/user/loadUser`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+      },
+      body: JSON.stringify({
+        token: Cookies.get("Auth_Token"),
+      }),
 
+      method: "POST",
+    });
+
+    const response = await res.json();
+    if (!response.error) {
+      setUsername(response.username);
+      setJobType(response.freelancerDetails.jobType);
+      setSelectedState(response.location.state);
+      setSelectedCity(response.location.city);
+      setWage(response.freelancerDetails.hourlyWage);
+      setUser(response);
+    }
+  };
   const getStates = async () => {
     const res = await fetch(
       "https://countriesnow.space/api/v0.1/countries/states",
@@ -36,7 +71,9 @@ const Signup = () => {
       }
     );
     const response = await res.json();
-    if (!response.error) setStates(response.data.states);
+    if (!response.error) {
+      setStates(response.data.states);
+    }
   };
   const getCities = async () => {
     const res = await fetch(
@@ -49,44 +86,49 @@ const Signup = () => {
         method: "POST",
         body: JSON.stringify({
           country: "united states",
-          state: stateRef.current?.value,
+          state: selectedState,
         }),
       }
     );
     const response = await res.json();
-    console.log(response);
-    if (!response.error) setCities(response.data);
+    if (!response.error) {
+      const filtered = response.data.filter(
+        (item: string) => item != selectedCity
+      );
+      setCities(selectedCity ? filtered : response.data);
+    }
   };
 
   const searchParams = useSearchParams();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username && email && password) {
-      const res = await fetch(`${BACKEND_SERVER_IP}/user/signup`, {
+    if (username && selectedCity && selectedState && wage && jobType) {
+      //will add aboutMe later on
+      const res = await fetch(`${BACKEND_SERVER_IP}/user/changeProfile`, {
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${Cookies.get("Auth_Token")}`,
         },
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({
-          type: { freelancer: true },
-          username: username,
-          email: email,
-          password: password,
+          username,
           location: {
-            state: stateRef.current!.value,
-            city: cityRef.current!.value,
+            state: selectedState,
+            city: selectedCity,
           },
           freelancerDetails: {
             jobType,
             hourlyWage: wage,
+            aboutMe
           },
         }),
       });
       const response = await res.json();
       if (!response.error) {
-        Cookies.set("Auth_Token", response.AuthValidation, { expires: 5 });
-        window.location.replace("/");
+        alert("Successfully updated profile!");
+
+        router.push(`/user/?id=${client.userId}`);
       } else alert(response.error);
     } else alert("All credentials must be filled.");
   };
@@ -96,33 +138,19 @@ const Signup = () => {
       <form className="flex flex-col" onSubmit={handleSubmit}>
         {formIndex == 0 && (
           <>
-            <h2 className="text-dark text-center">Signup As A Freelancer</h2>
+            <h2 className="text-dark text-center">Edit Your Profile</h2>
+            <h3 className="text-sm">Username</h3>
             <input
               type="text"
+              value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="mt-2 p-1"
               placeholder="Enter username"
               name=""
               id=""
             />
-            <input
-              type="email"
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-2 p-1"
-              placeholder="Enter email"
-              name=""
-              id=""
-            />
-            <input
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-2 p-1"
-              placeholder="Enter password"
-              name=""
-              id=""
-            />
             <div className="flex my-5 flex-col">
-              <label htmlFor="jobs">
+              <label className="text-sm" htmlFor="jobs">
                 Choose the main type of work you would like to do
               </label>
               <select
@@ -137,15 +165,40 @@ const Signup = () => {
                   {" "}
                   Select A Type{" "}
                 </option>
-                <option value="cuttingGrass">Grass Cutting</option>
-                <option value="cleaning">Cleaning</option>
-                <option value="plumbering">Plumbering</option>
-                <option value="movingHeavyObjects">Moving Heavy Objects</option>
-                <option value="walkingTheDog">Walking The Dog</option>
+                <option selected={jobType.cuttingGrass} value="cuttingGrass">
+                  Grass Cutting
+                </option>
+                <option selected={jobType.cleaning} value="cleaning">
+                  Cleaning
+                </option>
+                <option selected={jobType.plumbering} value="plumbering">
+                  Plumbering
+                </option>
+                <option
+                  selected={jobType.movingHeavyObjects}
+                  value="movingHeavyObjects"
+                >
+                  Moving Heavy Objects
+                </option>
+                <option selected={jobType.walkingTheDog} value="walkingTheDog">
+                  Walking The Dog
+                </option>
               </select>
             </div>
+            <div>
+                <h3 className="text-sm">About Me</h3>
+              <textarea
+              className="shadow"
+                cols={30}
+                value={aboutMe}
+                onChange={(e) => setAboutMe(e.target.value)}
+                rows={10}
+              ></textarea>
+            </div>
+            <h3 className="text-sm">Hourly Wage</h3>
             <input
               type="number"
+              value={wage}
               onChange={(e) => setWage(Number(e.target.value))}
               className="mt-2 p-1"
               placeholder="Enter your hourly wage (You can change this later)"
@@ -161,15 +214,15 @@ const Signup = () => {
               <div className="flex my-5 flex-col">
                 <label htmlFor="types">Choose your state</label>
                 <select
-                  ref={stateRef}
-                  onChange={getCities}
+                  onChange={(e) => {
+                    setSelectedState(e.target.value);
+                  }}
                   className="shadow p-3 appearance-none border"
                   name="jobs"
                   id="jobs"
                 >
-                  <option value="default" disabled selected>
-                    {" "}
-                    Select Your State{" "}
+                  <option value={selectedState} disabled selected>
+                    Selected State: {selectedState}
                   </option>
                   {states.map((item: any) => (
                     <option value={item.name}>{item.name}</option>
@@ -182,13 +235,13 @@ const Signup = () => {
                 <label htmlFor="types">Choose your city</label>
                 <select
                   ref={cityRef}
+                  onChange={(e) => setSelectedCity(e.target.value)}
                   className="shadow p-3 appearance-none border"
                   name="jobs"
                   id="jobs"
                 >
-                  <option value="default" disabled selected>
-                    {" "}
-                    Select Your City{" "}
+                  <option value={cities[0]} disabled selected>
+                    Selected City: {cities[0]}
                   </option>
                   {cities.map((item: string) => (
                     <option value={item}>{item}</option>
@@ -201,7 +254,7 @@ const Signup = () => {
                 className="p-2 bg-green-900 text-white rounded-lg"
                 type="submit"
               >
-                Signup
+                Save
               </button>
             </div>
           </div>
@@ -220,4 +273,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default EditProfile;

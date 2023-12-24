@@ -19,7 +19,11 @@ const userSchema = new mongoose.Schema({
     state: { type: String, required: true },
     city: { type: String, required: true },
   },
-  freelancerDetails: { jobType: jobTypesSchema, hourlyWage: Number },
+  freelancerDetails: {
+    jobType: jobTypesSchema,
+    hourlyWage: Number,
+    aboutMe: String,
+  },
   profilePicture: String,
   username: { required: true, type: String },
   email: { required: true, type: String },
@@ -55,7 +59,7 @@ userSchema.statics.signup = async function (
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   const user = await this.create({
-    accountType:type,
+    accountType: type,
     freelancerDetails,
     location,
     username,

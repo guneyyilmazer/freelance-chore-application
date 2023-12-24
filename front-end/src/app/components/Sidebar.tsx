@@ -3,11 +3,12 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <div className="shadow h-[40vh]">
+    <div className="">
       <div className="py-10">
         <h2 className="text-lg text-center ">Job Types</h2>
-        <ul className="flex flex-col text-sm p-5 h-[30vh] justify-between">
+        <div className="flex flex-col text-center text-sm p-5 h-[30vh] justify-between">
           <Link
+          className=""
             onClick={() => window.location.reload()}
             href={"/posts/?type=cleaning"}
           >
@@ -37,7 +38,7 @@ const Sidebar = () => {
           >
             Plumbering
           </Link>
-        </ul>
+        </div>
       </div>
     </div>
   );

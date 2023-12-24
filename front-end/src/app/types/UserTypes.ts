@@ -3,7 +3,7 @@ export type user = {
   accountType: { freelancer?: true; hirer?: true };
   location: { state: string; city: string };
 
-  freelancerDetails?: { jobType: JobType; hourlyWage: number };
+  freelancerDetails?: { jobType: JobType; hourlyWage: number,aboutMe:string };
   userId: string;
   profilePicture?: string;
   _id?: string;
