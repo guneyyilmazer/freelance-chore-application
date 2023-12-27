@@ -48,14 +48,16 @@ const page = () => {
           </div>
           <div className="flex flex-col my-5">
             <span>{user.accountType.freelancer && "Freelancer"}</span>
-            <span>State:{user.location.state}</span>
-            <span>City:{user.location.city}</span>
+            <span className="mt-1">State:{user.location.state}</span>
+            <span className="mt-1">City:{user.location.city}</span>
 
-            <span>Hourly:{user.freelancerDetails?.hourlyWage}$</span>
-            <span>
+            <span className="mt-1">Hourly:{user.freelancerDetails?.hourlyWage}$</span>
+            <span className="break-words mt-1">
               Specilazes in:{" "}
               {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
               {user.freelancerDetails?.jobType.cuttingGrass && "Cutting Grass"}
+              {user.freelancerDetails?.jobType.movingHeavyObjects &&
+                <br/>}
               {user.freelancerDetails?.jobType.movingHeavyObjects &&
                 "Moving Heavy Objects"}
               {user.freelancerDetails?.jobType.plumbering && "Plumbering"}
