@@ -7,6 +7,7 @@ import SearchBar from "../components/SearchBar";
 import DefaultProfilePicture from "../images/default.jpeg";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Loading from "../components/Loading";
 const page = () => {
   const searchParams = useSearchParams();
   useEffect(() => {
@@ -144,8 +145,8 @@ const page = () => {
             <option value="walkingTheDog">Walking The Dog</option>
           </select>
         </div>
-        {states.length != 0 && (
-          <div className="flex mt-5 flex-col">
+        {states.length != 0 ? (
+          <div className="flex my-3 flex-col">
             <label htmlFor="types">Choose your state</label>
             <select
               onChange={(e) => {
@@ -168,8 +169,12 @@ const page = () => {
               ))}
             </select>
           </div>
+        ) : (
+          <div className="my-3">
+            <Loading />
+          </div>
         )}
-        {cities.length != 0 && (
+        {cities.length != 0 ? (
           <div className="flex flex-col">
             <label htmlFor="types">Choose your city</label>
             <select
@@ -192,6 +197,12 @@ const page = () => {
               ))}
             </select>
           </div>
+        ) : selectedState != "" ? (
+          <div className="my-3">
+            <Loading />
+          </div>
+        ) : (
+          ""
         )}
         <div className="my-4">
           <h3 className="text-sm">Hourly Wage</h3>
