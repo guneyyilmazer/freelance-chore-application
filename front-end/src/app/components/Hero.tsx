@@ -15,6 +15,7 @@ const Hero = () => {
       </div>
       <div className="my-10">
 
+<h3 className="text-xl">Browse Categories</h3>
       <Categories/>
       </div>
     </div>

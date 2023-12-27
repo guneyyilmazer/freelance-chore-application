@@ -29,11 +29,12 @@ const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current!.value == "" && setUserNotFound(false);
+      inputRef.current!.value == "" && setUsers([]);
     }
   }, [inputRef.current?.value]);
   const findUsers = async () => {
     if (inputRef.current!.value != "") {
-      setShow(true)
+      setShow(true);
       const res = await fetch(`${BACKEND_SERVER_IP}/user/findUsers`, {
         headers: {
           "Content-Type": "application/json",
@@ -50,9 +51,8 @@ const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
       if (!response.error) setUsers(response.users);
       if (response.notFound) setUserNotFound(true);
       if (!response.notFound) setUserNotFound(false);
-    }
-    else{
-      setShow(false)
+    } else {
+      setShow(false);
     }
   };
 

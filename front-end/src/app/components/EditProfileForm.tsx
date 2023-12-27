@@ -120,7 +120,7 @@ const EditProfile = () => {
           freelancerDetails: {
             jobType,
             hourlyWage: wage,
-            aboutMe
+            aboutMe,
           },
         }),
       });
@@ -186,9 +186,9 @@ const EditProfile = () => {
               </select>
             </div>
             <div>
-                <h3 className="text-sm">About Me</h3>
+              <h3 className="text-sm">About Me</h3>
               <textarea
-              className="shadow"
+                className="shadow"
                 cols={30}
                 value={aboutMe}
                 onChange={(e) => setAboutMe(e.target.value)}

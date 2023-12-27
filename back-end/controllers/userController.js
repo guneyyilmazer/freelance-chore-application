@@ -48,7 +48,7 @@ const Login = async (req, res) => {
 };
 const getFreelancers = async (req, res) => {
   try {
-    const { page, amount, type } = req.body;
+    let { wage, state, city, page, amount, type } = req.body;
     if (
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
       !type.random
@@ -56,12 +56,23 @@ const getFreelancers = async (req, res) => {
       throw new Error("Job type is invalid");
     }
     const typeString = "freelancerDetails.jobType." + Object.keys(type)[0];
-    console.log([typeString]);
     const freelancers = !type.random
       ? await UserModel.find({
-          [typeString]: true, // back ticks don't work, using property keys
+          [typeString]: true,
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
+          "freelancerDetails.hourlyWage": wage != 0 ? wage : { $gt: 0 },
+        }).select(
+          "username _id profilePicture location freelancerDetails accountType"
+        )
+      : await UserModel.find({
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
+          "freelancerDetails.hourlyWage": wage != 0 ? wage : { $gt: 0 },
         })
-      : await UserModel.find({})
+          .select(
+            "username _id profilePicture location freelancerDetails accountType"
+          )
           .skip((page - 1) * amount)
           .limit(amount);
     res.status(200).json({ freelancers });
@@ -183,7 +194,8 @@ const ChangeProfile = async (req, res) => {
     const { location, freelancerDetails, username } = req.body;
     const checkDB = await UserModel.findOne({ username });
     console.log(checkDB._id.toString() != req.userId.toString());
-    if(freelancerDetails.aboutMe > 100) throw new Error("About me needs to be under 100 characters")
+    if (freelancerDetails.aboutMe > 100)
+      throw new Error("About me needs to be under 100 characters");
     if (checkDB) {
       if (checkDB._id.toString() != req.userId.toString()) {
         throw new Error(process.env.ERR_TAKEN_USERNAME);
