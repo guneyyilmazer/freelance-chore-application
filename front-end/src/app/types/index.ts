@@ -7,4 +7,8 @@ export type { message };
 import { room } from "./RoomTypes";
 export type { room };
 import { DirectMessagesRoom } from "./RoomTypes";
-export type {DirectMessagesRoom}
+export type { DirectMessagesRoom };
+import { post } from "./PostType";
+export type { post };
+import { JobType } from "./JobType";
+export type {JobType}

@@ -7,23 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useRouter, useSearchParams } from "next/navigation";
 
-type JobType = {
-  cleaning?: true;
-  walkingTheDog?: true;
-  cuttingGrass?: true;
-  movingHeavyObjects?: true;
-  plumbering?: true;
-  random?: true;
-};
-type post = {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  picture: string;
-  pictures: string[];
-  type: JobType;
-};
+import { JobType, post } from "../types";
 const Posts = ({ type }: { type: JobType }) => {
   const searchParams = useSearchParams();
   const router = useRouter();

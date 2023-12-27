@@ -4,7 +4,7 @@ import Messages from "./Messages";
 import SendMessage from "./SendMessage";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import { user } from "../types/AllTypes";
+import { user } from "../types";
 import { BACKEND_SERVER_IP, SOCKET_IO_IP } from "../layout";
 import io from "socket.io-client";
 import { useDispatch } from "react-redux";

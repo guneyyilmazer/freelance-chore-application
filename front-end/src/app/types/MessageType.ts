@@ -1,4 +1,4 @@
-import {seenByUser} from './AllTypes'
+import {seenByUser} from '.'
 export type message = {
     sender:  {
       username:string,

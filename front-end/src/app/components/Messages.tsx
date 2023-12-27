@@ -1,9 +1,9 @@
 "use client";
-import { message } from "../types/AllTypes";
+import { message } from "../types";
 import { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import "../css/Messages.css";
-import { user } from "../types/AllTypes";
+import { user } from "../types";
 import ImagePreview from "./ImagePreview";
 import { useSelector } from "react-redux";
 import ListOfSeen from "./ListOfSeen";
@@ -16,7 +16,7 @@ import {
   setEmptyRoom,
 } from "../features/appSlice";
 import { useDispatch } from "react-redux";
-import { seenByUser } from "../types/AllTypes";
+import { seenByUser } from "../types";
 import { BACKEND_SERVER_IP } from "../layout";
 import DefaultProfilePicture from "../images/default.jpeg";
 

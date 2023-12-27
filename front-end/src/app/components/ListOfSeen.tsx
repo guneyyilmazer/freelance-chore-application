@@ -3,7 +3,7 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
-import { user } from "../types/AllTypes";
+import { user } from "../types";
 import DefaultProfilePicture from "../images/default.jpeg";
 const ListOfSeen = ({ users, showSeen, setShowSeen }: any) => {
   const [count, setCount] = useState(users.length);

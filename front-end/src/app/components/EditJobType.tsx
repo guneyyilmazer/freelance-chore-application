@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import Cookies from "js-cookie";
+import { JobType } from "../types";
 
-const EditDesc = ({ show, setShow, type, id }: any) => {
+const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:JobType,id:string}) => {
   const typeRef = useRef<HTMLSelectElement>(null);
   const handleUserKeyPress = (event: KeyboardEvent) => {
     if (event.key == "Escape") {

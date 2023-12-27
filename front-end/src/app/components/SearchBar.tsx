@@ -2,7 +2,7 @@
 import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import SearchBarResults from "./SearchBarResults";
-import { user } from "../types/AllTypes";
+import { user } from "../types";
 import { BACKEND_SERVER_IP } from "../layout";
 
 const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {

@@ -1,6 +1,6 @@
 import "../css/SearchBar.css";
 import { useEffect } from "react";
-import { user } from "../types/AllTypes";
+import { user } from "../types";
 import DefaultProfilePicture from "../images/default.jpeg";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

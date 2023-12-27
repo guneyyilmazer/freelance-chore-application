@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { user } from "../types/UserTypes";
 import { useSelector } from "react-redux";
 import DefaultProfilePicture from "../images/default.jpeg";
-import Link from "next/link";
+import AuthButtons from "./AuthButtons";
+
 const page = () => {
   const client = useSelector((shop: any) => shop.app.user);
   const [user, setUser] = useState<user>();
@@ -51,13 +52,14 @@ const page = () => {
             <span className="mt-1">State:{user.location.state}</span>
             <span className="mt-1">City:{user.location.city}</span>
 
-            <span className="mt-1">Hourly:{user.freelancerDetails?.hourlyWage}$</span>
+            <span className="mt-1">
+              Hourly:{user.freelancerDetails?.hourlyWage}$
+            </span>
             <span className="break-words mt-1">
               Specilazes in:{" "}
               {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
               {user.freelancerDetails?.jobType.cuttingGrass && "Cutting Grass"}
-              {user.freelancerDetails?.jobType.movingHeavyObjects &&
-                <br/>}
+              {user.freelancerDetails?.jobType.movingHeavyObjects && <br />}
               {user.freelancerDetails?.jobType.movingHeavyObjects &&
                 "Moving Heavy Objects"}
               {user.freelancerDetails?.jobType.plumbering && "Plumbering"}
@@ -69,29 +71,7 @@ const page = () => {
               <span className="text-sm">{user.freelancerDetails?.aboutMe}</span>
             </div>
           </div>
-          <div>
-            {user && user.userId != client.userId && (
-              <div className="my-5">
-                <Link
-                  href="/messages"
-                  onClick={() => {
-                    localStorage.setItem("chattingWith", user.userId);
-                  }}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Send A Message
-                </Link>
-              </div>
-            )}
-            {user && user.userId == client.userId && (
-              <Link
-                className="bg-green-900 p-2 rounded-md text-white"
-                href={"/user/editprofile"}
-              >
-                Edit Profile
-              </Link>
-            )}
-          </div>
+          <AuthButtons user={user} client={client} />
         </>
       )}
     </div>

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { setChattingWith } from "../../features/appSlice";
 import { useDispatch } from "react-redux";
-import { DirectMessagesRoom } from "../../types/AllTypes";
+import { DirectMessagesRoom } from "../../types";
 import { BACKEND_SERVER_IP } from "../../layout";
 import DefaultProfilePicture from "../../images/default.jpeg";
 import SearchBar from "@/app/components/SearchBar";

@@ -4,8 +4,8 @@ import { useRef } from "react";
 import Cookies from "js-cookie";
 import { BACKEND_SERVER_IP } from "../layout";
 import { useSearchParams } from "next/navigation";
-import { user } from "../types/UserTypes";
-import { JobType } from "../types/JobType";
+import { user } from "../types";
+import { JobType } from "../types";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 

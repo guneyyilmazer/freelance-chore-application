@@ -1,3 +1,4 @@
+import { JobType } from ".";
 export type user = {
   username: string;
   accountType: { freelancer?: true; hirer?: true };
@@ -13,11 +14,4 @@ export type seenByUser = {
   username: string;
   profilePicture: string;
   time?: Date;
-};
-type JobType = {
-  cleaning?: true;
-  walkingTheDog?: true;
-  cuttingGrass?: true;
-  movingHeavyObjects?: true;
-  plumbering?: true;
 };

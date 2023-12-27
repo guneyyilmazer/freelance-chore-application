@@ -158,7 +158,9 @@ const page = () => {
               id="jobs"
             >
               <option
-                value={selectedState != "" ? selectedState : "empty"}
+                value={
+                  selectedState != "" ? (selectedState as string) : "empty"
+                }
                 disabled
                 selected
               >
@@ -186,7 +188,7 @@ const page = () => {
               id="jobs"
             >
               <option
-                value={selectedCity != "" ? selectedCity : "empty"}
+                value={selectedCity != "" ? selectedCity as string : "empty"}
                 disabled
                 selected
               >
@@ -208,7 +210,8 @@ const page = () => {
           <h3 className="text-sm">Hourly Wage</h3>
           <input
             type="number"
-            value={wage}
+            value={wage as number}
+            min={0}
             onChange={(e) => setWage(e.target.value)}
             className="mt-2 w-52 p-1"
             name=""
