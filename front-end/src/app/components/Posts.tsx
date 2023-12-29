@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { JobType, post } from "../types";
 const Posts = ({ type }: { type: JobType }) => {
@@ -41,10 +41,11 @@ const Posts = ({ type }: { type: JobType }) => {
   };
   useEffect(() => {
     getPosts();
-  }, [page]);
+  }, [page, type]);
   return (
-    <div className="flex flex-col m-10 text-center">
+    <div className="flex flex-col m-10 justify-center text-center">
       <div className="flex flex-wrap justify-center">
+        {/* sidebar */}
         {posts.length != 0 &&
           posts.map((item: post) => (
             <Link

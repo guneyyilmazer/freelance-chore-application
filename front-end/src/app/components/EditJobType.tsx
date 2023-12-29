@@ -63,7 +63,7 @@ const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:Jo
         id="jobs"
       >
         <option
-          selected={type.grassCutting ? true : false}
+          selected={type.cuttingGrass ? true : false}
           value="grassCutting"
         >
           Grass Cutting

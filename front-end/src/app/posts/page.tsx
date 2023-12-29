@@ -1,30 +1,70 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Posts from "../components/Posts";
-import Sidebar from "../components/Sidebar";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { JobType } from "../types";
 
 const page = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const type = searchParams.get("type");
-
+  const [jobType, setJobType] = useState<JobType>(
+    searchParams.get("type") != "random" && searchParams.get("type")
+      ? { [searchParams.get("type") as string]: true }
+      : { random: true }
+  );
   return (
     <div className="flex">
-      <div className="w-[10vw]">
-        <Sidebar />
+      <div className="w-[10vw] m-3">
+        {/* sidebar */}
+        <div className="flex flex-col">
+          <label className="text-center" htmlFor="jobs">
+            Job Type
+          </label>
+          <select
+            onChange={(e) => {
+              setJobType({ [e.target.value]: true });
+              router.replace(`/posts?type=${e.target.value}`);
+            }}
+            className="shadow p-3 appearance-none border"
+            name="jobs"
+            id="jobs"
+          >
+            <option value="default" disabled selected>
+              {" "}
+              {Object.keys(jobType)[0]
+                ? Object.keys(jobType)[0] == "cleaning"
+                  ? "Cleaning"
+                  : Object.keys(jobType)[0] == "plumbering"
+                  ? "Plumbering"
+                  : Object.keys(jobType)[0] == "cuttingGrass"
+                  ? "Cutting Grass"
+                  : Object.keys(jobType)[0] == "movingHeavyObjects"
+                  ? "Moving Heavy Objects"
+                  : Object.keys(jobType)[0] == "walkingTheDog"
+                  ? "Walking The Dog"
+                  : "Select"
+                : "Select"}{" "}
+            </option>
+            <option value="cuttingGrass">Cutting Grass</option>
+            <option value="cleaning">Cleaning</option>
+            <option value="plumbering">Plumbering</option>
+            <option value="movingHeavyObjects">Moving Heavy Objects</option>
+            <option value="walkingTheDog">Walking The Dog</option>
+          </select>
+        </div>
       </div>
       <div className="w-[90vw]">
         <Posts
           type={
-            type == "cleaning"
+            Object.keys(jobType)[0] == "cleaning"
               ? { cleaning: true }
-              : type == "cuttingGrass"
+              : Object.keys(jobType)[0] == "cuttingGrass"
               ? { cuttingGrass: true }
-              : type == "movingHeavyObjects"
+              : Object.keys(jobType)[0] == "movingHeavyObjects"
               ? { movingHeavyObjects: true }
-              : type == "walkingTheDog"
+              : Object.keys(jobType)[0] == "walkingTheDog"
               ? { walkingTheDog: true }
-              : type == "plumbering"
+              : Object.keys(jobType)[0] == "plumbering"
               ? { plumbering: true }
               : { random: true }
           }
