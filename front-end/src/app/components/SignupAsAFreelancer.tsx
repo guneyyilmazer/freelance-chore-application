@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Cookies from "js-cookie";
 import { BACKEND_SERVER_IP } from "../layout";
 import { useSearchParams } from "next/navigation";
+import Loading from "./Loading";
 
 const Signup = () => {
   const [states, setStates] = useState([]);
@@ -15,11 +16,16 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [jobType, setJobType] = useState({});
   const [wage, setWage] = useState<number>();
+  const [aboutMe, setAboutMe] = useState("");
   const stateRef = useRef<HTMLSelectElement>(null);
   const cityRef = useRef<HTMLSelectElement>(null);
   useEffect(() => {
     getStates();
   }, []);
+  useEffect(() => {
+    selectedState != "" && getStates();
+    selectedState != "" && getCities();
+  }, [selectedState]);
 
   const getStates = async () => {
     const res = await fetch(
@@ -80,6 +86,7 @@ const Signup = () => {
           freelancerDetails: {
             jobType,
             hourlyWage: wage,
+            aboutMe,
           },
         }),
       });
@@ -152,17 +159,29 @@ const Signup = () => {
               name=""
               id=""
             />
+            <h3 className="text-sm">About Me</h3>
+            <textarea
+              className="shadow"
+              cols={30}
+              value={aboutMe}
+              onChange={(e) => setAboutMe(e.target.value)}
+              rows={10}
+            ></textarea>
           </>
         )}
 
         {formIndex == 1 && (
           <div>
-            {states.length != 0 && (
+            {states.length != 0 ? (
               <div className="flex my-5 flex-col">
                 <label htmlFor="types">Choose your state</label>
                 <select
                   ref={stateRef}
-                  onChange={getCities}
+                  onChange={(e) => {
+                    setSelectedState(e.target.value)
+                    setCities([])
+
+                  }}
                   className="shadow p-3 appearance-none border"
                   name="jobs"
                   id="jobs"
@@ -176,11 +195,14 @@ const Signup = () => {
                   ))}
                 </select>
               </div>
+            ) : (
+              <Loading />
             )}
-            {cities.length != 0 && (
+            {cities.length != 0 ? (
               <div className="flex my-5 flex-col">
                 <label htmlFor="types">Choose your city</label>
                 <select
+                
                   ref={cityRef}
                   className="shadow p-3 appearance-none border"
                   name="jobs"
@@ -195,6 +217,12 @@ const Signup = () => {
                   ))}
                 </select>
               </div>
+            ) : selectedState != "" ? (
+              <div className="my-3">
+                <Loading />
+              </div>
+            ) : (
+              ""
             )}
             <div className="mt-3 text-center">
               <button

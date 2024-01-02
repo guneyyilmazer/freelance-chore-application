@@ -8,5 +8,10 @@ export type post = {
   title: string;
   description: string;
   price: number;
+  hourly: number;
+  location: {
+    state: string;
+    city: string;
+  };
   type: JobType;
 };

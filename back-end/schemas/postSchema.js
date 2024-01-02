@@ -12,7 +12,12 @@ const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   type: { type: jobTypesSchema, required: true },
-  price: { type: Number, required: true },
+  location: {
+    state: String,
+    city: String,
+  },
+  hourly: Number,
+  price: Number,
   picture: String,
   pictures: [String],
 });
@@ -24,19 +29,24 @@ postSchema.statics.createPost = async function (
   type,
   price,
   picture,
-  pictures
+  pictures,
+  location,
+  hourly
 ) {
   if (!jobTypes.filter((item) => item == type)) {
     throw new Error(process.env.JOB_TYPE_INVALID);
   }
+
   await this.create({
     user: userId,
     title,
     description,
     type,
-    price,
+    price: price != 0 ? Number(price) : -1,
     picture,
     pictures,
+    location,
+    hourly: hourly != 0 ? Number(hourly) : -1,
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {

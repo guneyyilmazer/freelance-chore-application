@@ -4,13 +4,81 @@ import Cookies from "js-cookie";
 import { BACKEND_SERVER_IP } from "../layout";
 import getBase64 from "./GetBase64";
 import Auth from "./Auth";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loading from "./Loading";
 const PostCreateForm = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+  const hourlyRef = useRef<HTMLInputElement>(null);
   const typeRef = useRef<HTMLSelectElement>(null);
   const [pictures, setPictures] = useState<string[]>([]);
   const [mainPicture, setMainPicture] = useState("");
+  const [states, setStates] = useState([]);
+  const [priceWage, setPriceWage] = useState(false);
+  const [hourly, setHourly] = useState(true);
+  const [cities, setCities] = useState([]);
+  const searchParams = useSearchParams();
+  const [wage, setWage] = useState<number>(
+    searchParams.get("hourly") ? Number(searchParams.get("hourly")) : 0
+  );
+  const [selectedState, setSelectedState] = useState(
+    searchParams.get("state") ? searchParams.get("state") : ""
+  );
+  const [selectedCity, setSelectedCity] = useState(
+    searchParams.get("city") ? searchParams.get("city") : ""
+  );
+  useEffect(() => console.log(selectedCity), [selectedCity]);
+  const router = useRouter();
+  const getStates = async () => {
+    const res = await fetch(
+      "https://countriesnow.space/api/v0.1/countries/states",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        method: "POST",
+        body: JSON.stringify({
+          country: "united states",
+        }),
+      }
+    );
+    const response = await res.json();
+    if (!response.error) {
+      setStates(response.data.states);
+    }
+  };
+  const getCities = async () => {
+    const res = await fetch(
+      "https://countriesnow.space/api/v0.1/countries/state/cities",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        method: "POST",
+        body: JSON.stringify({
+          country: "united states",
+          state: selectedState,
+        }),
+      }
+    );
+    const response = await res.json();
+    if (!response.error) {
+      const filtered = response.data.filter(
+        (item: string) => item != selectedCity
+      );
+      setCities(selectedCity ? filtered : response.data);
+    }
+  };
+  useEffect(() => {
+    getStates();
+  }, []);
+  useEffect(() => {
+    selectedState != "" && getStates();
+    selectedState != "" && getCities();
+  }, [selectedState]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch(`${BACKEND_SERVER_IP}/post/create`, {
@@ -23,9 +91,13 @@ const PostCreateForm = () => {
       body: JSON.stringify({
         title: titleRef.current!.value,
         description: descRef.current!.value,
-        price: priceRef.current!.value,
+        price: priceRef.current?.value ? Number(priceRef.current?.value) : -1,
+        hourly: hourlyRef.current?.value
+          ? Number(hourlyRef.current?.value)
+          : -1,
         pictures,
         picture: mainPicture,
+        location: { state: selectedState, city: selectedCity },
         type: { [typeRef.current!.value]: true },
       }),
     });
@@ -47,12 +119,50 @@ const PostCreateForm = () => {
           className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter Description."
         />
-        <input
-          ref={priceRef}
-          className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="Enter price."
-          type="number"
-        />
+        <div className="flex items-center">
+          <input
+            onChange={() => {
+              setPriceWage(false);
+              setHourly(true);
+            }}
+            checked={hourly}
+            type="radio"
+            id="hourly"
+            name="wage"
+            value="hourly"
+            className="mx-2"
+          />
+          <label htmlFor="hourly"> Hourly Wage</label>
+          <input
+          className="mx-2"
+          checked={priceWage}
+            onChange={() => {
+              setHourly(false);
+              setPriceWage(true);
+            }}
+            type="radio"
+            id="price"
+            name="wage"
+            value="price"
+          />
+          <label htmlFor="price"> Price</label>
+        </div>
+        {priceWage && (
+          <input
+            ref={priceRef}
+            className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter price."
+            type="number"
+          />
+        )}
+        {hourly && (
+          <input
+            ref={hourlyRef}
+            className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter hourly wage."
+            type="number"
+          />
+        )}
         <div className="flex my-5 flex-col">
           <label htmlFor="jobs">Choose a gig type:</label>
 
@@ -73,6 +183,68 @@ const PostCreateForm = () => {
             <option value="walkingTheDog">Walking The Dog</option>
           </select>
         </div>
+        {states.length != 0 ? (
+          <div className="flex my-3 flex-col">
+            <label htmlFor="types">Choose your state</label>
+            <select
+              onChange={(e) => {
+                setSelectedState(e.target.value);
+                setSelectedCity("");
+                setCities([])
+              }}
+              className="shadow break-words p-3 appearance-none border"
+              name="jobs"
+              id="jobs"
+            >
+              <option
+                value={
+                  selectedState != "" ? (selectedState as string) : "empty"
+                }
+                disabled
+                selected
+              >
+                {selectedState != "" ? selectedState : "Select"}
+              </option>
+              {states.map((item: any) => (
+                <option value={item.name}>{item.name}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div className="my-3">
+            <Loading />
+          </div>
+        )}
+        {cities.length != 0 ? (
+          <div className="flex flex-col">
+            <label htmlFor="types">Choose your city</label>
+            <select
+              onChange={(e) => {
+                setSelectedCity(e.target.value);
+              }}
+              className="shadow p-3 appearance-none border"
+              name="jobs"
+              id="jobs"
+            >
+              <option
+                value={selectedCity != "" ? (selectedCity as string) : "empty"}
+                disabled
+                selected
+              >
+                {selectedCity != "" ? selectedCity : "Select"}
+              </option>
+              {cities.map((item: string) => (
+                <option value={item}>{item}</option>
+              ))}
+            </select>
+          </div>
+        ) : selectedState != "" ? (
+          <div className="my-3">
+            <Loading />
+          </div>
+        ) : (
+          ""
+        )}
         <input
           type="file"
           multiple

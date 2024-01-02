@@ -73,7 +73,7 @@ const Post = () => {
               </button>
             )}
           </span>
-          <span className="text-sm">Price:{post.price}$</span>
+          <span className="text-sm">{post.price != -1 ? "Price: "+post.price : "Hourly: " + post.hourly}$</span>
           <div className="flex justify-center">
             <span className="text-sm">
               {descEditShow ? (

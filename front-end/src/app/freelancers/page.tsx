@@ -152,6 +152,7 @@ const page = () => {
               onChange={(e) => {
                 setSelectedState(e.target.value);
                 setSelectedCity("");
+                setCities([])
               }}
               className="shadow break-words p-3 appearance-none border"
               name="jobs"
@@ -188,7 +189,7 @@ const page = () => {
               id="jobs"
             >
               <option
-                value={selectedCity != "" ? selectedCity as string : "empty"}
+                value={selectedCity != "" ? (selectedCity as string) : "empty"}
                 disabled
                 selected
               >
@@ -200,7 +201,7 @@ const page = () => {
             </select>
           </div>
         ) : selectedState != "" ? (
-          <div className="my-3">
+          <div className="mt-3">
             <Loading />
           </div>
         ) : (

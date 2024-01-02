@@ -8,7 +8,19 @@ import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { JobType, post } from "../types";
-const Posts = ({ type }: { type: JobType }) => {
+const Posts = ({
+  type,
+  selectedState,
+  selectedCity,
+  hourly,
+  price,
+}: {
+  type: JobType;
+  selectedState: string;
+  selectedCity: string;
+  hourly: number;
+  price: number;
+}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -21,6 +33,7 @@ const Posts = ({ type }: { type: JobType }) => {
       ? Number(searchParams.get("page"))
       : 1
   );
+  console.log(hourly, price);
   const getPosts = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/post`, {
       headers: {
@@ -30,9 +43,13 @@ const Posts = ({ type }: { type: JobType }) => {
 
       method: "POST",
       body: JSON.stringify({
-        type,
         page,
         amount: 15,
+        type,
+        city: selectedCity,
+        state: selectedState,
+        price: Number(price),
+        hourly: Number(hourly),
       }),
     });
     const response = await res.json();
@@ -40,8 +57,10 @@ const Posts = ({ type }: { type: JobType }) => {
     setPosts(response.posts);
   };
   useEffect(() => {
+    console.log(selectedState);
+    console.log(selectedCity);
     getPosts();
-  }, [page, type]);
+  }, [page, type, selectedCity, selectedState, hourly, price]);
   return (
     <div className="flex flex-col m-10 justify-center text-center">
       <div className="flex flex-wrap justify-center">
@@ -60,7 +79,15 @@ const Posts = ({ type }: { type: JobType }) => {
                 {item.type.plumbering && "Plumbering"}
                 {item.type.walkingTheDog && "Walking The Dog"}
               </span>
-              <span className="text-sm">Price:{item.price}$</span>
+              <span className="text-sm">
+                {item.location.state + "/" + item.location.city}
+              </span>
+              <span className="text-sm">
+                {item.price != -1
+                  ? "Price:" + item.price
+                  : "Hourly: " + item.hourly}
+                $
+              </span>
               <span className="text-sm">{item.description.slice(0, 50)}</span>
               <div className="flex justify-center my-4">
                 <img className="h-72 rounded" src={item.picture} />

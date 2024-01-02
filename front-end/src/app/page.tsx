@@ -4,8 +4,7 @@ export default function Home() {
   return (
     <main className="">
       <div className="h-[85vh]">
-
-      <Hero />
+        <Hero />
       </div>
     </main>
   );

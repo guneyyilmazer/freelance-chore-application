@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const getPosts = async (req, res) => {
   try {
-    const { page, amount, type } = req.body;
+    const { page, amount, type, city, state, price, hourly } = req.body;
     if (
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
       !type.random
@@ -14,14 +14,34 @@ const getPosts = async (req, res) => {
     const typeString = "type." + Object.keys(type)[0];
     const posts = !type.random
       ? await PostModel.find({
-          [typeString]: true, // back ticks don't work, using property keys
+          [typeString]: true,
+          hourly: hourly > 0 ? hourly : hourly == 0 ? { $gt: 0 } : -1,
+          price: price > 0 ? price : price == 0 ? { $gt: 0 } : -1,
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
         })
-      : await PostModel.find({})
+      : await PostModel.find({
+        hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
+        price: price && price != 0 ? price : { $gt: 0 },
+        "location.state": state != "" ? state : { $not: /^0.*/ },
+        "location.city": city != "" ? city : { $not: /^0.*/ },
+        })
           .skip((page - 1) * amount)
           .limit(amount);
     const lastPosts = !type.random
-      ? await PostModel.find({ [typeString]: true })
-      : await PostModel.find({})
+      ? await PostModel.find({
+          [typeString]: true,
+          hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
+          price: price && price != 0 ? price : { $gt: 0 },
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
+        })
+      : await PostModel.find({
+        hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
+        price: price && price != 0 ? price : { $gt: 0 },
+        "location.state": state != "" ? state : { $not: /^0.*/ },
+        "location.city": city != "" ? city : { $not: /^0.*/ },
+        })
           .skip((page - 1) * amount)
           .select("title");
     const lastPage =
@@ -55,7 +75,17 @@ const getRandomPosts = async (req, res) => {
 };
 const createPost = async (req, res) => {
   try {
-    const { title, type, description, price, picture, pictures } = req.body;
+    const {
+      userId,
+      title,
+      description,
+      type,
+      price,
+      picture,
+      pictures,
+      location,
+      hourly,
+    } = req.body;
     await PostModel.createPost(
       req.userId,
       title,
@@ -63,11 +93,13 @@ const createPost = async (req, res) => {
       type,
       price,
       picture,
-      pictures
+      pictures,
+      location,
+      hourly
     );
     res.status(200).json({ msg: "Post has been created successfully." });
   } catch (err) {
-    res.status(400).json({ msg: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 const deletePost = async (req, res) => {
@@ -76,7 +108,7 @@ const deletePost = async (req, res) => {
     await PostModel.deletePost(req.userId, id);
     res.status(200).json({ msg: "Post has been deleted successfully." });
   } catch (err) {
-    res.status(400).json({ msg: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
