@@ -9,6 +9,7 @@ const {
   changeType,
   changeDescription,
   changePrice,
+  changeLocation
 } = require("../controllers/postController");
 const withAuth = require("../middleware/withAuth");
 const router = express.Router();
@@ -23,4 +24,5 @@ router.patch("/changeTitle", changeTitle);
 router.patch("/changeType", changeType);
 router.patch("/changeDescription", changeDescription);
 router.patch("/changePrice", changePrice);
+router.patch("/changeLocation", changeLocation);
 module.exports = router;

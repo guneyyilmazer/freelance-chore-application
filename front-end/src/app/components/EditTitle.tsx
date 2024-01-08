@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import Cookies from "js-cookie";
 
-const EditDesc = ({ show, setShow, text, id }: any) => {
-  const [value, setValue] = useState(text);
-  const descRef = useRef<HTMLTextAreaElement>(null);
+const EditDesc = ({ show, setShow, id }: any) => {
+  const titleRef = useRef<HTMLInputElement>(null);
   const handleUserKeyPress = (event: KeyboardEvent) => {
     if (event.key == "Escape") {
       setShow(!show);
@@ -33,7 +32,7 @@ const EditDesc = ({ show, setShow, text, id }: any) => {
     };
   }, [onClickOutside]);
   const handleClick = async () => {
-    const res = await fetch(`${BACKEND_SERVER_IP}/post/changeDescription`, {
+    const res = await fetch(`${BACKEND_SERVER_IP}/post/changeTitle`, {
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${Cookies.get("Auth_Token")}`,
@@ -42,33 +41,31 @@ const EditDesc = ({ show, setShow, text, id }: any) => {
       method: "PATCH",
       body: JSON.stringify({
         id,
-        newDescription: descRef.current!.value,
+        title: titleRef.current?.value,
       }),
     });
     const response = await res.json();
     if (!response.error) {
-      alert("Description changed successfully!");
+      alert(response.msg);
       window.location.reload();
     }
     setShow(!show);
   };
   return (
-    <div ref={ref} className="break-words flex flex-col">
-      <textarea
-        ref={descRef}
-        value={value}
-        className="shadow p-3 appearance-none border h-24"
-        onChange={(e) => setValue(e.target.value)}
+    <div ref={ref} className="flex my-2 break-words">
+      <input
+        type="text"
+        className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        ref={titleRef}
       />
-      <div>
-
-      <button
-        className="bg-green-800 mt-2 p-2 px-4 rounded-md text-white"
-        onClick={handleClick}
+      <div className="flex items-center">
+        <button
+          className="bg-green-800 mx-1 px-4 py-2 rounded-md text-white"
+          onClick={handleClick}
         >
-        Save
-      </button>
-        </div>
+          Save
+        </button>
+      </div>
     </div>
   );
 };

@@ -11,4 +11,6 @@ export type { DirectMessagesRoom };
 import { post } from "./PostType";
 export type { post };
 import { JobType } from "./JobType";
-export type {JobType}
+export type { JobType };
+import { filterType } from "./FilterType";
+export type { filterType };

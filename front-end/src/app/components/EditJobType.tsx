@@ -87,7 +87,11 @@ const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:Jo
           Walking The Dog
         </option>
       </select>
-      <button onClick={handleClick}>Save</button>
+      <div>
+
+      <button className="bg-green-800 mt-2 p-2 px-4 rounded-md text-white" onClick={handleClick}>Save</button>
+      </div>
+
     </div>
   );
 };

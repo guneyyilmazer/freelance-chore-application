@@ -42,12 +42,12 @@ const SendMessage = () => {
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if ((inputRef.current?.value || pictures?.length != 0) && user) {
+    if ((inputRef.current?.value != "" || pictures?.length != 0) && user) {
       socket.emit(
         "send-msg",
         user,
         room,
-        inputRef.current!.value ? inputRef.current!.value : " ",
+        inputRef.current!.value ? inputRef.current!.value : "",
         pictures,
         chattingWith
       );
@@ -69,19 +69,17 @@ const SendMessage = () => {
           ref={inputRef}
         />
         <div className="mx-2 flex justify-center items-center">
-
-        <button
-          className=" bg-teal-900 p-2 text-white rounded-lg w-12 "
-          onClick={() => fileRef.current?.click()}
-          
+          <button
+            className=" bg-green-900 p-2 text-white rounded-lg w-12 "
+            onClick={() => fileRef.current?.click()}
           >
-          <FontAwesomeIcon
-            style={{ height: "22px", width: "1.5rem", marginTop: "3px" }}
-            //@ts-ignore
-            icon={faImage}
+            <FontAwesomeIcon
+              style={{ height: "22px", width: "1.5rem", marginTop: "3px" }}
+              //@ts-ignore
+              icon={faImage}
             ></FontAwesomeIcon>
-        </button>
-            </div>
+          </button>
+        </div>
         <input
           type="file"
           ref={fileRef}
@@ -90,7 +88,7 @@ const SendMessage = () => {
           className="hidden"
         />
         <button
-          className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 my-5 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-green-800 hover:bg-green-950 text-white font-bold py-2 my-5 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Send

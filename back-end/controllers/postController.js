@@ -21,10 +21,10 @@ const getPosts = async (req, res) => {
           "location.city": city != "" ? city : { $not: /^0.*/ },
         })
       : await PostModel.find({
-        hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
-        price: price && price != 0 ? price : { $gt: 0 },
-        "location.state": state != "" ? state : { $not: /^0.*/ },
-        "location.city": city != "" ? city : { $not: /^0.*/ },
+          hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
+          price: price && price != 0 ? price : { $gt: 0 },
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
         })
           .skip((page - 1) * amount)
           .limit(amount);
@@ -37,10 +37,10 @@ const getPosts = async (req, res) => {
           "location.city": city != "" ? city : { $not: /^0.*/ },
         })
       : await PostModel.find({
-        hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
-        price: price && price != 0 ? price : { $gt: 0 },
-        "location.state": state != "" ? state : { $not: /^0.*/ },
-        "location.city": city != "" ? city : { $not: /^0.*/ },
+          hourly: hourly && hourly != 0 ? hourly : { $gt: 0 },
+          price: price && price != 0 ? price : { $gt: 0 },
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
         })
           .skip((page - 1) * amount)
           .select("title");
@@ -114,7 +114,8 @@ const deletePost = async (req, res) => {
 
 const changeTitle = async (req, res) => {
   try {
-    const { id, newTitle } = req.body;
+    const { id, title } = req.body;
+    if (title == "") throw new Error("Title can't be empty.");
     const doesItExist = await PostModel.findOne({ _id: id });
     if (!doesItExist) {
       res.status(400).json({ error: "Post doesn't exist." });
@@ -124,7 +125,7 @@ const changeTitle = async (req, res) => {
     }
     const post = await PostModel.findOneAndUpdate(
       { _id: id },
-      { title: newTitle },
+      { title },
       { new: true }
     );
     res
@@ -180,7 +181,7 @@ const changeDescription = async (req, res) => {
 };
 const changePrice = async (req, res) => {
   try {
-    const { id, newPrice } = req.body;
+    const { id, hourly, price } = req.body;
     const doesItExist = await PostModel.findOne({ _id: id });
     if (!doesItExist) {
       res.status(400).json({ error: "Post doesn't exist." });
@@ -190,11 +191,36 @@ const changePrice = async (req, res) => {
     }
     const post = await PostModel.findOneAndUpdate(
       { _id: id },
-      { price: newPrice },
+      { hourly, price },
       { new: true }
     );
     res.status(200).json({
       msg: `Successfully updated the price, new price: ${post.price}`,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const changeLocation = async (req, res) => {
+  try {
+    const { id, location } = req.body;
+    if (location.state == "") throw new Error("State can't be empty.");
+    const doesItExist = await PostModel.findOne({ _id: id });
+    if (!doesItExist) {
+      res.status(400).json({ error: "Post doesn't exist." });
+    }
+    if (doesItExist.user != req.userId) {
+      res.status(401).json({ error: process.env.AUTHORIZATION_DENIED });
+    }
+    const post = await PostModel.findOneAndUpdate(
+      { _id: id },
+      { location },
+      { new: true }
+    );
+    res.status(200).json({
+      msg: `Successfully updated the location, new location: ${
+        post.location.state + "/" + post.location.city
+      }`,
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -211,4 +237,5 @@ module.exports = {
   changeType,
   changeDescription,
   changePrice,
+  changeLocation,
 };

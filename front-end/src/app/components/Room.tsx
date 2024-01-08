@@ -24,7 +24,6 @@ const Room = () => {
     //prevents the initial useEffect call
     //because of this when on click on a searchBarResult the room state doesn't get emptied
     if (chattingWith != "") {
-      localStorage.setItem("chattingWith", chattingWith);
       dispatch(setRoom(""));
       localStorage.removeItem("room");
     }

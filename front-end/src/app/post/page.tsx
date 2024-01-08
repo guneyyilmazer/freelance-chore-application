@@ -11,12 +11,17 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import EditJobType from "../components/EditJobType";
 import { post } from "../types";
 import AuthButtons from "./AuthButtons";
+import EditWageType from "../components/EditWageType";
+import EditLocation from "../components/EditLocation";
+import EditTitle from "../components/EditTitle";
 
 const Post = () => {
   const [preview, setPreview] = useState(false);
   const [previewPictures, setPreviewPictures] = useState<string[]>();
   const [previewPicturesIndex, setPreviewPicturesIndex] = useState(0);
-
+  const [titleEditShow, setTitleEditShow] = useState(false);
+  const [editLocationShow, setEditLocationShow] = useState(false);
+  const [wageEditShow, setWageEditShow] = useState(false);
   const [descEditShow, setDescEditShow] = useState(false);
   const [typeEditShow, setTypeEditShow] = useState(false);
 
@@ -46,11 +51,30 @@ const Post = () => {
     <div className="flex text-center justify-center">
       {post && (
         <div className=" p-3 w-[50vw] flex flex-col m-5">
-          <h3 className="text-3xl my-5 font-semibold">{post.title}</h3>
+          <div className="flex justify-center items-center">
+            {!titleEditShow ? (
+              <h3 className="text-3xl my-5 font-semibold">{post.title}</h3>
+            ) : (
+              <EditTitle
+                show={titleEditShow}
+                id={post._id}
+                setShow={setTitleEditShow}
+              />
+            )}
+            {post.user == user.userId && !titleEditShow && (
+              <button
+                onClick={() => setTitleEditShow(!titleEditShow)}
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+              >
+                <FontAwesomeIcon className="text-xs" icon={faPen} />
+              </button>
+            )}
+          </div>
           <span className="text-sm flex justify-center">
             {!typeEditShow ? (
               <span>
-                Type:{post.type.cleaning && "Cleaning"}
+                <span className="font-semibold">Type:</span>{" "}
+                {post.type.cleaning && "Cleaning"}
                 {post.type.cuttingGrass && "Cutting Grass"}
                 {post.type.movingHeavyObjects && "Moving Heavy Objects"}
                 {post.type.plumbering && "Plumbering"}
@@ -73,7 +97,63 @@ const Post = () => {
               </button>
             )}
           </span>
-          <span className="text-sm">{post.price != -1 ? "Price: "+post.price : "Hourly: " + post.hourly}$</span>
+          <span className="text-sm flex justify-center">
+            {!wageEditShow ? (
+              <span className="">
+                {post.price != -1 ? (
+                  <>
+                    <span className="font-semibold">Price:</span>
+                    {post.price}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold">Hourly: </span>
+                    {post.hourly}
+                  </>
+                )}
+                $
+              </span>
+            ) : (
+              <EditWageType
+                show={wageEditShow}
+                id={post._id}
+                setShow={setWageEditShow}
+              />
+            )}
+
+            {post.user == user.userId && !wageEditShow && (
+              <button
+                onClick={() => setWageEditShow(!wageEditShow)}
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+              >
+                <FontAwesomeIcon className="text-xs" icon={faPen} />
+              </button>
+            )}
+          </span>
+          <span className="text-sm flex justify-center">
+            {!editLocationShow ? (
+              <span>
+                <span className="font-semibold">Location: </span>
+                {post.location.state + "/" + post.location.city}
+              </span>
+            ) : (
+              <EditLocation
+                show={editLocationShow}
+                id={post._id}
+                setShow={setEditLocationShow}
+                location={post.location}
+              />
+            )}
+            {post.user == user.userId && !editLocationShow && (
+              <button
+                onClick={() => setEditLocationShow(!editLocationShow)}
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+              >
+                <FontAwesomeIcon className="text-xs" icon={faPen} />
+              </button>
+            )}
+          </span>
+
           <div className="flex justify-center">
             <span className="text-sm">
               {descEditShow ? (

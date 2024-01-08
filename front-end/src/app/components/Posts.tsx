@@ -7,20 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { JobType, post } from "../types";
-const Posts = ({
-  type,
-  selectedState,
-  selectedCity,
-  hourly,
-  price,
-}: {
-  type: JobType;
-  selectedState: string;
-  selectedCity: string;
-  hourly: number;
-  price: number;
-}) => {
+import { post } from "../types";
+import { useSelector } from "react-redux";
+
+const Posts = () => {
+  const filter = useSelector((shop: any) => shop.app.searchFilter);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -33,7 +24,6 @@ const Posts = ({
       ? Number(searchParams.get("page"))
       : 1
   );
-  console.log(hourly, price);
   const getPosts = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/post`, {
       headers: {
@@ -45,11 +35,11 @@ const Posts = ({
       body: JSON.stringify({
         page,
         amount: 15,
-        type,
-        city: selectedCity,
-        state: selectedState,
-        price: Number(price),
-        hourly: Number(hourly),
+        type: filter.jobType,
+        city: filter.selectedCity,
+        state: filter.selectedState,
+        price: filter.price,
+        hourly: filter.hourly,
       }),
     });
     const response = await res.json();
@@ -57,14 +47,11 @@ const Posts = ({
     setPosts(response.posts);
   };
   useEffect(() => {
-    console.log(selectedState);
-    console.log(selectedCity);
     getPosts();
-  }, [page, type, selectedCity, selectedState, hourly, price]);
+  }, [filter]);
   return (
     <div className="flex flex-col m-10 justify-center text-center">
       <div className="flex flex-wrap justify-center">
-        {/* sidebar */}
         {posts.length != 0 &&
           posts.map((item: post) => (
             <Link
