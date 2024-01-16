@@ -1,7 +1,7 @@
 .message-sent {
   margin-top: 10px;
   margin-bottom: 10px;
-  background-color: rgb(146, 199, 146);
+  background-color: rgb(204, 209, 204);
   border-radius: 15px;
   text-align: end;
   border-bottom-right-radius: 0px;
@@ -9,7 +9,7 @@
   color: black;
 }
 .message-received {
-  background-color: rgb(50, 76, 51);
+  background-color: rgb(60, 60, 60);
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 15px;

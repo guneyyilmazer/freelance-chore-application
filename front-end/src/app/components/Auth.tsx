@@ -26,10 +26,10 @@ const logUserIn = async (dispatch: any) => {
       token: Cookies.get("Auth_Token"),
     }),
   });
-  const { userId, username, profilePicture } = await res.json();
-  dispatch(setUser({ userId, username, profilePicture }));
+  const user = await res.json();
+  dispatch(setUser(user));
 
-  Cookies.set("userId", userId, { expires: 5 });
+  Cookies.set("userId", user.userId, { expires: 5 });
 
   dispatch(setIsLoggedIn(true));
 };

@@ -10,11 +10,11 @@ const Categories = () => {
     { name: "Walking The Dog", icon: "", type: "walkingTheDog" },
   ];
   return (
-    <div className="flex">
+    <div className="flex flex-wrap flex-col md:flex-row">
       {categories.map((item) => (
         <Link
           href={`posts/?type=${item.type}`}
-          className="flex flex-col justify-center items-center text-center text-sm p-2 m-1 bg-green-800 rounded-lg text-white w-24 h-15"
+          className="flex flex-col justify-center items-center text-center text-xl md:text-sm p-10 md:p-5 m-1 bg-green-800 rounded-lg text-white "
         >
           <img src={item.icon} />
           {item.name}

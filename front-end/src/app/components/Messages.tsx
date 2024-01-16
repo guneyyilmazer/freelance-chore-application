@@ -207,7 +207,7 @@ const Messages = () => {
   }, [messages[messages.length - 1]]);
 
   return emptyRoom ? (
-    <div className="flex m-5 text-2xl text-white justify-center">
+    <div className="flex m-5 h-[70vh] text-3xl items-center justify-center">
       Room is empty.
     </div>
   ) : !loadedFirstMessages ? (
@@ -216,7 +216,6 @@ const Messages = () => {
         className="text-white text-center"
         spin
         style={{ height: "60px", width: "60px", display: "block" }}
-        //@ts-ignore
         icon={faCircleNotch}
       />
     </div>
@@ -231,8 +230,6 @@ const Messages = () => {
             className="text-white text-center"
             spin
             style={{ height: "25px", width: "25px" }}
-            //@ts-ignore
-
             icon={faCircleNotch}
           />
         </div>

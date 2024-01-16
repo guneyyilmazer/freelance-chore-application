@@ -69,16 +69,16 @@ const SendMessage = () => {
           ref={inputRef}
         />
         <div className="mx-2 flex justify-center items-center">
-          <button
-            className=" bg-green-900 p-2 text-white rounded-lg w-12 "
+          <div
+            className="bg-green-900 flex justify-center items-center p-2 text-white rounded-lg "
             onClick={() => fileRef.current?.click()}
           >
             <FontAwesomeIcon
-              style={{ height: "22px", width: "1.5rem", marginTop: "3px" }}
+              style={{ height: "1.3rem", width: "1.3rem"}}
               //@ts-ignore
               icon={faImage}
             ></FontAwesomeIcon>
-          </button>
+          </div>
         </div>
         <input
           type="file"

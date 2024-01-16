@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { Provider } from "react-redux";
 const inter = Inter({ subsets: ["latin"] });
+import "./css/styles.css";
 import { Providers } from "./Providers";
-import { store } from "./app/store";
+import Footer from "./components/Footer";
 export const BACKEND_SERVER_IP = "http://localhost:4000";
 export const SOCKET_IO_IP = "http://localhost:3001";
 /* export const metadata: Metadata = {
@@ -23,13 +22,9 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body className={inter.className}>
-          <div className="">
-            <Header />
-          </div>
+          <Header />
           <div className="">{children}</div>
-          <div className="">
-            <Footer />
-          </div>
+          <Footer />
         </body>
       </html>
     </Providers>

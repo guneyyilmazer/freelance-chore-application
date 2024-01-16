@@ -54,6 +54,7 @@ const EditProfile = () => {
       setSelectedCity(response.location.city);
       setWage(response.freelancerDetails.hourlyWage);
       setUser(response);
+      setAboutMe(response.freelancerDetails.aboutMe)
     }
   };
   const getStates = async () => {

@@ -14,6 +14,7 @@ import AuthButtons from "./AuthButtons";
 import EditWageType from "../components/EditWageType";
 import EditLocation from "../components/EditLocation";
 import EditTitle from "../components/EditTitle";
+import Page404 from "../components/Page404";
 
 const Post = () => {
   const [preview, setPreview] = useState(false);
@@ -49,7 +50,7 @@ const Post = () => {
   };
   return (
     <div className="flex text-center justify-center">
-      {post && (
+      {post ? (
         <div className=" p-3 w-[50vw] flex flex-col m-5">
           <div className="flex justify-center items-center">
             {!titleEditShow ? (
@@ -64,13 +65,13 @@ const Post = () => {
             {post.user == user.userId && !titleEditShow && (
               <button
                 onClick={() => setTitleEditShow(!titleEditShow)}
-                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-green-700"
               >
                 <FontAwesomeIcon className="text-xs" icon={faPen} />
               </button>
             )}
           </div>
-          <span className="text-sm flex justify-center">
+          <span className="text-xl flex justify-center">
             {!typeEditShow ? (
               <span>
                 <span className="font-semibold">Type:</span>{" "}
@@ -91,13 +92,13 @@ const Post = () => {
             {post.user == user.userId && !typeEditShow && (
               <button
                 onClick={() => setTypeEditShow(!typeEditShow)}
-                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-green-700"
               >
                 <FontAwesomeIcon className="text-xs" icon={faPen} />
               </button>
             )}
           </span>
-          <span className="text-sm flex justify-center">
+          <span className="text-xl flex justify-center">
             {!wageEditShow ? (
               <span className="">
                 {post.price != -1 ? (
@@ -124,13 +125,13 @@ const Post = () => {
             {post.user == user.userId && !wageEditShow && (
               <button
                 onClick={() => setWageEditShow(!wageEditShow)}
-                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-green-700"
               >
                 <FontAwesomeIcon className="text-xs" icon={faPen} />
               </button>
             )}
           </span>
-          <span className="text-sm flex justify-center">
+          <span className="text-xl flex justify-center">
             {!editLocationShow ? (
               <span>
                 <span className="font-semibold">Location: </span>
@@ -147,14 +148,15 @@ const Post = () => {
             {post.user == user.userId && !editLocationShow && (
               <button
                 onClick={() => setEditLocationShow(!editLocationShow)}
-                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-green-700"
               >
                 <FontAwesomeIcon className="text-xs" icon={faPen} />
               </button>
             )}
           </span>
 
-          <div className="flex justify-center">
+          <div className="flex flex-col justify-center">
+            <h2 className="text-xl">Description:</h2>
             <span className="text-sm">
               {descEditShow ? (
                 <EditDesc
@@ -170,7 +172,7 @@ const Post = () => {
             {post.user == user.userId && !descEditShow && (
               <button
                 onClick={() => setDescEditShow(!descEditShow)}
-                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-blue-500"
+                className="ms-2 flex justify-center items-center w-6 h-6 text-white p-1 rounded-full bg-green-700"
               >
                 <FontAwesomeIcon className="text-xs" icon={faPen} />
               </button>
@@ -202,6 +204,8 @@ const Post = () => {
           </div>
           <AuthButtons user={user} post={post} />
         </div>
+      ) : (
+        <Page404/>
       )}
       {preview && previewPictures && (
         <ImagePreview

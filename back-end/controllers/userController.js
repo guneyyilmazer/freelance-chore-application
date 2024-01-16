@@ -11,8 +11,10 @@ const genToken = (userId, username) => {
 
 const Signup = async (req, res) => {
   try {
-    const { type, location, freelancerDetails, username, email, password } =
+    let { type, location, freelancerDetails, username, email, password } =
       req.body;
+    if (!freelancerDetails.hourlyWage || freelancerDetails.hourlyWage == 0)
+      freelancerDetails.hourlyWage = 15;
     if (username.length > 4) {
       const userId = await UserModel.signup(
         type,
@@ -61,14 +63,14 @@ const getFreelancers = async (req, res) => {
           [typeString]: true,
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
-          "freelancerDetails.hourlyWage": wage != 0 ? wage : { $gt: 0 },
+          "freelancerDetails.hourlyWage": wage && wage != 0 ? wage : { $gt: 0 },
         }).select(
           "username _id profilePicture location freelancerDetails accountType"
         )
       : await UserModel.find({
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
-          "freelancerDetails.hourlyWage": wage != 0 ? wage : { $gt: 0 },
+          "freelancerDetails.hourlyWage": wage && wage != 0 ? wage : { $gt: 0 },
         })
           .select(
             "username _id profilePicture location freelancerDetails accountType"

@@ -102,7 +102,10 @@ const PostCreateForm = () => {
       }),
     });
     const response = await res.json();
-    if (!response.error) alert("Post created successfully!");
+    if (!response.error) {
+      alert("Post created successfully!");
+      window.location.replace("/posts")
+    }
   };
   return (
     <div className="flex justify-center mt-10">
@@ -134,8 +137,8 @@ const PostCreateForm = () => {
           />
           <label htmlFor="hourly"> Hourly Wage</label>
           <input
-          className="mx-2"
-          checked={priceWage}
+            className="mx-2"
+            checked={priceWage}
             onChange={() => {
               setHourly(false);
               setPriceWage(true);
@@ -176,7 +179,7 @@ const PostCreateForm = () => {
               {" "}
               Select A Type{" "}
             </option>
-            <option value="grassCutting">Grass Cutting</option>
+            <option value="cuttingGrass">Grass Cutting</option>
             <option value="cleaning">Cleaning</option>
             <option value="plumbering">Plumbering</option>
             <option value="movingHeavyObjects">Moving Heavy Objects</option>
@@ -190,7 +193,7 @@ const PostCreateForm = () => {
               onChange={(e) => {
                 setSelectedState(e.target.value);
                 setSelectedCity("");
-                setCities([])
+                setCities([]);
               }}
               className="shadow break-words p-3 appearance-none border"
               name="jobs"

@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 const page = () => {
   return (
     <div className="flex">
-      <div className="w-[10vw] m-3">
-        <FilterSideBar />
+      <div className="md:w-[10vw] m-3">
+        <FilterSideBar page="posts" />
       </div>
       <div className="w-[90vw]">
         <Posts />

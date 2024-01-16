@@ -354,10 +354,11 @@ app.post("/loadPrivateRooms", async (req, res) => {
               const user = await UserModel.findOne({
                   _id: item.userId,
                 });
+                console.log(user)
                 return {
                     userId: item.userId,
-                    profilePicture: user.profilePicture ? user.profilePicture : "",
-                    username: user.username,
+                    profilePicture: user ? user.profilePicture : "",
+                    username: user ? user.username:"",
                 };
             });
             const usersWithProfilePictureAndUsername = await Promise.all(
