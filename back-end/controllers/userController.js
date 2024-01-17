@@ -50,7 +50,8 @@ const Login = async (req, res) => {
 };
 const getFreelancers = async (req, res) => {
   try {
-    let { wage, state, city, page, amount, type } = req.body;
+    let { wage, hourlyBetween, username, state, city, page, amount, type } =
+      req.body;
     if (
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
       !type.random
@@ -62,15 +63,32 @@ const getFreelancers = async (req, res) => {
       ? await UserModel.find({
           [typeString]: true,
           "location.state": state != "" ? state : { $not: /^0.*/ },
+          username: username
+            ? { $regex: username, $options: "i" }
+            : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
-          "freelancerDetails.hourlyWage": wage && wage != 0 ? wage : { $gt: 0 },
+          "freelancerDetails.hourlyWage":
+            wage && wage != 0 && wage != -1
+              ? wage
+              : wage == -1
+              ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
+              : { $gt: 0 },
         }).select(
           "username _id profilePicture location freelancerDetails accountType"
         )
       : await UserModel.find({
           "location.state": state != "" ? state : { $not: /^0.*/ },
+          username: username
+            ? { $regex: username, $options: "i" }
+            : { $not: /^0.*/ },
+
           "location.city": city != "" ? city : { $not: /^0.*/ },
-          "freelancerDetails.hourlyWage": wage && wage != 0 ? wage : { $gt: 0 },
+          "freelancerDetails.hourlyWage":
+            wage && wage != 0 && wage != -1
+              ? wage
+              : wage == -1
+              ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
+              : { $gt: 0 },
         })
           .select(
             "username _id profilePicture location freelancerDetails accountType"

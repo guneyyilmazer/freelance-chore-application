@@ -11,6 +11,7 @@ import user4 from "../images/user4.png";
 import briefcase from "../images/briefcase.svg";
 import wallet from "../images/wallet.svg";
 import risingarrow from "../images/risingarrow.svg";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -49,7 +50,10 @@ const Hero = () => {
                 TRENDING SERVICES
               </div>
               <div className="left-0 top-[33px] absolute justify-start items-start gap-4 inline-flex">
-                <div className="w-[174px] flex justify-around h-[50px] relative">
+                <Link
+                  href="/posts?type=cleaning"
+                  className="w-[174px] flex justify-around h-[50px] relative"
+                >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
                     CLEANING
@@ -59,8 +63,11 @@ const Hero = () => {
                     className="absolute right-0 top-[10px] mr-4"
                     alt=""
                   />
-                </div>
-                <div className="w-[174px] h-[50px] relative">
+                </Link>
+                <Link
+                  href="/posts?type=plumbering"
+                  className="w-[174px] h-[50px] relative"
+                >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
                     PLUMBING
@@ -70,18 +77,21 @@ const Hero = () => {
                     className="absolute right-0 top-[10px] mr-4"
                     alt=""
                   />
-                </div>
-                <div className="w-[174px] h-[50px] relative">
+                </Link>
+                <Link
+                  href="/posts?type=walkingTheDog"
+                  className="w-[174px] h-[50px] relative"
+                >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                    HVAC REPAIR
+                    DOG WALKING
                   </div>
                   <img
                     src={risingarrow.src}
                     className="absolute right-0 top-[10px] mr-4"
                     alt=""
                   />
-                </div>
+                </Link>
               </div>
             </div>
             <div className="w-[550px] mt-[32px] h-10 justify-start items-center gap-4 inline-flex">

@@ -5,6 +5,7 @@ import { setUser, setIsLoggedIn } from "../features/appSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { BACKEND_SERVER_IP } from "../layout";
+import Signup from "./Signup";
 type verified = {
   valid: boolean;
   userId: string;
@@ -67,10 +68,8 @@ const withAuth = (HocComponent: any) => {
       // Using a count state prevents the Auth Page flashing up on reload. Because it returns with inital state value first time this function gets run.
       <HocComponent {...props} />
     ) : state == 1 ? (
-      <></>
+      router.replace("/auth")
     ) : (
-      /* <AuthPage /> */
-
       <></>
     );
   };

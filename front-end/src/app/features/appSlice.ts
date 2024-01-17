@@ -13,11 +13,13 @@ const initialState: {
   room: string;
 } = {
   searchFilter: {
+    username: "",
+    hourlyBetween: [0, 999999],
     hourly: 0,
     price: -1,
     selectedState: "",
     selectedCity: "",
-    jobType: {random:true},
+    jobType: { random: true },
   },
   user: {
     userId: Cookies.get("userId") ? (Cookies.get("userId") as string) : "",
