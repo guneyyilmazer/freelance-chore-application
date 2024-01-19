@@ -6,11 +6,13 @@ import getBase64 from "./GetBase64";
 import Auth from "./Auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "./Loading";
+import { categories } from "../layout";
 const PostCreateForm = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
   const hourlyRef = useRef<HTMLInputElement>(null);
+  const skillLevelRef = useRef<HTMLSelectElement>(null);
   const typeRef = useRef<HTMLSelectElement>(null);
   const [pictures, setPictures] = useState<string[]>([]);
   const [mainPicture, setMainPicture] = useState("");
@@ -80,6 +82,17 @@ const PostCreateForm = () => {
     selectedState != "" && getCities();
   }, [selectedState]);
   const handleSubmit = async (e: React.FormEvent) => {
+    if (
+      titleRef.current?.value == "" ||
+      descRef.current?.value == "" ||
+      (priceRef.current?.value || hourlyRef.current?.value) ||
+      skillLevelRef.current?.value ||
+      selectedState == "" ||
+      selectedCity == "" ||
+      typeRef.current?.value
+    ) {
+      alert("All credentials must be filled!");
+    }
     e.preventDefault();
     const res = await fetch(`${BACKEND_SERVER_IP}/post/create`, {
       headers: {
@@ -95,16 +108,17 @@ const PostCreateForm = () => {
         hourly: hourlyRef.current?.value
           ? Number(hourlyRef.current?.value)
           : -1,
+        skillLevel: skillLevelRef.current?.value,
         pictures,
         picture: mainPicture,
         location: { state: selectedState, city: selectedCity },
-        type: { [typeRef.current!.value]: true },
+        type: { [typeRef.current?.value as string]: true },
       }),
     });
     const response = await res.json();
     if (!response.error) {
       alert("Post created successfully!");
-      window.location.replace("/posts")
+      window.location.replace("/posts");
     }
   };
   return (
@@ -179,11 +193,29 @@ const PostCreateForm = () => {
               {" "}
               Select A Type{" "}
             </option>
-            <option value="cuttingGrass">Grass Cutting</option>
-            <option value="cleaning">Cleaning</option>
-            <option value="plumbering">Plumbering</option>
-            <option value="movingHeavyObjects">Moving Heavy Objects</option>
-            <option value="walkingTheDog">Walking The Dog</option>
+            <option value={categories.cuttingGrass.name}>Grass Cutting</option>
+            <option value={categories.cleaning.name}>Cleaning</option>
+            <option value={categories.plumbing.name}>Plumbing</option>
+            <option value={categories.moving.name}>Moving</option>
+            <option value={categories.dogWalking.name}>Dog Walking</option>
+          </select>
+        </div>
+        <div className="flex my-5 flex-col">
+          <label htmlFor="skillLevel">Choose desired skill level</label>
+
+          <select
+            ref={skillLevelRef}
+            className="shadow p-3 appearance-none border"
+            name="skillLevel"
+            id="skillLevel"
+          >
+            <option disabled selected>
+              {" "}
+              Select A Skill Level{" "}
+            </option>
+            <option value="entry">Entry</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
           </select>
         </div>
         {states.length != 0 ? (

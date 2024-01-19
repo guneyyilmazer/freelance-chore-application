@@ -49,6 +49,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
         return {
           hourly: 0,
           price: -1,
+          hourlyBetween: state.hourlyBetween,
+          username: state.username,
           selectedCity: state.selectedCity,
           selectedState: state.selectedState,
           jobType: state.jobType,
@@ -135,6 +137,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
             onChange={(e) => {
               setFilter((state: filterType) => {
                 return {
+                  username: state.username,
+                  hourlyBetween: state.hourlyBetween,
                   hourly: state.hourly,
                   price: state.price,
                   selectedCity: state.selectedCity,
@@ -177,6 +181,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   setCities([]);
                   setFilter((state: filterType) => {
                     return {
+                      hourlyBetween: state.hourlyBetween,
+                      username: state.username,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
@@ -219,7 +225,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     return {
                       hourly: state.hourly,
                       price: state.price,
-
+                      hourlyBetween: state.hourlyBetween,
+                      username: state.username,
                       selectedCity: e.target.value,
                       selectedState: state.selectedState,
                       jobType: state.jobType,
@@ -267,6 +274,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   setHourlyChecked(true);
                   setFilter((state: filterType) => {
                     return {
+                      hourlyBetween: state.hourlyBetween,
+                      username: state.username,
                       hourly: 0,
                       price: -1,
                       jobType: state.jobType,
@@ -295,6 +304,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   setPriceChecked(true);
                   setFilter((state: filterType) => {
                     return {
+                      hourlyBetween: state.hourlyBetween,
+                      username: state.username,
                       hourly: -1,
                       price: 0,
                       jobType: state.jobType,
@@ -320,9 +331,10 @@ const FilterSideBar = ({ page }: { page: string }) => {
               onChange={(e) => {
                 setFilter((state: filterType) => {
                   return {
+                    hourlyBetween: state.hourlyBetween,
+                    username: state.username,
                     hourly: Number(e.target.value),
                     price: state.price,
-
                     selectedCity: state.selectedCity,
                     selectedState: state.selectedState,
                     jobType: state.jobType,
@@ -345,6 +357,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
               onChange={(e) => {
                 setFilter((state: filterType) => {
                   return {
+                    hourlyBetween: state.hourlyBetween,
+                    username: state.username,
                     hourly: state.hourly,
                     price: Number(e.target.value),
                     selectedCity: state.selectedCity,

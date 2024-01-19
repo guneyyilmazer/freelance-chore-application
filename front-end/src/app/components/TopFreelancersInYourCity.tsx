@@ -1,8 +1,62 @@
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { BACKEND_SERVER_IP } from "../layout";
+import { useSelector } from "react-redux";
+import { user } from "../types";
+import Cookies from "js-cookie";
+import DefaultProfilePicture from "../images/default.jpeg";
+import star from "../images/Star.svg";
+import tickCircle from "../images/tick-circle.svg";
 const TopFreelancersInYourCity = () => {
+  const client = useSelector((shop: any) => shop.app.user);
+  const [user, setUser] = useState<user>();
+  console.log(client);
+  useEffect(() => {
+    getUser();
+  }, []);
+  useEffect(() => {
+    user && getFreelancers();
+  }, [user]);
+  const [freelancers, setFreelancers] = useState([]);
+  const getUser = async () => {
+    const res = await fetch(`${BACKEND_SERVER_IP}/user/loadUser`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+      },
+      body: JSON.stringify({
+        userId: client.userId,
+      }),
+
+      method: "POST",
+    });
+    const response = await res.json();
+    if (!response.error) {
+      setUser(response);
+    }
+  };
+  const getFreelancers = async () => {
+    const res = await fetch(`${BACKEND_SERVER_IP}/user/loadFreelancers`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+      },
+      body: JSON.stringify({
+        page: 1,
+        amount: 4,
+        type: { random: true },
+        state: client.location.state,
+        city: client.location.city,
+      }),
+
+      method: "POST",
+    });
+    const response = await res.json();
+    if (!response.error) {
+      setFreelancers(response.freelancers);
+    }
+  };
   return (
     <div className="w-[100vw] h-[606px] relative bg-slate-800 flex-col justify-center items-center inline-flex">
       <div className="text-center flex w-full justify-center my-[40px] text-white text-[32px] font-bold font-['Helvetica Neue'] leading-[44px]">
@@ -21,130 +75,49 @@ const TopFreelancersInYourCity = () => {
       </div>
       <div className="flex justify-around w-[90%]">
         {/* cards */}
-        <div className="w-[302px] h-[356px] relative bg-white rounded-lg">
-          <img
-            className="w-[286px] h-[215px] left-[8px] top-[8px] absolute rounded-lg"
-            src="https://via.placeholder.com/286x215"
-          />
-          <div className="left-[20px] top-[308px] absolute justify-start items-center gap-1 inline-flex">
-            <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
-            </div>
-            <div className="text-slate-600 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
-              85 Jobs Completed{" "}
-            </div>
-          </div>
-          <div className="left-[20px] top-[239px] absolute flex-col justify-start items-start gap-0.5 inline-flex">
-            <div className="text-black text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
-              Jonathan Flores
-            </div>
-            <div className="text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              HVAC Technician
-            </div>
-          </div>
-          <div className="px-2 py-1 left-[223px] top-[252px] absolute bg-slate-50 rounded-lg justify-center items-center gap-0.5 inline-flex">
-            <div className="w-[22px] h-[11px] text-zinc-900 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              4.8
-            </div>
-            <div className="w-5 h-5 relative" />
-          </div>
-          <div className="left-[207px] top-[310px] absolute text-green-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-            View Profile
-          </div>
-        </div>
-        <div className="w-[302px] h-[356px] relative bg-white rounded-lg">
-          <img
-            className="w-[286px] h-[215px] left-[8px] top-[8px] absolute rounded-lg"
-            src="https://via.placeholder.com/286x215"
-          />
-          <div className="left-[20px] top-[308px] absolute justify-start items-center gap-1 inline-flex">
-            <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
-            </div>
-            <div className="text-slate-600 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
-              102 Jobs Completed{" "}
+        {freelancers.map((item: user) => (
+          <div className="w-[300px] h-[350px] flex flex-col items-center bg-white rounded-lg">
+            <img
+              className="w-full p-2 h-[215px] rounded-lg"
+              src={
+                item.profilePicture
+                  ? item.profilePicture
+                  : DefaultProfilePicture.src
+              }
+            />
+            <div className="flex flex-col mt-4 justify-between w-[85%]">
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col">
+                  <div className="text-xl font-bold">{item.username}</div>
+
+                  <div className="text-slate-600 text-sm">
+                    {item.freelancerDetails?.jobType.cleaning &&
+                      "Cleaning Specialist"}
+                    {item.freelancerDetails?.jobType.cuttingGrass &&
+                      "Grass Cutting Specialist"}
+                    {item.freelancerDetails?.jobType.moving &&
+                      "Moving Specialist"}
+                    {item.freelancerDetails?.jobType.plumbing && "Plumber"}
+                    {item.freelancerDetails?.jobType.dogWalking && "Dog Walker"}
+                  </div>
+                </div>
+                <div className="flex rounded-lg justify-center items-center">
+                  <div className="text-zinc-900 text-sm">4.8</div>
+                  <img src={star.src} alt="" />
+                </div>
+              </div>
+              <div className="flex w-full mt-5 justify-between">
+                <div className="flex gap-1 items-center">
+                  <img src={tickCircle.src} alt="" />
+                  <div className="text-slate-600 text-xs">
+                    85 Jobs Completed{" "}
+                  </div>
+                </div>
+                <div className="text-green-600 text-sm">View Profile</div>
+              </div>
             </div>
           </div>
-          <div className="left-[20px] top-[239px] absolute flex-col justify-start items-start gap-0.5 inline-flex">
-            <div className="text-black text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
-              Leslie Alexander
-            </div>
-            <div className="text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Home and Office Moving
-            </div>
-          </div>
-          <div className="px-2 py-1 left-[223px] top-[252px] absolute bg-slate-50 rounded-lg justify-center items-center gap-0.5 inline-flex">
-            <div className="w-[22px] h-[11px] text-zinc-900 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              4.9
-            </div>
-            <div className="w-5 h-5 relative" />
-          </div>
-          <div className="left-[207px] top-[310px] absolute text-green-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-            View Profile
-          </div>
-        </div>
-        <div className="w-[302px] h-[356px] relative bg-white rounded-lg">
-          <img
-            className="w-[286px] h-[215px] left-[8px] top-[8px] absolute rounded-lg"
-            src="https://via.placeholder.com/286x215"
-          />
-          <div className="left-[20px] top-[308px] absolute justify-start items-center gap-1 inline-flex">
-            <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
-            </div>
-            <div className="text-slate-600 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
-              64Jobs Completed{" "}
-            </div>
-          </div>
-          <div className="left-[20px] top-[239px] absolute flex-col justify-start items-start gap-0.5 inline-flex">
-            <div className="text-black text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
-              Ralph Edwards
-            </div>
-            <div className="text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Electrical Technician
-            </div>
-          </div>
-          <div className="px-2 py-1 left-[223px] top-[252px] absolute bg-slate-50 rounded-lg justify-center items-center gap-0.5 inline-flex">
-            <div className="w-[22px] h-[11px] text-zinc-900 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              4.7
-            </div>
-            <div className="w-5 h-5 relative" />
-          </div>
-          <div className="left-[207px] top-[310px] absolute text-green-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-            View Profile
-          </div>
-        </div>
-        <div className="w-[302px] h-[356px] relative bg-white rounded-lg">
-          <img
-            className="w-[286px] h-[215px] left-[8px] top-[8px] absolute rounded-lg"
-            src="https://via.placeholder.com/286x215"
-          />
-          <div className="left-[20px] top-[308px] absolute justify-start items-center gap-1 inline-flex">
-            <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
-            </div>
-            <div className="text-slate-600 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
-              236 Jobs Completed{" "}
-            </div>
-          </div>
-          <div className="left-[20px] top-[239px] absolute flex-col justify-start items-start gap-0.5 inline-flex">
-            <div className="text-black text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
-              Courtney Henry
-            </div>
-            <div className="text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Graffiti Painter
-            </div>
-          </div>
-          <div className="px-2 py-1 left-[223px] top-[252px] absolute bg-slate-50 rounded-lg justify-center items-center gap-0.5 inline-flex">
-            <div className="w-[22px] h-[11px] text-zinc-900 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              5.0
-            </div>
-            <div className="w-5 h-5 relative" />
-          </div>
-          <div className="left-[207px] top-[310px] absolute text-green-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-            View Profile
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

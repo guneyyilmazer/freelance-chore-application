@@ -1,8 +1,8 @@
 export type JobType = {
   cleaning?: true;
-  walkingTheDog?: true;
+  dogWalking?: true;
   cuttingGrass?: true;
-  movingHeavyObjects?: true;
-  plumbering?: true;
+  moving?: true;
+  plumbing?: true;
   random?: true;
 };

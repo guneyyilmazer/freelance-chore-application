@@ -62,9 +62,9 @@ const Posts = () => {
               <span className="text-sm">
                 Type:{item.type.cleaning && "Cleaning"}
                 {item.type.cuttingGrass && "Cutting Grass"}
-                {item.type.movingHeavyObjects && "Moving Heavy Objects"}
-                {item.type.plumbering && "Plumbering"}
-                {item.type.walkingTheDog && "Walking The Dog"}
+                {item.type.moving && "Moving Heavy Objects"}
+                {item.type.plumbing && "Plumbering"}
+                {item.type.dogWalking && "Walking The Dog"}
               </span>
               <span className="text-sm">
                 {item.location.state + "/" + item.location.city}

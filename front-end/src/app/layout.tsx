@@ -12,6 +12,20 @@ import { setIsLoggedIn, setUser } from "./features/appSlice";
 import { useDispatch } from "react-redux";
 export const BACKEND_SERVER_IP = "http://localhost:4000";
 export const SOCKET_IO_IP = "http://localhost:3001";
+export const categories: categories = {
+  cleaning: { value: { cleaning: true }, name: "cleaning" },
+  cuttingGrass: { value: { cuttingGrass: true }, name: "cuttingGrass" },
+  plumbing: { value: { plumbing: true }, name: "plumbing" },
+  moving: { value: { moving: true }, name: "moving" },
+  dogWalking: { value: { dogWalking: true }, name: "dogWalking" },
+};
+type categories = {
+  cleaning: { value: { cleaning: true }; name: string };
+  cuttingGrass: { value: { cuttingGrass: true }; name: string };
+  plumbing: { value: { plumbing: true }; name: string };
+  moving: { value: { moving: true }; name: string };
+  dogWalking: { value: { dogWalking: true }; name: string };
+};
 
 /* export const metadata: Metadata = {
   title: "Freelance Chore App",
@@ -23,7 +37,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
   return (
     <Providers>
       <html lang="en">

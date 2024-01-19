@@ -1,4 +1,5 @@
 const UserModel = require("../schemas/userSchema");
+const PostModel = require("../schemas/postSchema");
 const jwt = require("jsonwebtoken");
 const { jobTypes } = require("../jobTypes");
 require("dotenv").config();
@@ -68,11 +69,13 @@ const getFreelancers = async (req, res) => {
             : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
           "freelancerDetails.hourlyWage":
-            wage && wage != 0 && wage != -1
+            wage && wage != 0 && wage != -1 && wage != -2
               ? wage
-              : wage == -1
+              : wage == -2
               ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
-              : { $gt: 0 },
+              : wage == 0 || !wage
+              ? { $gt: 0 }
+              : -1,
         }).select(
           "username _id profilePicture location freelancerDetails accountType"
         )
@@ -84,18 +87,26 @@ const getFreelancers = async (req, res) => {
 
           "location.city": city != "" ? city : { $not: /^0.*/ },
           "freelancerDetails.hourlyWage":
-            wage && wage != 0 && wage != -1
+            wage && wage != 0 && wage != -1 && wage != -2
               ? wage
-              : wage == -1
+              : wage == -2
               ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
-              : { $gt: 0 },
+              : wage == 0 || !wage
+              ? { $gt: 0 }
+              : -1,
         })
           .select(
             "username _id profilePicture location freelancerDetails accountType"
           )
           .skip((page - 1) * amount)
           .limit(amount);
-    res.status(200).json({ freelancers });
+    const lastPage =
+      freelancers.length <= amount || !freelancers.length ? true : false;
+    const pagesCount =
+      freelancers.length / amount < 1
+        ? 1
+        : Math.floor(freelancers.length / amount);
+    res.status(200).json({ freelancers, lastPage, pagesCount });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -233,6 +244,52 @@ const ChangeProfile = async (req, res) => {
     console.log(err.message);
   }
 };
+const getSavedPosts = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({
+      _id: req.userId,
+    });
+    const posts = user.freelancerDetails.savedPosts.map(async (id) => {
+      const post = await PostModel.findOne({ _id: id });
+      return post;
+    });
+    const savedPosts = await Promise.all(posts);
+    res.status(200).json({ posts: savedPosts });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const savePost = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const { freelancerDetails } = await UserModel.findOne({ _id: req.userId });
+    if (freelancerDetails.savedPosts.filter((post) => post == id).length != 0) {
+      throw new Error("Post is already saved!");
+    }
+    const newSavedPosts = [...freelancerDetails.savedPosts, id];
+    await UserModel.findOneAndUpdate(
+      { _id: req.userId },
+      { "freelancerDetails.savedPosts": newSavedPosts }
+    );
+    res.status(200).json({ msg: "Successfully saved post." });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const deleteSavedPost = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const { savedPosts } = await UserModel.findOne({ _id: req.userId });
+    const newSavedPosts = savedPosts.filter((post) => post != id);
+    await UserModel.findOneAndUpdate(
+      { _id: req.userId },
+      { savedPosts: newSavedPosts }
+    );
+    res.status(200).json({ msg: "Successfully deleted post from saved list." });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 module.exports = {
   Signup,
   Login,
@@ -243,4 +300,6 @@ module.exports = {
   UpdateUsername,
   UpdateEmail,
   ChangeProfile,
+  getSavedPosts,
+  savePost,
 };

@@ -3,24 +3,29 @@ const { jobTypes } = require("../jobTypes");
 const jobTypesSchema = new mongoose.Schema({
   cleaning: Boolean,
   cuttingGrass: Boolean,
-  movingHeavyObjects: Boolean,
-  walkingTheDog: Boolean,
-  plumbering: Boolean,
+  moving: Boolean,
+  dogWalking: Boolean,
+  plumbing: Boolean,
 });
-const postSchema = new mongoose.Schema({
-  user: { type: String, required: true },
-  title: { type: String, required: true },
-  description: String,
-  type: { type: jobTypesSchema, required: true },
-  location: {
-    state: String,
-    city: String,
+const postSchema = new mongoose.Schema(
+  {
+    applicants: [String],
+    user: { type: String, required: true },
+    title: { type: String, required: true },
+    description: String,
+    type: { type: jobTypesSchema, required: true },
+    skillLevel: String,
+    location: {
+      state: String,
+      city: String,
+    },
+    hourly: Number,
+    price: Number,
+    picture: String,
+    pictures: [String],
   },
-  hourly: Number,
-  price: Number,
-  picture: String,
-  pictures: [String],
-});
+  { timestamps: true }
+);
 
 postSchema.statics.createPost = async function (
   userId,
@@ -31,12 +36,18 @@ postSchema.statics.createPost = async function (
   picture,
   pictures,
   location,
-  hourly
+  hourly,
+  skillLevel
 ) {
   if (!jobTypes.filter((item) => item == type)) {
     throw new Error(process.env.JOB_TYPE_INVALID);
   }
-
+  if (
+    ["entry", "intermediate", "expert"].filter((item) => item == skillLevel)
+      .length == 0
+  ) {
+    throw new Error(process.env.NOT_SELECTED_SKILL_LEVEL);
+  }
   await this.create({
     user: userId,
     title,
@@ -47,6 +58,7 @@ postSchema.statics.createPost = async function (
     pictures,
     location,
     hourly: hourly != 0 ? Number(hourly) : -1,
+    skillLevel,
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {

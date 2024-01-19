@@ -27,6 +27,7 @@ import briefcase from "../images/briefcasenormal.svg";
 import dollar from "../images/dollar-circle.svg";
 import clock from "../images/clock.svg";
 import bookmark from "../images/bookmark.svg";
+import bookmarkWhite from "../images/bookmark-white.svg";
 import star from "../images/star.svg";
 const page = () => {
   const [preview, setPreview] = useState(false);
@@ -61,6 +62,44 @@ const page = () => {
     setPost(post);
     setPreviewPictures(post.pictures);
   };
+  const savePost = async () => {
+    const res = await fetch(`${BACKEND_SERVER_IP}/user/savePost`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+      },
+
+      method: "POST",
+      body: JSON.stringify({
+        id: post?._id,
+      }),
+    });
+    const data = await res.json();
+    if (res.status == 200) alert("Successfully saved post!");
+    //@ts-ignore
+    if (data.error)
+      //@ts-ignore
+      alert(data.error);
+  };
+  const applyToPost = async () => {
+    const res = await fetch(`${BACKEND_SERVER_IP}/post/applyToPost`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+      },
+
+      method: "POST",
+      body: JSON.stringify({
+        id: post?._id,
+      }),
+    });
+    const data = await res.json();
+    if (res.status == 200) alert("Successfully applied!");
+    //@ts-ignore
+    if (data.error)
+      //@ts-ignore
+      alert(data.error);
+  };
   useEffect(() => {
     post && getUser();
   }, [post]);
@@ -87,126 +126,114 @@ const page = () => {
       {post ? (
         <div className="flex flex-col justify-around my-20">
           <div className="flex justify-between">
-            <div className="w-[478px] h-[254px] flex-col justify-start items-start gap-5 inline-flex">
-              <div className="w-[478px] text-black text-4xl font-bold font-['Helvetica Neue'] leading-[54px]">
-                {post?.title}
-              </div>
-              <div className="flex-col justify-start items-start gap-6 flex">
-                <div className="justify-start items-center gap-2 inline-flex">
-                  <div className="w-6 h-6 justify-center items-center flex">
-                    <div className="w-6 h-6 relative">
-                      <img src={location.src} alt="" />
-                    </div>
+            <div className="flex flex-col gap-5">
+              <div className="text-4xl font-bold">{post?.title}</div>
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-2">
+                  <div>
+                    <img src={location.src} alt="" />
                   </div>
-                  <div className="w-[162px] text-black text-lg font-normal font-['Helvetica Neue'] leading-[27px]">
+                  <div className="text-lg">
                     {post?.location.state + "/" + post?.location.city}
                   </div>
                 </div>
-                <div className="justify-start items-center gap-2 inline-flex">
-                  <div className="w-6 h-6 justify-center items-center flex">
-                    <div className="w-6 h-6 relative">
-                      <img src={briefcase.src} alt="" />
-                    </div>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <img src={briefcase.src} alt="" />
                   </div>
-                  <div className="w-[162px] text-black text-lg font-normal font-['Helvetica Neue'] leading-[27px]">
-                    Contract
-                  </div>
+                  <div className="text-lg">Contract</div>
                 </div>
-                <div className="justify-start items-center gap-2 inline-flex">
-                  <div className="w-6 h-6 justify-center items-center flex">
-                    <div className="w-6 h-6 relative">
-                      <img src={dollar.src} alt="" />
-                    </div>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <img src={dollar.src} alt="" />
                   </div>
-                  <div className="text-black text-lg font-normal font-['Helvetica Neue'] leading-[27px]">
+                  <div className="text-lg">
                     {post?.price != -1 && "Price: " + post?.price}
                     {post?.hourly != -1 && post?.hourly + "$ hr"}
                   </div>
                 </div>
-                <div className="justify-start items-center gap-2 inline-flex">
-                  <div className="w-6 h-6 justify-center items-center flex">
-                    <div className="w-6 h-6 relative">
-                      <img src={clock.src} alt="" />
-                    </div>
+                <div className="flex gap-2 items-center">
+                  <div>
+                    <img src={clock.src} alt="" />
                   </div>
-                  <div className="w-[162px] text-black text-lg font-normal font-['Helvetica Neue'] leading-[27px]">
-                    Posted 5hrs ago
-                  </div>
+                  <div className="text-lg">Posted {post.postedTimeAgoText}</div>
                 </div>
               </div>
-              <div className="flex items-center py-5 justify-start">
-                <div className="mr-2 flex-col justify-center items-center inline-flex">
-                  <div className="px-10 py-3 bg-green-600 rounded-lg shadow border justify-center items-center gap-[5px] inline-flex">
-                    <div className="text-center text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                      Apply Now
-                    </div>
-                  </div>
-                </div>
-                <div className="w-[232px] h-[46px] pl-1 flex-col justify-start items-start gap-2 inline-flex">
-                  <div className="grow shrink basis-0 px-10 rounded-[40px] border border-green-600 justify-center items-center gap-[5px] inline-flex">
-                    <div className="w-6 h-6 relative">
+              <div className="flex items-center py-5">
+                <button
+                  onClick={applyToPost}
+                  className="flex px-10 py-3 text-white font-semibold text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
+                >
+                  Apply Now
+                </button>
+                <div className="pl-1 flex-col gap-2 inline-flex">
+                  <button
+                    onClick={savePost}
+                    className="p-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 text-sm text-green-600 border-green-600 flex justify-center items-center"
+                  >
+                    <div className="text-md group-hover:hidden">
                       <img src={bookmark.src} alt="" />
                     </div>
-                    <div className="text-center text-green-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                      Save This Job
+                    <div className="text-md hidden group-hover:block">
+                      <img src={bookmarkWhite.src} alt="" />
                     </div>
-                  </div>
+                    Save This Job
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="w-[430px] h-[350px] bg-slate-100 p-5 rounded-xl flex-col justify-start items-start gap-4 inline-flex">
-              <div className="flex-col justify-start items-start gap-2 flex">
-                <div className="text-center text-black text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-                  Job Categories
-                </div>
-                <div className="justify-start items-start gap-2 inline-flex">
+            <div className="w-[430px] h-[350px] flex flex-col bg-slate-50 p-5 rounded-xl gap-4">
+              <div className="flex flex-col gap-2">
+                <div className="text-sm">Job Categories</div>
+                <div className="flex gap-2">
                   <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
-                    <div className="text-slate-800 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
+                    <div className="text-slate-800 text-xs">
                       {post.type.cleaning && "Cleaning"}
                       {post.type.cuttingGrass && "Cutting Grass"}
-                      {post.type.movingHeavyObjects && "Moving"}
-                      {post.type.plumbering && "Plumbing"}
-                      {post.type.walkingTheDog && "Dog Walking"}
+                      {post.type.moving && "Moving"}
+                      {post.type.plumbing && "Plumbing"}
+                      {post.type.dogWalking && "Dog Walking"}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex-col justify-start items-start gap-2 flex">
-                <div className="text-center text-black text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-                  Skills
-                </div>
-                <div className="justify-start items-start gap-2 inline-flex">
+              <div className="flex flex-col gap-2">
+                <div className="text-sm">Skills</div>
+                <div className="flex">
                   <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
-                    <div className="text-slate-800 text-xs font-normal font-['Helvetica Neue'] leading-[18px]">
+                    <div className="text-slate-800 text-xs">
                       {post.type.cleaning && "Cleaning"}
                       {post.type.cuttingGrass && "Cutting Grass"}
-                      {post.type.movingHeavyObjects && "Moving"}
-                      {post.type.plumbering && "Plumbing"}
-                      {post.type.walkingTheDog && "Dog Walking"}
+                      {post.type.moving && "Moving"}
+                      {post.type.plumbing && "Plumbing"}
+                      {post.type.dogWalking && "Dog Walking"}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex-col justify-start items-start gap-1 flex">
-                <div className="text-center text-black text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-                  Experience Level
-                </div>
-                <div className="text-center text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                  Intermediate, Professional
+                <div className="text-sm">Experience Level</div>
+                <div className="text-slate-600 text-sm">
+                  {post.skillLevel.charAt(0).toUpperCase() +
+                    post.skillLevel.slice(1)}
                 </div>
               </div>
-              <div className="flex-col justify-start items-start gap-1 flex">
-                <div className="text-center text-black text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-                  Share this Job
-                </div>
-                <div className="pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg justify-start items-center inline-flex">
-                  <div className="text-gray-500 text-xs font-medium font-['Helvetica Neue'] leading-[18px]">
+              <div className="flex flex-col gap-1">
+                <div className="text-sm">Share this Job</div>
+                <div className="flex pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg justify-start items-center">
+                  <div className="text-gray-500 text-xs">
                     {window.location.href}
                   </div>
                 </div>
-                <div className="text-center text-green-600 text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("The link has been copied to your clipboard!");
+                  }}
+                  className="text-start mt-2 text-green-600 text-sm"
+                >
                   Copy Link
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -214,68 +241,18 @@ const page = () => {
           <div className="flex justify-center items-center">
             <div className="flex flex-col justify-center items-center my-20">
               <div className="flex mb-5 justify-start w-full">
-                <div className="w-[254px] text-black text-lg font-bold font-['Helvetica Neue'] leading-[27px]">
-                  Overview{" "}
-                </div>
+                <div className="text-lg font-bold">Overview</div>
               </div>
-              <div className="w-[989px] text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
+              <div className="w-[1000px] text-black text-base">
                 {post?.description}
               </div>
             </div>
           </div>
-          <div className="w-[843px] my-10">
-            <div className="w-[254px] mb-5 text-black text-lg font-bold font-['Helvetica Neue'] leading-[27px]">
-              Responsibilities
-            </div>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Install, inspect, and troubleshoot air conditioning units in
-              accordance with industry standards.
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Collaborate with team members to coordinate installation schedules
-              and ensure timely project completion.
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Conduct thorough assessments of clients' HVAC needs and recommend
-              appropriate solutions.
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Maintain accurate records of all installations, repairs, and
-              inspections.
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Provide excellent customer service by addressing client inquiries
-              and concerns with professionalism.
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              <br />
-            </span>
-            <span className="text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
-              Stay updated on industry trends and technological advancements in
-              HVAC systems.
-            </span>
-          </div>
+
           <div className="w-full flex justify-center">
-            <div className="w-[816px] h-[156px] px-14 py-7 rounded-lg shadow border border-gray-200 flex-col justify-start items-start gap-1 inline-flex">
-              <div className="justify-start items-center gap-6 inline-flex">
-                <div className="justify-start items-center gap-6 flex">
+            <div className="flex flex-col px-14 py-7 rounded-lg shadow border border-gray-200">
+              <div className="flex justify-between items-center gap-6">
+                <div className="flex items-center gap-6">
                   <img
                     className="w-[100px] h-[100px] rounded-full"
                     src={
@@ -284,20 +261,20 @@ const page = () => {
                         : DefaultProfilePicture.src
                     }
                   />
-                  <div className="flex-col flex">
-                    <div className="w-[283px] text-black text-lg font-bold font-['Helvetica Neue'] leading-[27px]">
+                  <div className="flex flex-col">
+                    <div className="text-lg font-bold">
                       {postUser?.username}
                     </div>
-                    <div className="flex-col justify-center items-center flex">
-                      <div className="justify-center flex">
+                    <div className="flex flex-col justify-center items-center">
+                      <div className="flex justify-center">
                         <div className="mr-1">
                           <img src={star.src} alt="" />
                         </div>
-                        <div className="w-[271px] text-slate-600 font-['Helvetica Neue']">
+                        <div className="text-slate-600">
                           4.8 | 5 rating based on 37 reviews
                         </div>
                       </div>
-                      <div className="w-[271px] text-slate-600 text-base font-normal font-['Helvetica Neue'] leading-normal">
+                      <div className="w-full text-slate-600">
                         Based in:{" "}
                         {postUser?.location.state +
                           "/" +
@@ -306,11 +283,9 @@ const page = () => {
                     </div>
                   </div>
                 </div>
-                <div className="h-[50%] pl-1 pt-1 flex-col justify-start items-start gap-2 inline-flex">
-                  <div className="grow shrink basis-0 px-3 bg-green-600 rounded-lg shadow border justify-center items-center gap-[5px] inline-flex">
-                    <div className="text-center text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                      Contact Me About This Job
-                    </div>
+                <div className="flex py-2.5 px-3 bg-green-600 rounded-lg shadow border justify-center items-center">
+                  <div className="text-center text-white text-sm">
+                    Contact Me About This Job
                   </div>
                 </div>
               </div>

@@ -9,7 +9,6 @@ import { BACKEND_SERVER_IP, SOCKET_IO_IP } from "../layout";
 import io from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { setRoom, setSocket } from "../features/appSlice";
-const background = require("../images/background.jpeg");
 
 const Room = () => {
     
@@ -64,7 +63,6 @@ const Room = () => {
     <div
       className="flex flex-col justify-between items-center "
       style={{
-        backgroundImage: `url(${background})`,
         backgroundSize: "600px",
       }}
     >

@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   freelancerDetails: {
     jobType: jobTypesSchema,
+    savedPosts: { type: [String], default: [] },
     hourlyWage: Number,
     aboutMe: String,
   },

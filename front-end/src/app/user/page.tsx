@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { BACKEND_SERVER_IP } from "../layout";
+import { BACKEND_SERVER_IP, categories } from "../layout";
 import { useSearchParams } from "next/navigation";
 import { user } from "../types/UserTypes";
 import { useSelector } from "react-redux";
 import DefaultProfilePicture from "../images/default.jpeg";
 import AuthButtons from "./AuthButtons";
-
+import location from "../images/location.svg";
+import star from "../images/Star.svg";
 const page = () => {
   const client = useSelector((shop: any) => shop.app.user);
   const [user, setUser] = useState<user>();
@@ -34,45 +35,59 @@ const page = () => {
     }
   };
   return (
-    <div className="flex flex-col my-5 justify-center items-center">
+    <div className="flex justify-center">
       {user && (
-        <>
-          <div className="my-5 text-xl">{user?.username}</div>
-          <div>
+        <div className="flex flex-col mt-20 mb-10 w-[1000px]">
+          <div className="flex items-center">
             <img
+              className="w-[187px] h-[187px] mr-6 rounded-full border-4 border-gray-200"
               src={
-                user?.profilePicture
+                user.profilePicture
                   ? user.profilePicture
                   : DefaultProfilePicture.src
               }
             />
-          </div>
-          <div className="flex flex-col my-5">
-            <span>{user.accountType.freelancer && "Freelancer"}</span>
-            <span className="mt-1">State:{user.location.state}</span>
-            <span className="mt-1">City:{user.location.city}</span>
-
-            <span className="mt-1">
-              Hourly:{user.freelancerDetails?.hourlyWage}$
-            </span>
-            <span className="break-words mt-1">
-              Specilazes in:{" "}
-              {user.freelancerDetails?.jobType.cleaning && "Cleaning"}
-              {user.freelancerDetails?.jobType.cuttingGrass && "Cutting Grass"}
-              {user.freelancerDetails?.jobType.movingHeavyObjects && <br />}
-              {user.freelancerDetails?.jobType.movingHeavyObjects &&
-                "Moving Heavy Objects"}
-              {user.freelancerDetails?.jobType.plumbering && "Plumbering"}
-              {user.freelancerDetails?.jobType.walkingTheDog &&
-                "Walking The Dog"}
-            </span>
-            <div className="my-2">
-              <h3 className="">About Me</h3>
-              <span className="text-sm">{user.freelancerDetails?.aboutMe}</span>
+            <div className="flex items-center justify-between w-[480px]">
+              <div className="flex flex-col gap-2">
+                <div className="text-slate-800 font-bold text-3xl">
+                  {user.username}
+                </div>
+                <div className="flex items-center gap-2 ">
+                  <div className="flex items-center">
+                    <img src={location.src} alt="" />
+                    <div className="text-slate-600">
+                      {user.location.state + "/" + user.location.city}
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="text-zinc-900">5.0</div>
+                    <img src={star.src} alt="" />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <AuthButtons user={user} client={client} />
+              </div>
             </div>
           </div>
-          <AuthButtons user={user} client={client} />
-        </>
+          <div className="w-full my-5 flex items-center justify-between">
+            <div className="text-slate-800 text-2xl font-bold font-['Helvetica Neue'] leading-9">
+              {user.freelancerDetails?.jobType.cleaning &&
+                "Cleaning Specialist"}
+              {user.freelancerDetails?.jobType.cuttingGrass &&
+                "Grass Cutting Specialist"}
+              {user.freelancerDetails?.jobType.moving && "Moving Specialist"}
+              {user.freelancerDetails?.jobType.plumbing && "Plumber"}
+              {user.freelancerDetails?.jobType.dogWalking && "Dog Walker"}
+            </div>
+            <div className="text-slate-800 text-xl font-bold">
+              {user.freelancerDetails?.hourlyWage}$/hr
+            </div>
+          </div>
+          <div className="w-full text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
+            {user.freelancerDetails?.aboutMe}
+          </div>
+        </div>
       )}
     </div>
   );

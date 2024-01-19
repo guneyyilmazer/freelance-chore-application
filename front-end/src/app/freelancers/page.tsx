@@ -12,8 +12,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { filterType } from "../types";
 import FilterSideBarr from "../components/FilterSideBarr";
 import { setSearchFilter } from "../features/appSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import star from "../images/Star.svg";
+import {
+  faAngleUp,
+  faCaretLeft,
+  faCaretRight,
+  faLocation,
+  faLocationArrow,
+  faLocationPin,
+  faLocationPinLock,
+} from "@fortawesome/free-solid-svg-icons";
 const page = () => {
   const dispatch = useDispatch();
+  const [allPages, setAllPages] = useState<number[]>([]);
+  const [lastPage, setLastPage] = useState(true);
+  const searchParams = useSearchParams()
+  const [page, setPage] = useState(
+    searchParams.get("page") &&
+      Number(searchParams.get("page")) > 0 &&
+      !lastPage
+      ? Number(searchParams.get("page"))
+      : 1
+  );
+  const router = useRouter();
   const filter: filterType = useSelector((shop: any) => shop.app.searchFilter);
   useEffect(() => {
     getFreelancers();
@@ -26,8 +48,8 @@ const page = () => {
         authorization: `Bearer ${Cookies.get("Auth_Token")}`,
       },
       body: JSON.stringify({
-        page: 1,
-        amount: 15,
+        page,
+        amount: 5,
         username: filter.username,
         type: filter.jobType,
         state: filter.selectedState,
@@ -41,6 +63,14 @@ const page = () => {
     const response = await res.json();
     if (!response.error) {
       setFreelancers(response.freelancers);
+      setLastPage(response.lastPage);
+      setAllPages(() => {
+        let allPages = [];
+        for (let i = 1; i < response.pagesCount + 1; i++) {
+          allPages.push(i);
+        }
+        return allPages;
+      });
     }
   };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,146 +87,123 @@ const page = () => {
     );
   };
   return (
-    <div className="w-[100vw] h-[2090px] relative bg-white flex-col items-center inline-flex">
+    <div className="w-[100vw] relative bg-white flex-col items-center inline-flex">
       <div className="text-black w-full m-14 justify-start text-[40px] font-bold font-['Helvetica Neue'] leading-[48px]">
         <span className="m-12">Freelancers</span>
       </div>
-      <div className="flex justify-around w-[100%]">
+      <div className="flex justify-around w-[90%]">
         <FilterSideBarr page="freelancers" />
-        <div className="flex-col justify-start items-start gap-8 inline-flex">
-          <div className="w-full">
+        <div className="flex flex-col w-full items-center">
+          <div className="w-[954px]">
             <input
               onChange={handleChange}
               placeholder="Search freelancers by name"
-              className="w-full pl-4 py-3 bg-white rounded-lg border border-gray-200 justify-start items-end gap-4 inline-flex"
+              className="w-full pl-4 py-3 bg-white rounded-lg border border-gray-200 flex items-end gap-4"
             />
-            <div className="w-6 h-6 justify-center items-center inline-flex">
-              <div className="w-6 h-6 relative"></div>
-            </div>
-            <div className="text-slate-500 w-full text-sm font-normal font-['Helvetica Neue'] leading-[21px]" />
+            <div className="text-slate-500 w-full text-sm" />
           </div>
-          <div className="flex-col w-[954px] justify-start items-start gap-10 flex">
+          <div className="flex mt-5 mb-2 flex-col gap-10">
             {freelancers.map((item: user) => (
-              <div className="w-[954px] h-[308px] relative bg-white rounded-lg shadow border border-gray-200">
-                <div className="left-[232px] top-[24px] absolute text-slate-800 text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
-                  {item.username}
-                </div>
-                <div className="left-[870px] top-[25.50px] absolute">
-                  <span className="text-slate-800 text-lg font-bold font-['Helvetica Neue'] leading-[27px]">
-                    {item.freelancerDetails?.hourlyWage + "$"}
-                  </span>
-                  <span className="text-slate-800 text-lg font-normal font-['Helvetica Neue'] leading-[27px]">
-                    /hr
-                  </span>
-                </div>
-                <div className="left-[232px] top-[58px] absolute text-slate-800 text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-                  {Object.keys(item.freelancerDetails!.jobType)[0]}
-                </div>
-                <div className="w-[690px] left-[232px] top-[131px] absolute text-black text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                  {item.freelancerDetails?.aboutMe}
-                </div>
-                <img
-                  className="w-48 h-[212px] left-[16px] top-[16px] absolute rounded-lg"
-                  src={
-                    item.profilePicture
-                      ? item.profilePicture
-                      : DefaultProfilePicture.src
-                  }
-                />
-                <div className="left-[232px] top-[91px] absolute justify-start items-center gap-6 inline-flex">
-                  <div className="justify-start items-center gap-1 flex">
-                    <div className="w-5 h-5 justify-center items-center flex">
-                      <div className="w-5 h-5 relative"></div>
-                    </div>
-                    <div className="w-[98px] text-slate-600 text-base font-normal font-['Helvetica Neue'] leading-normal">
-                      {item.location.city + "/" + item.location.state}
-                    </div>
-                  </div>
-                  <div className="px-2 py-1 bg-white rounded-lg justify-center items-center gap-1 flex">
-                    <div className="w-[22px] h-[11px] text-zinc-900 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                      4.8
-                    </div>
-                    <div className="w-5 h-5 relative" />
+              <Link
+                href={`/user?id=${item._id}`}
+                className="w-[954px] h-[308px] flex bg-white rounded-lg shadow border border-gray-200"
+              >
+                <div className="m-3 flex flex-col justify-center items-center">
+                  <img
+                    className="w-48 h-[212px] left-[16px] rounded-lg"
+                    src={
+                      item.profilePicture
+                        ? item.profilePicture
+                        : DefaultProfilePicture.src
+                    }
+                  />
+                  <div className="text-center my-4 px-9 py-3.5 rounded-lg bg-green-600 text-white text-sm">
+                    Send a Message
                   </div>
                 </div>
-                <div className="w-[200px] pl-1 pt-1 left-[18px] top-[239px] absolute flex-col justify-start items-start gap-2 inline-flex">
-                  <div className="self-stetch grow shrink basis-0 px-9 py-3.5 bg-green-600 rounded-[40px] shadow border justify-center items-center gap-[5px] inline-flex">
-                    <div className="text-center text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                      Send a Message
+                <div className="m-5 flex flex-col">
+                  <div className="text-slate-800 text-xl font-bold">
+                    {item.username}
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-slate-800 text-lg font-bold">
+                      {item.freelancerDetails?.hourlyWage + "$"}
+                    </span>
+                    <span className="text-slate-800 text-lg">/hr</span>
+                  </div>
+                  <div className="text-slate-800 text-sm my-2">
+                    {item.freelancerDetails?.jobType.cleaning &&
+                      "Cleaning Specialist"}
+                    {item.freelancerDetails?.jobType.cuttingGrass &&
+                      "Grass Cutting Specialist"}
+                    {item.freelancerDetails?.jobType.moving &&
+                      "Moving Specialist"}
+                    {item.freelancerDetails?.jobType.plumbing && "Plumber"}
+                    {item.freelancerDetails?.jobType.dogWalking && "Dog Walker"}
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="flex justify-center items-center">
+                      <FontAwesomeIcon icon={faLocationPinLock} />
+                      <div className="text-slate-600">
+                        {item.location.city + "/" + item.location.state}
+                      </div>
+                    </div>
+                    <div className="flex justify-center items-center gap-1">
+                      <div className="text-zinc-900 text-sm">4.8</div>
+                      <img src={star.src} alt="" />
                     </div>
                   </div>
+                  <div className="mt-4 text-sm">
+                    {item.freelancerDetails?.aboutMe}
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
-        </div>
-      </div>
+          <div className="w-[90%] relative flex justify-center items-center">
+            <div className="flex absolute right-0">
+              <select
+                style={{ textAlignLast: "center" }}
+                className="px-2 appearance-none border shadow"
+              >
+                {allPages.map((page) => (
+                  <option className="bg-slate-200" value={page}>
+                    {page}
+                  </option>
+                ))}
+              </select>
+              <span className="ml-1">
+                <FontAwesomeIcon icon={faAngleUp} />
+              </span>
+            </div>
 
-      <div className="h-[62px] bg-white flex-col justify-center items-center gap-2 inline-flex">
-        <div className="w-[889px] h-px justify-center items-center inline-flex">
-          <div className="w-[889px] self-stretch bg-gray-200" />
-        </div>
-        <div className="self-stretch py-2 bg-white justify-between items-center inline-flex">
-          <div className="pl-0.5 pr-1 justify-center items-center flex">
-            <div className="text-center text-black text-sm font-medium font-['Helvetica Neue'] leading-[21px]">
-              Page 1 of 22
-            </div>
-          </div>
-          <div className="justify-center items-center gap-1 flex">
-            <div className="w-6 h-6 p-2 bg-white rounded-md border border-green-600 flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-black text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                1
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                2
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                3
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Inter'] leading-tight">
-                …
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                20
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                21
-              </div>
-            </div>
-            <div className="w-6 h-6 p-2 bg-white rounded-md flex-col justify-center items-center gap-2 inline-flex">
-              <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                22
-              </div>
-            </div>
-          </div>
-          <div className="justify-start items-center gap-3.5 flex">
-            <div className="text-center text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Go to page
-            </div>
-            <div className="h-[37px] p-2 bg-white rounded-md border border-gray-200 justify-start items-center gap-1 flex">
-              <div className="grow shrink basis-0 h-[21px] justify-start items-center gap-2 flex">
-                <div className="justify-start items-center gap-0.5 flex">
-                  <div className="text-gray-400 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-                    00
-                  </div>
-                </div>
-              </div>
-              <div className="justify-start items-center gap-1 flex">
-                <div className="w-5 h-5 justify-center items-center flex">
-                  <div className="w-5 h-5 relative"></div>
-                </div>
-              </div>
-            </div>
+            <button
+              className="text-xl px-2 rounded-full mx-1 text-green-600"
+              onClick={() => {
+                page - 1 > 0 &&
+                  router.replace(`/freelancers/?page=${page - 1}`);
+                setPage((page) => {
+                  if (page - 1 > 0) return page - 1;
+                  else return page;
+                });
+              }}
+            >
+              <FontAwesomeIcon icon={faCaretLeft} />
+            </button>
+            <span>{page}</span>
+            <button
+              className="text-xl px-2 rounded-full mx-1 text-green-600"
+              onClick={() => {
+                !lastPage && router.replace(`/freelancers/?page=${page + 1}`);
+
+                setPage((page) => {
+                  if (!lastPage) return page + 1;
+                  else return page;
+                });
+              }}
+            >
+              <FontAwesomeIcon icon={faCaretRight} />
+            </button>
           </div>
         </div>
       </div>

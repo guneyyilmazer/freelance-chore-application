@@ -172,17 +172,17 @@ const EditProfile = () => {
                 <option selected={jobType.cleaning} value="cleaning">
                   Cleaning
                 </option>
-                <option selected={jobType.plumbering} value="plumbering">
-                  Plumbering
+                <option selected={jobType.plumbing} value="plumbing">
+                  Plumbing
                 </option>
                 <option
-                  selected={jobType.movingHeavyObjects}
-                  value="movingHeavyObjects"
+                  selected={jobType.moving}
+                  value="moving"
                 >
-                  Moving Heavy Objects
+                  Moving
                 </option>
-                <option selected={jobType.walkingTheDog} value="walkingTheDog">
-                  Walking The Dog
+                <option selected={jobType.dogWalking} value="dogWalking">
+                  Dog Walking
                 </option>
               </select>
             </div>

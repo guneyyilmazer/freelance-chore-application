@@ -36,8 +36,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
       : -1,
     hourlyBetween: searchParams.get("hourlybetween")
       ? [
-          Number(searchParams.get("hourly")?.split("/")[0]),
-          Number(searchParams.get("hourly")?.split("/")[1]),
+          Number(searchParams.get("hourlybetween")?.split("/")[0]),
+          Number(searchParams.get("hourlybetween")?.split("/")[1]),
         ]
       : [0, 99999],
     price: searchParams.get("price") ? Number(searchParams.get("price")) : -1,
@@ -56,9 +56,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
     if (filter.price == -1 && filter.hourly == -1) {
       setFilter((state: filterType) => {
         return {
-          hourlyBetween: filter.hourlyBetween,
-          username: filter.username,
-          hourly: 0,
+          hourlyBetween: state.hourlyBetween,
+          username: state.username,
+          hourly: page == "posts" ? -2 : 0,
           price: -1,
           selectedCity: state.selectedCity,
           selectedState: state.selectedState,
@@ -153,15 +153,21 @@ const FilterSideBar = ({ page }: { page: string }) => {
               <div className="w-6 h-6 relative">
                 <input
                   type="radio"
+                  checked={
+                    filter.hourlyBetween![0] == 0 &&
+                    filter.hourlyBetween![1] == 20
+                      ? true
+                      : false
+                  }
                   onChange={() => {
                     setPriceChecked(false);
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
-                        username: filter.username,
+                        username: state.username,
                         hourlyBetween: [0, 20],
                         price: -1,
-                        hourly: -1,
+                        hourly: -2,
                         jobType: state.jobType,
                         selectedState: state.selectedState,
                         selectedCity: state.selectedCity,
@@ -182,16 +188,22 @@ const FilterSideBar = ({ page }: { page: string }) => {
               <div className="w-6 h-6 relative">
                 <input
                   type="radio"
+                  checked={
+                    filter.hourlyBetween![0] == 20 &&
+                    filter.hourlyBetween![1] == 40
+                      ? true
+                      : false
+                  }
                   onChange={() => {
                     setPriceChecked(false);
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
-                        username: filter.username,
+                        username: state.username,
 
                         hourlyBetween: [20, 40],
                         price: -1,
-                        hourly: -1,
+                        hourly: -2,
                         jobType: state.jobType,
                         selectedState: state.selectedState,
                         selectedCity: state.selectedCity,
@@ -212,14 +224,20 @@ const FilterSideBar = ({ page }: { page: string }) => {
               <div className="w-6 h-6 relative">
                 <input
                   type="radio"
+                  checked={
+                    filter.hourlyBetween![0] == 40 &&
+                    filter.hourlyBetween![1] == 60
+                      ? true
+                      : false
+                  }
                   onChange={() => {
                     setPriceChecked(false);
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
-                        username: filter.username,
-                        hourlyBetween: [50, 70],
-                        hourly: -1,
+                        username: state.username,
+                        hourlyBetween: [40, 60],
+                        hourly: -2,
                         price: -1,
                         jobType: state.jobType,
                         selectedState: state.selectedState,
@@ -233,24 +251,30 @@ const FilterSideBar = ({ page }: { page: string }) => {
               </div>
             </div>
             <div className="w-[139px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              $50 to $70 per hr
+              $40 to $60 per hr
             </div>
           </div>
           <div className="justify-start items-start gap-3 inline-flex">
             <div className="w-6 h-6 justify-center items-center flex">
               <div className="w-6 h-6 relative">
                 <input
+                  checked={
+                    filter.hourlyBetween![0] == 60 &&
+                    filter.hourlyBetween![1] == 80
+                      ? true
+                      : false
+                  }
                   type="radio"
                   onChange={() => {
                     setPriceChecked(false);
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
-                        username: filter.username,
+                        username: state.username,
 
-                        hourlyBetween: [80, 100],
+                        hourlyBetween: [60, 80],
                         price: -1,
-                        hourly: -1,
+                        hourly: -2,
                         jobType: state.jobType,
                         selectedState: state.selectedState,
                         selectedCity: state.selectedCity,
@@ -263,7 +287,43 @@ const FilterSideBar = ({ page }: { page: string }) => {
               </div>
             </div>
             <div className="w-[232px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              $80 to $100 per hr
+              $60 to $80 per hr
+            </div>
+          </div>
+          <div className="justify-start items-start gap-3 inline-flex">
+            <div className="w-6 h-6 justify-center items-center flex">
+              <div className="w-6 h-6 relative">
+                <input
+                  type="radio"
+                  checked={
+                    filter.hourlyBetween![0] == 80 &&
+                    filter.hourlyBetween![1] == 100
+                      ? true
+                      : false
+                  }
+                  name="hourly"
+                  onChange={() => {
+                    setPriceChecked(false);
+                    setHourlyChecked(true);
+                    setFilter((state: filterType) => {
+                      return {
+                        username: state.username,
+
+                        hourlyBetween: [80, 100],
+                        hourly: -2,
+                        price: -1,
+                        jobType: state.jobType,
+                        selectedState: state.selectedState,
+                        selectedCity: state.selectedCity,
+                      };
+                    });
+                  }}
+                  id=""
+                />
+              </div>
+            </div>
+            <div className="w-[232px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
+              $80 to 100$ per hr{" "}
             </div>
           </div>
           <div className="justify-start items-start gap-3 inline-flex">
@@ -272,15 +332,21 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 <input
                   type="radio"
                   name="hourly"
+                  checked={
+                    filter.hourlyBetween![0] == 100 &&
+                    filter.hourlyBetween![1] > 100
+                      ? true
+                      : false
+                  }
                   onChange={() => {
                     setPriceChecked(false);
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
-                        username: filter.username,
+                        username: state.username,
 
-                        hourlyBetween: [100, 99999999],
-                        hourly: -1,
+                        hourlyBetween: [100, 9999999],
+                        hourly: -2,
                         price: -1,
                         jobType: state.jobType,
                         selectedState: state.selectedState,
@@ -316,8 +382,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   setCities([]);
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
-                      hourlyBetween: filter.hourlyBetween,
+                      username: state.username,
+                      hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
@@ -358,11 +424,11 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
+                      username: state.username,
 
                       hourly: state.hourly,
                       price: state.price,
-                      hourlyBetween: filter.hourlyBetween,
+                      hourlyBetween: state.hourlyBetween,
                       selectedCity: e.target.value,
                       selectedState: state.selectedState,
                       jobType: state.jobType,
@@ -414,21 +480,21 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
+                      username: state.username,
 
                       hourly: state.hourly,
-                      hourlyBetween: filter.hourlyBetween,
+                      hourlyBetween: state.hourlyBetween,
                       price: state.price,
                       selectedCity: state.selectedCity,
                       selectedState: state.selectedState,
-                      jobType: { ["plumbering"]: true },
+                      jobType: { plumbing: true },
                     };
                   });
                 }}
                 type="radio"
                 className="w-6 h-6 relative"
                 name="jobType"
-                checked={filter.jobType.plumbering ? true : false}
+                checked={filter.jobType.plumbing ? true : false}
               ></input>
             </div>
             <div className="w-[139px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
@@ -441,20 +507,20 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
-                      hourlyBetween: filter.hourlyBetween,
+                      username: state.username,
+                      hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
                       selectedState: state.selectedState,
-                      jobType: { ["walkingTheDog"]: true },
+                      jobType: { dogWalking: true },
                     };
                   });
                 }}
                 type="radio"
                 className="w-6 h-6 relative"
                 name="jobType"
-                checked={filter.jobType.walkingTheDog ? true : false}
+                checked={filter.jobType.dogWalking ? true : false}
               ></input>
             </div>
             <div className="w-[139px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
@@ -467,13 +533,13 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
-                      hourlyBetween: filter.hourlyBetween,
+                      username: state.username,
+                      hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
                       selectedState: state.selectedState,
-                      jobType: { ["cleaning"]: true },
+                      jobType: { cleaning: true },
                     };
                   });
                 }}
@@ -493,19 +559,19 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
-                      hourlyBetween: filter.hourlyBetween,
+                      username: state.username,
+                      hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
                       selectedState: state.selectedState,
-                      jobType: { ["movingHeavyObjects"]: true },
+                      jobType: { moving: true },
                     };
                   });
                 }}
                 type="radio"
                 name="jobType"
-                checked={filter.jobType.movingHeavyObjects ? true : false}
+                checked={filter.jobType.moving ? true : false}
                 className="w-6 h-6 relative"
               ></input>
             </div>
@@ -519,13 +585,13 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
-                      username: filter.username,
-                      hourlyBetween: filter.hourlyBetween,
+                      username: state.username,
+                      hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
                       price: state.price,
                       selectedCity: state.selectedCity,
                       selectedState: state.selectedState,
-                      jobType: { ["cuttingGrass"]: true },
+                      jobType: { cuttingGrass: true },
                     };
                   });
                 }}

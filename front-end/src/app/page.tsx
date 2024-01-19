@@ -19,9 +19,6 @@ export default function Home() {
   useEffect(() => {
     getUser();
   }, []);
-  useEffect(() => {
-    user && getFreelancers();
-  }, [user]);
   const [freelancers, setFreelancers] = useState([]);
   const getUser = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/loadUser`, {
@@ -40,27 +37,7 @@ export default function Home() {
       setUser(response);
     }
   };
-  const getFreelancers = async () => {
-    const res = await fetch(`${BACKEND_SERVER_IP}/user/loadFreelancers`, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
-      },
-      body: JSON.stringify({
-        page: 1,
-        amount: 15,
-        type: { random: true },
-        state: client.location.state,
-        city: client.location.city,
-      }),
 
-      method: "POST",
-    });
-    const response = await res.json();
-    if (!response.error) {
-      setFreelancers(response.freelancers);
-    }
-  };
   return (
     <main className="">
       <div className="secondary pt-[60px]">

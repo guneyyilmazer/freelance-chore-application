@@ -157,9 +157,9 @@ const Signup = () => {
                 </option>
                 <option value="cuttingGrass">Grass Cutting</option>
                 <option value="cleaning">Cleaning</option>
-                <option value="plumbering">Plumbering</option>
-                <option value="movingHeavyObjects">Moving Heavy Objects</option>
-                <option value="walkingTheDog">Walking The Dog</option>
+                <option value="plumbing">Plumbing</option>
+                <option value="moving">Moving</option>
+                <option value="dogWalking">Dog Walking</option>
               </select>
             </div>
             <h3 className="text-sm">Hourly Wage</h3>

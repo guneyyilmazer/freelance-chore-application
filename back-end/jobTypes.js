@@ -1,8 +1,8 @@
 const jobTypes = [
   "cleaning",
   "cuttingGrass",
-  "movingHeavyObjects",
-  "walkingTheDog",
-  "plumbering",
+  "moving",
+  "dogWalking",
+  "plumbing",
 ];
-module.exports={jobTypes}
+module.exports = { jobTypes };

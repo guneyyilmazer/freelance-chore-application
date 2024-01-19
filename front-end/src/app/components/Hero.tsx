@@ -52,7 +52,7 @@ const Hero = () => {
               <div className="left-0 top-[33px] absolute justify-start items-start gap-4 inline-flex">
                 <Link
                   href="/posts?type=cleaning"
-                  className="w-[174px] flex justify-around h-[50px] relative"
+                  className="w-[174px] flex justify-around h-[50px] hover:opacity-50 relative"
                 >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
@@ -65,8 +65,8 @@ const Hero = () => {
                   />
                 </Link>
                 <Link
-                  href="/posts?type=plumbering"
-                  className="w-[174px] h-[50px] relative"
+                  href="/posts?type=plumbing"
+                  className="w-[174px] h-[50px] hover:opacity-50  relative"
                 >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
@@ -80,7 +80,7 @@ const Hero = () => {
                 </Link>
                 <Link
                   href="/posts?type=walkingTheDog"
-                  className="w-[174px] h-[50px] relative"
+                  className="w-[174px] h-[50px] hover:opacity-50 relative"
                 >
                   <div className="w-[174px] h-[50px] left-0 top-0 absolute bg-white bg-opacity-5 rounded-[51px] border border-white border-opacity-5 backdrop-blur-[11.60px]" />
                   <div className="left-[20px] top-[14px] absolute opacity-80 text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">

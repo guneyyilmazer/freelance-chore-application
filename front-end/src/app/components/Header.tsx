@@ -8,7 +8,7 @@ import { BACKEND_SERVER_IP } from "../layout";
 import { setIsLoggedIn, setUser } from "../features/appSlice";
 import Cookies from "js-cookie";
 import Auth from "./Auth";
-import SignInButton from "./SignInButton";
+import MessagesButton from "./MessagesButton";
 const Header = () => {
   const [hamburgerMenuCollapsed, setHamburgerMenuCollapsed] = useState(false);
   const user = useSelector((shop: any) => shop.app.user);
@@ -32,16 +32,7 @@ const Header = () => {
             Jobs
           </Link>
         </div>
-        {user.isLoggedIn && (
-          <div className="justify-center items-center gap-1 flex">
-            <Link
-              href="/messages/dms"
-              className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal"
-            >
-              Messages
-            </Link>
-          </div>
-        )}
+        <MessagesButton />
         <Link
           href="/freelancers"
           className="justify-center items-center gap-1 flex"
@@ -57,20 +48,32 @@ const Header = () => {
         </div>
       </div>
       <div className="w-[370px] flex justify-between">
-        <SignInButton />
+        {!user.isLoggedIn && (
+          <Link
+            href="/auth"
+            className="px-10 py-3 text-white rounded-xl shadow border border-white justify-center items-center"
+          >
+            Sign In
+          </Link>
+        )}
+        {user.isLoggedIn && (
+          <button
+            onClick={() => {
+              Cookies.remove("Auth_Token");
+              window.location.reload();
+            }}
+            className="px-10 py-3 text-white rounded-xl shadow border border-white justify-center items-center"
+          >
+            Logout
+          </button>
+        )}
         <Link
           href="/post/create"
-          className="w-[210px] h-full flex-col justify-end items-end gap-2 inline-flex"
+          className="px-10 py-3 text-white gap-2 bg-green-600 flex rounded-xl"
         >
-          <div className="grow shrink basis-0 px-10 py-3 bg-green-600 rounded-xl shadow justify-center items-center gap-[5px] inline-flex">
-            <div className="text-center text-white text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Create a Listing
-            </div>
-            <div className="justify-center items-center flex">
-              <div className="flex-col justify-center text-white items-center flex">
-                <FontAwesomeIcon icon={faAnglesRight} />
-              </div>
-            </div>
+          Create a Listing
+          <div className="justify-center items-center flex">
+            <FontAwesomeIcon icon={faAnglesRight} />
           </div>
         </Link>
       </div>

@@ -11,7 +11,7 @@ const AuthButtons = ({ user, client }: any) => {
               onClick={() => {
                 localStorage.setItem("chattingWith", user.userId);
               }}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green-600 px-10 py-4 hover:bg-green-700 text-white font-semibold rounded-lg"
             >
               Send A Message
             </Link>
@@ -19,7 +19,7 @@ const AuthButtons = ({ user, client }: any) => {
         )}
         {user && user.userId == client.userId && (
           <Link
-            className="bg-green-900 p-2 rounded-md text-white"
+            className="bg-green-600 px-10 py-4 hover:bg-green-700 text-white font-semibold rounded-lg"
             href={"/user/editprofile"}
           >
             Edit Profile

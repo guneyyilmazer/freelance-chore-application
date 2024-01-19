@@ -64,27 +64,27 @@ const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:Jo
       >
         <option
           selected={type.cuttingGrass ? true : false}
-          value="grassCutting"
+          value="cuttingGrass"
         >
           Grass Cutting
         </option>
         <option selected={type.cleaning ? true : false} value="cleaning">
           Cleaning
         </option>
-        <option selected={type.plumbering ? true : false} value="plumbering">
-          Plumbering
+        <option selected={type.plumbing ? true : false} value="plumbing">
+          Plumbing
         </option>
         <option
-          selected={type.movingHeavyObjects ? true : false}
-          value="movingHeavyObjects"
+          selected={type.moving ? true : false}
+          value="moving"
         >
-          Moving Heavy Objects
+          Moving
         </option>
         <option
-          selected={type.walkingTheDog ? true : false}
-          value="walkingTheDog"
+          selected={type.dogWalking ? true : false}
+          value="dogWalking"
         >
-          Walking The Dog
+          Dog Walking
         </option>
       </select>
       <div>
