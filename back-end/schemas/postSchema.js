@@ -23,6 +23,7 @@ const postSchema = new mongoose.Schema(
     price: Number,
     picture: String,
     pictures: [String],
+    availability: { fullTime: Boolean, partTime: Boolean },
   },
   { timestamps: true }
 );
@@ -37,7 +38,8 @@ postSchema.statics.createPost = async function (
   pictures,
   location,
   hourly,
-  skillLevel
+  skillLevel,
+  availability
 ) {
   if (!jobTypes.filter((item) => item == type)) {
     throw new Error(process.env.JOB_TYPE_INVALID);
@@ -59,6 +61,7 @@ postSchema.statics.createPost = async function (
     location,
     hourly: hourly != 0 ? Number(hourly) : -1,
     skillLevel,
+    availability
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {

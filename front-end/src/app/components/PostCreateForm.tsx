@@ -13,6 +13,7 @@ const PostCreateForm = () => {
   const priceRef = useRef<HTMLInputElement>(null);
   const hourlyRef = useRef<HTMLInputElement>(null);
   const skillLevelRef = useRef<HTMLSelectElement>(null);
+  const availabilityRef = useRef<HTMLSelectElement>(null);
   const typeRef = useRef<HTMLSelectElement>(null);
   const [pictures, setPictures] = useState<string[]>([]);
   const [mainPicture, setMainPicture] = useState("");
@@ -82,43 +83,45 @@ const PostCreateForm = () => {
     selectedState != "" && getCities();
   }, [selectedState]);
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (
       titleRef.current?.value == "" ||
       descRef.current?.value == "" ||
-      (priceRef.current?.value || hourlyRef.current?.value) ||
-      skillLevelRef.current?.value ||
+      (!priceRef.current?.value && !hourlyRef.current?.value) ||
+      skillLevelRef.current?.value == "" ||
       selectedState == "" ||
       selectedCity == "" ||
-      typeRef.current?.value
+      typeRef.current?.value == ""
     ) {
       alert("All credentials must be filled!");
-    }
-    e.preventDefault();
-    const res = await fetch(`${BACKEND_SERVER_IP}/post/create`, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
-      },
+    } else {
+      const res = await fetch(`${BACKEND_SERVER_IP}/post/create`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+        },
 
-      method: "POST",
-      body: JSON.stringify({
-        title: titleRef.current!.value,
-        description: descRef.current!.value,
-        price: priceRef.current?.value ? Number(priceRef.current?.value) : -1,
-        hourly: hourlyRef.current?.value
-          ? Number(hourlyRef.current?.value)
-          : -1,
-        skillLevel: skillLevelRef.current?.value,
-        pictures,
-        picture: mainPicture,
-        location: { state: selectedState, city: selectedCity },
-        type: { [typeRef.current?.value as string]: true },
-      }),
-    });
-    const response = await res.json();
-    if (!response.error) {
-      alert("Post created successfully!");
-      window.location.replace("/posts");
+        method: "POST",
+        body: JSON.stringify({
+          title: titleRef.current!.value,
+          description: descRef.current!.value,
+          price: priceRef.current?.value ? Number(priceRef.current?.value) : -1,
+          hourly: hourlyRef.current?.value
+            ? Number(hourlyRef.current?.value)
+            : -1,
+          skillLevel: skillLevelRef.current?.value,
+          availability: { [availabilityRef.current?.value as string]: true },
+          pictures,
+          picture: mainPicture,
+          location: { state: selectedState, city: selectedCity },
+          type: { [typeRef.current?.value as string]: true },
+        }),
+      });
+      const response = await res.json();
+      if (!response.error) {
+        alert("Post created successfully!");
+        window.location.replace("/posts");
+      }
     }
   };
   return (
@@ -218,6 +221,23 @@ const PostCreateForm = () => {
             <option value="expert">Expert</option>
           </select>
         </div>
+        <div className="flex my-5 flex-col">
+          <label htmlFor="skillLevel">Choose availability</label>
+
+          <select
+            ref={availabilityRef}
+            className="shadow p-3 appearance-none border"
+            name="skillLevel"
+            id="skillLevel"
+          >
+            <option disabled selected>
+              {" "}
+              Select Desired Freelancer Availability{" "}
+            </option>
+            <option value="partTime">Part-Time</option>
+            <option value="fullTime">Full-Time</option>
+          </select>
+        </div>
         {states.length != 0 ? (
           <div className="flex my-3 flex-col">
             <label htmlFor="types">Choose your state</label>
@@ -238,7 +258,7 @@ const PostCreateForm = () => {
                 disabled
                 selected
               >
-                {selectedState != "" ? selectedState : "Select"}
+                {selectedState != "" ? selectedState : "Select State"}
               </option>
               {states.map((item: any) => (
                 <option value={item.name}>{item.name}</option>
@@ -266,7 +286,7 @@ const PostCreateForm = () => {
                 disabled
                 selected
               >
-                {selectedCity != "" ? selectedCity : "Select"}
+                {selectedCity != "" ? selectedCity : "Select City"}
               </option>
               {cities.map((item: string) => (
                 <option value={item}>{item}</option>

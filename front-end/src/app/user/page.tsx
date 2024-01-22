@@ -71,7 +71,7 @@ const page = () => {
             </div>
           </div>
           <div className="w-full my-5 flex items-center justify-between">
-            <div className="text-slate-800 text-2xl font-bold font-['Helvetica Neue'] leading-9">
+            <div className="text-slate-800 text-2xl font-bold leading-9">
               {user.freelancerDetails?.jobType.cleaning &&
                 "Cleaning Specialist"}
               {user.freelancerDetails?.jobType.cuttingGrass &&
@@ -84,7 +84,7 @@ const page = () => {
               {user.freelancerDetails?.hourlyWage}$/hr
             </div>
           </div>
-          <div className="w-full text-black text-base font-normal font-['Helvetica Neue'] leading-normal">
+          <div className="w-full">
             {user.freelancerDetails?.aboutMe}
           </div>
         </div>

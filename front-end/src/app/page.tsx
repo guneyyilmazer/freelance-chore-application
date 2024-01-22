@@ -55,28 +55,30 @@ export default function Home() {
       <div className="">
         <TopFreelancersInYourCity />
       </div>
-      <div className="w-[100vw] relative h-[600px] bg-black bg-opacity-20">
-        <div className="text-white ml-[100px] py-[70px] text-base font-bold font-['Helvetica Neue'] leading-normal">
+      <div className="w-[100vw] flex justify-center items-center relative h-[300px] md:h-[600px] bg-opacity-20">
+        <div className="w-[90%]">
           {" "}
-          WHAT USERS ARE SAYING
-        </div>
-        <div className="w-[587px] ml-[100px] text-white text-[32px] font-bold font-['Helvetica Neue'] leading-[44px]">
-          {" "}
-          “Orea was a game-changer to manage my busy schedule. I hired an
-          amazing lawn technician who efficiently takes care of my lawn.”
-        </div>
-        <div className="text-white ml-[100px] my-[30px] text-base font-bold font-['Helvetica Neue'] leading-normal">
-          Emily Turner
-        </div>
-        <div className="w-full h-full top-0 absolute z-[-1]">
-          <img
-            src={emilyturner.src}
-            className="w-full object-cover h-full"
-            alt=""
-          />
+          <div className="text-white 0 md:ml-[100px] py-[30px] md:py-[70px] font-bold">
+            WHAT USERS ARE SAYING
+          </div>
+          <div className="md:w-[587px] md:ml-[100px] text-white text-lg md:text-[32px] font-bold md:leading-[44px]">
+            {" "}
+            “Orea was a game-changer to manage my busy schedule. I hired an
+            amazing lawn technician who efficiently takes care of my lawn.”
+          </div>
+          <div className="text-white md:ml-[100px] my-[30px] font-bold">
+            Emily Turner
+          </div>
+          <div className="w-full h-full left-0 top-0 absolute z-[-1]">
+            <img
+              src={emilyturner.src}
+              className="md:w-full object-cover h-full"
+              alt=""
+            />
+          </div>
         </div>
       </div>
-      <div className="w-12 h-12 bg-white bg-opacity-5 rounded-full border-2 border-white border-opacity-5" />
+      <div className="md:w-12 h-12 bg-white bg-opacity-5 rounded-full border-2 border-white border-opacity-5" />
     </main>
   );
 }

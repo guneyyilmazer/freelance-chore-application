@@ -220,7 +220,7 @@ const page = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <div className="text-sm">Share this Job</div>
-                <div className="flex pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg justify-start items-center">
+                <div className="flex pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg items-center">
                   <div className="text-gray-500 text-xs">
                     {window.location.href}
                   </div>

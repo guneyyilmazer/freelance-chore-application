@@ -13,25 +13,23 @@ const Header = () => {
   const [hamburgerMenuCollapsed, setHamburgerMenuCollapsed] = useState(false);
   const user = useSelector((shop: any) => shop.app.user);
   return (
-    <div className="w-[100vw] flex justify-around items-center h-[90px] secondary">
+    <div className="w-[100vw] hidden md:flex justify-around items-center h-[90px] secondary">
       <Link
         href="/"
-        className="w-[89px] h-10 justify-start items-center gap-1.5 inline-flex"
+        className="h-10 justify-start items-center gap-1.5 inline-flex"
       >
         <div className="w-10 h-10 relative" />
-        <div className="text-center text-white text-xl font-bold font-['Helvetica Neue'] leading-[30px]">
+        <div className="text-center text-white text-xl font-bold leading-[30px]">
           orea
         </div>
       </Link>
-      <div className="w-[327px] h-6 justify-center items-center gap-5 inline-flex">
-        <div className="justify-center items-center gap-2 flex">
+      <div className="h-6 justify-center items-center gap-5 inline-flex">
           <Link
             href="/posts"
             className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal"
           >
             Jobs
           </Link>
-        </div>
         <MessagesButton />
         <Link
           href="/freelancers"
@@ -47,7 +45,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="w-[370px] flex justify-between">
+      <div className="flex gap-2 justify-between">
         {!user.isLoggedIn && (
           <Link
             href="/auth"

@@ -31,6 +31,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
     username: searchParams.get("username")
       ? (searchParams.get("username") as string)
       : "",
+    availability: searchParams.get("availability")
+      ? (searchParams.get("availability") as string)
+      : "random",
     hourly: searchParams.get("hourly")
       ? Number(searchParams.get("hourly"))
       : -1,
@@ -56,6 +59,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
     if (filter.price == -1 && filter.hourly == -1) {
       setFilter((state: filterType) => {
         return {
+          availability: "random",
           hourlyBetween: state.hourlyBetween,
           username: state.username,
           hourly: page == "posts" ? -2 : 0,
@@ -127,7 +131,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
         Object.keys(filter.jobType)[0] != undefined
           ? Object.keys(filter.jobType)[0]
           : "random"
-      }&username${filter.username}&hourlybetween=${
+      }&username${filter.username}&availability=${
+        filter.availability
+      }&hourlybetween=${
         filter.hourlyBetween![0] + "/" + filter.hourlyBetween![1]
       }&state=${filter.selectedState}&city=${filter.selectedCity}${
         filter.hourly != -1
@@ -164,6 +170,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
                         hourlyBetween: [0, 20],
                         price: -1,
@@ -199,8 +206,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
-
                         hourlyBetween: [20, 40],
                         price: -1,
                         hourly: -2,
@@ -235,6 +242,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
                         hourlyBetween: [40, 60],
                         hourly: -2,
@@ -270,8 +278,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
-
                         hourlyBetween: [60, 80],
                         price: -1,
                         hourly: -2,
@@ -307,8 +315,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
-
                         hourlyBetween: [80, 100],
                         hourly: -2,
                         price: -1,
@@ -343,8 +351,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                     setHourlyChecked(true);
                     setFilter((state: filterType) => {
                       return {
+                        availability: state.availability,
                         username: state.username,
-
                         hourlyBetween: [100, 9999999],
                         hourly: -2,
                         price: -1,
@@ -382,6 +390,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   setCities([]);
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
                       hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
@@ -424,8 +433,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
-
                       hourly: state.hourly,
                       price: state.price,
                       hourlyBetween: state.hourlyBetween,
@@ -480,8 +489,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
-
                       hourly: state.hourly,
                       hourlyBetween: state.hourlyBetween,
                       price: state.price,
@@ -507,6 +516,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
                       hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
@@ -533,6 +543,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
                       hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
@@ -559,6 +570,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
                       hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
@@ -585,6 +597,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
                 onChange={(e) => {
                   setFilter((state: filterType) => {
                     return {
+                      availability: state.availability,
                       username: state.username,
                       hourlyBetween: state.hourlyBetween,
                       hourly: state.hourly,
@@ -619,7 +632,26 @@ const FilterSideBar = ({ page }: { page: string }) => {
         <div className="flex-col justify-start items-start gap-4 flex">
           <div className="justify-start items-start gap-3 inline-flex">
             <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
+              <input
+                onChange={(e) => {
+                  setFilter((state: filterType) => {
+                    return {
+                      availability: "fullTime",
+                      username: state.username,
+                      hourly: state.hourly,
+                      hourlyBetween: state.hourlyBetween,
+                      price: state.price,
+                      selectedCity: state.selectedCity,
+                      selectedState: state.selectedState,
+                      jobType: state.jobType,
+                    };
+                  });
+                }}
+                type="radio"
+                className="w-6 h-6 relative"
+                name="jobType"
+                checked={filter.availability == "fullTime" ? true : false}
+              ></input>
             </div>
             <div className="w-[139px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
               Full - Time Jobs
@@ -627,7 +659,26 @@ const FilterSideBar = ({ page }: { page: string }) => {
           </div>
           <div className="justify-start items-start gap-3 inline-flex">
             <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
+              <input
+                onChange={(e) => {
+                  setFilter((state: filterType) => {
+                    return {
+                      availability: "partTime",
+                      username: state.username,
+                      hourly: state.hourly,
+                      hourlyBetween: state.hourlyBetween,
+                      price: state.price,
+                      selectedCity: state.selectedCity,
+                      selectedState: state.selectedState,
+                      jobType: state.jobType,
+                    };
+                  });
+                }}
+                type="radio"
+                className="w-6 h-6 relative"
+                name="jobType"
+                checked={filter.availability == "partTime" ? true : false}
+              ></input>
             </div>
             <div className="w-[139px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
               Part - Time Jobs
@@ -635,10 +686,29 @@ const FilterSideBar = ({ page }: { page: string }) => {
           </div>
           <div className="justify-start items-start gap-3 inline-flex">
             <div className="w-6 h-6 justify-center items-center flex">
-              <div className="w-6 h-6 relative"></div>
+              <input
+                onChange={(e) => {
+                  setFilter((state: filterType) => {
+                    return {
+                      availability: "random",
+                      username: state.username,
+                      hourly: state.hourly,
+                      hourlyBetween: state.hourlyBetween,
+                      price: state.price,
+                      selectedCity: state.selectedCity,
+                      selectedState: state.selectedState,
+                      jobType: state.jobType,
+                    };
+                  });
+                }}
+                type="radio"
+                className="w-6 h-6 relative"
+                name="jobType"
+                checked={filter.availability == "random" ? true : false}
+              ></input>
             </div>
             <div className="w-[232px] text-slate-600 text-sm font-normal font-['Helvetica Neue'] leading-[21px]">
-              Contract Jobs
+              All Jobs
             </div>
           </div>
         </div>

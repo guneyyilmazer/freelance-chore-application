@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
+import DesktopHeader from "./components/DesktopHeader";
+import MobileNavbar from "./components/MobileNavbar";
 const inter = Inter({ subsets: ["latin"] });
 import "./css/styles.css";
 import { Providers } from "./Providers";
@@ -19,6 +20,21 @@ export const categories: categories = {
   moving: { value: { moving: true }, name: "moving" },
   dogWalking: { value: { dogWalking: true }, name: "dogWalking" },
 };
+export const categoriesArray = [
+  { value: { cleaning: true }, name: "cleaning", displayName: "Cleaning" },
+  {
+    value: { cuttingGrass: true },
+    name: "cuttingGrass",
+    displayName: "Cutting Grass",
+  },
+  { value: { plumbing: true }, name: "plumbing", displayName: "Plumbing" },
+  { value: { moving: true }, name: "moving", displayName: "Moving" },
+  {
+    value: { dogWalking: true },
+    name: "dogWalking",
+    displayName: "Dog Walking",
+  },
+];
 type categories = {
   cleaning: { value: { cleaning: true }; name: string };
   cuttingGrass: { value: { cuttingGrass: true }; name: string };
@@ -41,7 +57,12 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body className={inter.className}>
-          <Header />
+          <div className="hidden md:block">
+            <DesktopHeader />
+          </div>
+          <div className="md:hidden">
+            <MobileNavbar />
+          </div>
           <div className="">{children}</div>
           <Footer />
         </body>

@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { filterType, user } from "../types";
 const initialState: {
   searchFilter: filterType;
+  mobileFilterMenu: boolean;
   user: user;
   emptyRoom: boolean;
   loading: boolean;
@@ -12,8 +13,10 @@ const initialState: {
   chattingWith: string;
   room: string;
 } = {
+  mobileFilterMenu: false,
   searchFilter: {
     username: "",
+    availability: "random",
     hourlyBetween: [0, 999999],
     hourly: 0,
     price: -1,
@@ -49,6 +52,9 @@ const appSlice = createSlice({
     setSearchFilter: (state, action) => {
       state.searchFilter = action.payload;
     },
+    setMobileFilterMenu: (state, action) => {
+      state.mobileFilterMenu = action.payload;
+    },
     setUser: (state, action) => {
       state.user = action.payload;
     },
@@ -77,6 +83,7 @@ const appSlice = createSlice({
 });
 export const {
   setSearchFilter,
+  setMobileFilterMenu,
   setUser,
   setRoom,
   setChattingWith,

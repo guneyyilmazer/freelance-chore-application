@@ -68,7 +68,8 @@ const withAuth = (HocComponent: any) => {
       // Using a count state prevents the Auth Page flashing up on reload. Because it returns with inital state value first time this function gets run.
       <HocComponent {...props} />
     ) : state == 1 ? (
-      router.replace("/auth")
+      <></>
+      /* router.replace("/auth") */
     ) : (
       <></>
     );

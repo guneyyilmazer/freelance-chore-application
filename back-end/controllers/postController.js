@@ -38,23 +38,17 @@ const getPostedTimeAgoText = (createdAt) => {
   if (postedMonthsAgo < 1 && postedDaysAgo < 1 && postedHoursAgo < 1) {
     postedTimeAgoText =
       postedMinutesAgo < 2
-        ? postedMinutesAgo + " Minute Ago"
+        ? " 1 Minute Ago"
         : postedMinutesAgo + " Minutes Ago";
   } else if (postedMonthsAgo < 1 && postedDaysAgo < 1) {
     postedTimeAgoText =
-      postedHoursAgo < 2
-        ? postedHoursAgo + " Hour Ago"
-        : postedHoursAgo + " Hours Ago";
+      postedHoursAgo < 2 ? " 1 Hour Ago" : postedHoursAgo + " Hours Ago";
   } else if (postedMonthsAgo < 1) {
     postedTimeAgoText =
-      postedDaysAgo < 2
-        ? postedDaysAgo + " Day Ago"
-        : postedDaysAgo + " Days Ago";
+      postedDaysAgo < 2 ? " 1 Day Ago" : postedDaysAgo + " Days Ago";
   } else {
     postedTimeAgoText =
-      postedMonthsAgo < 2
-        ? postedMonthsAgo + " Month Ago"
-        : postedMonthsAgo + " Months Ago";
+      postedMonthsAgo < 2 ? " 1 Month Ago" : postedMonthsAgo + " Months Ago";
   }
   return postedTimeAgoText;
 };
@@ -70,6 +64,7 @@ const getPosts = async (req, res) => {
       state,
       price,
       hourly,
+      availability,
     } = req.body;
     if (
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
@@ -102,6 +97,7 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
+          availability: availability.random ? { $not: /^0.*/ } : availability,
         })
       : await PostModel.find({
           hourly:
@@ -123,6 +119,8 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
+        availability: availability.random ? { $not: /^0.*/ } : availability,
+
         })
           .skip((page - 1) * amount)
           .limit(amount);
@@ -282,6 +280,7 @@ const createPost = async (req, res) => {
       location,
       hourly,
       skillLevel,
+      availability,
     } = req.body;
     await PostModel.createPost(
       req.userId,
@@ -293,7 +292,8 @@ const createPost = async (req, res) => {
       pictures,
       location,
       hourly,
-      skillLevel
+      skillLevel,
+      availability
     );
     res.status(200).json({ msg: "Post has been created successfully." });
   } catch (err) {
