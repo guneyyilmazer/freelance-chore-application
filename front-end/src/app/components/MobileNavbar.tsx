@@ -19,7 +19,7 @@ const Header = () => {
     <div>
       {!hamburgerMenu && (
         <div className="w-[100vw] flex justify-center items-center secondary">
-          <div className="w-[90%] h-[10svh] flex justify-between items-center">
+          <div className="w-[90%] h-[10vh] flex justify-between items-center">
             <Link href="/" className="flex items-center">
               <div className="w-10 h-10 flex justify-center items-center">
                 <img src={logo.src} alt="" />
@@ -41,7 +41,7 @@ const Header = () => {
       {hamburgerMenu && (
         <div className="absolute flex flex-col items-center top-0 left-0 secondary z-20 w-[100vw] h-[100vh] text-white">
           <div className="w-[90%]">
-            <div className="h-[10svh] flex justify-between items-center">
+            <div className="h-[10vh] flex justify-between items-center">
               <Link
                 onClick={() => setHamburgerMenu(false)}
                 href="/"
@@ -73,16 +73,12 @@ const Header = () => {
                   Jobs
                 </Link>
               </li>
-              <li>
-                {" "}
-                <Link
-                  href="/messages/dms"
-                  onClick={() => setHamburgerMenu(false)}
-                  className="text-center text-white"
-                >
-                  Messages
-                </Link>
-              </li>
+              {user.isLoggedIn && (
+                <li onClick={() => setHamburgerMenu(false)}>
+                  {" "}
+                  <MessagesButton />
+                </li>
+              )}
               <li>
                 {" "}
                 <Link

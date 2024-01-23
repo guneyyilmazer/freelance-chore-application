@@ -24,9 +24,11 @@ import {
 const page = () => {
   const dispatch = useDispatch();
   const filter = useSelector((shop: any) => shop.app.searchFilter);
+  const mobileFilterMenu = useSelector(
+    (shop: any) => shop.app.mobileFilterMenu
+  );
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [mobileFilterMenu, setLocalMobileFilterMenu] = useState(false);
   const [posts, setPosts] = useState([]);
   const [allPages, setAllPages] = useState([1]);
   const [lastPage, setLastPage] = useState(false);
@@ -91,9 +93,6 @@ const page = () => {
   useEffect(() => {
     getPosts();
   }, [filter]);
-  useEffect(() => {
-    dispatch(setMobileFilterMenu(mobileFilterMenu));
-  }, [mobileFilterMenu]);
   return (
     <div>
       <div className="flex">
@@ -102,11 +101,7 @@ const page = () => {
         </div>
         {mobileFilterMenu && (
           <div className="md:hidden">
-            <MobileFilterMenu
-              page="posts"
-              state={mobileFilterMenu}
-              setState={setLocalMobileFilterMenu}
-            />
+            <MobileFilterMenu page="posts" />
           </div>
         )}
         {!mobileFilterMenu && (
@@ -124,7 +119,7 @@ const page = () => {
                     <div className="ml-2">^</div>
                   </div>
                   <button
-                    onClick={() => setLocalMobileFilterMenu(true)}
+                    onClick={() => dispatch(setMobileFilterMenu(true))}
                     className="mt-5 flex text-lg md:hidden items-center gap-2 text-green-600"
                   >
                     Filter

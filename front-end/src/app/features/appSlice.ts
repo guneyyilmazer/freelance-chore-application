@@ -5,6 +5,8 @@ import { filterType, user } from "../types";
 const initialState: {
   searchFilter: filterType;
   mobileFilterMenu: boolean;
+  mobileDmSideBar: boolean;
+  mobileChattingWithUserSideBar: boolean;
   user: user;
   emptyRoom: boolean;
   loading: boolean;
@@ -14,6 +16,12 @@ const initialState: {
   room: string;
 } = {
   mobileFilterMenu: false,
+  mobileDmSideBar:
+    localStorage.getItem("mobileDmSideBar") == "false" ? false : true,
+  mobileChattingWithUserSideBar:
+    localStorage.getItem("mobileChattingWithUserSideBar") == "false"
+      ? false
+      : true,
   searchFilter: {
     username: "",
     availability: "random",
@@ -36,10 +44,9 @@ const initialState: {
   loading: true,
   loadedFirstMessages: false,
   socket: {},
-  chattingWith:
-    typeof window !== "undefined"
-      ? (window.localStorage.getItem("chattingWith") as string)
-      : "",
+  chattingWith: localStorage.getItem("chattingWith")
+    ? (localStorage.getItem("chattingWith") as string)
+    : "",
   room:
     typeof window !== "undefined"
       ? (window.localStorage.getItem("room") as string)
@@ -54,6 +61,12 @@ const appSlice = createSlice({
     },
     setMobileFilterMenu: (state, action) => {
       state.mobileFilterMenu = action.payload;
+    },
+    setMobileDmSideBar: (state, action) => {
+      state.mobileDmSideBar = action.payload;
+    },
+    setMobileChattingWithUserSideBar: (state, action) => {
+      state.mobileChattingWithUserSideBar = action.payload;
     },
     setUser: (state, action) => {
       state.user = action.payload;
@@ -84,6 +97,8 @@ const appSlice = createSlice({
 export const {
   setSearchFilter,
   setMobileFilterMenu,
+  setMobileDmSideBar,
+  setMobileChattingWithUserSideBar,
   setUser,
   setRoom,
   setChattingWith,

@@ -20,26 +20,24 @@ const ListOfSeen = ({ users, showSeen, setShowSeen }: any) => {
     };
   }, [handleUserKeyPress]);
   return (
-    <div
-      style={{ height: "100svh", width: "100vw" }}
-      className="bg-gray-700 text-white absolute top-0 left-0"
-    >
+    <div className="secondary z-50 w-[100vw] h-[100vh] overflow-y-auto text-white absolute top-0 left-0">
       <div className="flex justify-center flex-col">
         <span className="text-2xl my-4 text-center">
           Seen By {count} {count == 1 ? "User" : "Users"}
         </span>
         <div className="flex justify-center items-center flex-col">
-
           {users.map((item: user, index: number) => {
             return (
-              <div key={index} className="my-1 flex w-52 justify-center text-white">
+              <div
+                key={index}
+                className="my-1 flex w-52 justify-center text-white"
+              >
                 <Link
                   className="no-underline flex justify-center items-center text-white"
                   href={`/user/?id=${item.userId}`}
                 >
                   <img
-                    className="rounded-full"
-                    style={{ height: "40px", width: "40px" }}
+                    className="rounded-full w-8 h-8"
                     src={
                       item.profilePicture
                         ? item.profilePicture
@@ -56,7 +54,7 @@ const ListOfSeen = ({ users, showSeen, setShowSeen }: any) => {
       </div>
       <button
         onClick={() => setShowSeen(!showSeen)}
-        className="absolute p-3 rounded-lg bg-blue-900 top-0 right-0"
+        className="absolute w-10 h-10 rounded-full m-2 bg-green-600 top-0 right-0"
       >
         <FontAwesomeIcon icon={faX} />
       </button>

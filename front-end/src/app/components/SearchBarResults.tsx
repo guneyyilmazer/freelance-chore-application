@@ -20,7 +20,14 @@ const SearchBarResults = ({
   const router = useRouter();
   useEffect(() => setShow(false), [router]);
   return show ? (
-    <div className="bg-gray-800 text-white">
+    <div
+      style={{
+        borderBottomLeftRadius: "10px",
+        borderBottomRightRadius: "10px",
+      }}
+      className="secondary max-h-full
+     text-white"
+    >
       {!userNotFound ? (
         users.map((item, index) => (
           <Link

@@ -2,8 +2,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { JobType, filterType } from "../types";
 import Loading from "./Loading";
-import { setSearchFilter } from "../features/appSlice";
-import { useDispatch } from "react-redux";
+import { setMobileFilterMenu, setSearchFilter } from "../features/appSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -13,18 +13,14 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 
-const FilterSideBar = ({
-  page,
-  state,
-  setState,
-}: {
-  page: string;
-  state: boolean;
-  setState: any;
-}) => {
+const FilterSideBar = ({ page }: { page: string }) => {
   const searchParams = useSearchParams();
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+  const mobileFilterMenu = useSelector(
+    (shop: any) => shop.app.mobileFilterMenu
+  );
+
   const [sideBarVisible, setSideBarVisible] = useState(false);
   const dispatch = useDispatch();
   const [priceChecked, setPriceChecked] = useState(
@@ -153,7 +149,10 @@ const FilterSideBar = ({
   return (
     <div className="absolute z-20 top-0 left-0 w-[100vw] h-[100vh] bg-white overflow-y-auto flex flex-col items-center gap-10">
       <div className="flex justify-end w-[95%]">
-        <button className="mt-5 mr-5 text-lg" onClick={() => setState(false)}>
+        <button
+          className="mt-5 mr-5 text-lg"
+          onClick={() => dispatch(setMobileFilterMenu(false))}
+        >
           <FontAwesomeIcon icon={faX} />
         </button>
       </div>

@@ -4,14 +4,12 @@ import Auth from './Auth'
 
 const MessagesButton = () => {
   return (
-    <div className="justify-center items-center gap-1 flex">
       <Link
-        href="/messages/dms"
+        href="/messages"
         className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal"
       >
         Messages
       </Link>
-    </div>
   );
 };
 

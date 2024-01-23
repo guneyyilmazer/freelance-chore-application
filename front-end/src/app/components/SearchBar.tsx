@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import SearchBarResults from "./SearchBarResults";
 import { user } from "../types";
 import { BACKEND_SERVER_IP } from "../layout";
-
-const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
+import search from "../images/search-normal.svg";
+const SearchBar = () => {
   const [show, setShow] = useState(true);
   const [userNotFound, setUserNotFound] = useState(false);
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [users, setUsers] = useState<user[]>([]);
   const onClickOutside = () => {
@@ -44,13 +43,12 @@ const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
         method: "POST",
         body: JSON.stringify({
           username: inputRef.current!.value,
-          freelancer,
         }),
       });
       const response = await res.json();
       if (!response.error) setUsers(response.users);
       if (response.notFound) setUserNotFound(true);
-      if (!response.notFound) setUserNotFound(false);
+      else setUserNotFound(false);
     } else {
       setShow(false);
     }
@@ -58,23 +56,19 @@ const SearchBar = ({ freelancer }: { freelancer?: boolean }) => {
 
   return (
     <div className="relative" onClick={() => setShow(true)}>
-      <form className="flex">
+      <div className="w-full flex items-center px-5 py-3 gap-2 rounded-lg border border-zinc-200">
+        <div className="w-6 h-6">
+          <img src={search.src} alt="" />
+        </div>
         <input
           ref={inputRef}
           onChange={findUsers}
-          type="text"
-          className="text-dark p-1 text-center"
-          style={{
-            outline: "none",
-            background: "none",
-            border: "none",
-            borderBottom: "2px solid",
-            borderColor: "Red",
-          }}
-          placeholder={`Search for ${freelancer ? "freelancers" : "users"}`}
+          placeholder={`Search for chats...`}
+          className="text-slate-600 outline-none"
         />
-      </form>
-      <div ref={ref} className="absolute w-[100%]">
+      </div>
+
+      <div ref={ref} className="absolute z-20 max-h-72 overflow-y-auto w-[100%]">
         <SearchBarResults
           show={show}
           setShow={setShow}

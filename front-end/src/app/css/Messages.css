@@ -1,15 +1,15 @@
 .message-sent {
   margin-top: 10px;
   margin-bottom: 10px;
-  background-color: rgb(204, 209, 204);
+  background-color: #1d2a3b;
   border-radius: 15px;
   text-align: end;
   border-bottom-right-radius: 0px;
   padding: 10px;
-  color: black;
+  color: white;
 }
 .message-received {
-  background-color: rgb(60, 60, 60);
+  background-color: white;
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 15px;

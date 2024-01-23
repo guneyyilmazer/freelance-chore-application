@@ -98,8 +98,8 @@ const Hero = () => {
                 </div>
               )}
             </div>
-            <div className="flex justify-center items-center h-[500px] flex-col md:hidden">
-              <div className="flex flex-col justify-center items-center gap- w-[100vw]">
+            <div className="flex justify-center items-center h-[400px] flex-col md:hidden">
+              <div className="flex flex-col justify-center items-center w-[100vw]">
                 <div className="w-[350px] h-[167px] relative">
                   <div className="left-[20px] top-0 absolute rounded-[11px] shadow border border-white flex flex-col justify-end items-center">
                     <img
@@ -186,7 +186,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex mt-10 flex-col">
               <div className="text-white text-sm font-bold">
                 TRENDING SERVICES
               </div>
@@ -283,7 +283,7 @@ const Hero = () => {
                 </span>
               </div>
             </div>
-            <div className="w-[70%] py-[50px] flex justify-center flex-col md:hidden md:w-[550px] mt-[32px] h-10 items-start gap-4">
+            <div className="w-[90%] py-[50px] flex justify-center flex-col md:hidden md:w-[550px] mt-[32px] h-10 items-start gap-4">
               <div className="w-[300px] md:text-center">
                 <span className="text-gray-50 text-base">Join the </span>
                 <span className="text-gray-50 text-base font-bold">

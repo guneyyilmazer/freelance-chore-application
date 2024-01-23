@@ -5,6 +5,7 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import getBase64 from "../components/GetBase64";
 import reduceBase64Size from "../components/ReduceBase64Size";
+import send from "../images/send.svg";
 const SendMessage = () => {
   const socket = useSelector((shop: any) => shop.app.socket); //will implement the type later
   const room = useSelector((shop: any) => shop.app.room);
@@ -59,41 +60,43 @@ const SendMessage = () => {
 
   return (
     (loadedFirstMessages || emptyRoom) && (
-      <form onSubmit={handleSubmit} className="flex justify-center">
-        <input
-          className="py-3 rounded-2"
-          placeholder={"Send a message to room " + room}
-          type="text"
-          onChange={handleTyping}
-          value={inputState}
-          ref={inputRef}
-        />
-        <div className="mx-2 flex justify-center items-center">
-          <div
-            className="bg-green-900 flex justify-center items-center p-2 text-white rounded-lg "
-            onClick={() => fileRef.current?.click()}
-          >
-            <FontAwesomeIcon
-              style={{ height: "1.3rem", width: "1.3rem"}}
-              //@ts-ignore
-              icon={faImage}
-            ></FontAwesomeIcon>
+      <div
+        style={{ borderTopLeftRadius: "20px", borderTopRightRadius: "20px" }}
+        className="flex bg-white items-center py-4 justify-center"
+      >
+        <form onSubmit={handleSubmit} className="flex w-[90%] justify-between">
+          <div className="flex w-full items-center">
+            <input
+              className="w-[90%] bg-slate-200 text-center py-4 rounded-xl outline-none rounded-2"
+              type="text"
+              onChange={handleTyping}
+              value={inputState}
+              ref={inputRef}
+            />
           </div>
-        </div>
-        <input
-          type="file"
-          ref={fileRef}
-          multiple
-          onChange={handleChange}
-          className="hidden"
-        />
-        <button
-          className="bg-green-800 hover:bg-green-950 text-white font-bold py-2 my-5 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          Send
-        </button>
-      </form>
+          <div className="flex gap-2 justify-center items-center">
+            <div
+              className="bg-green-600 hover:bg-green-800 text-xl flex justify-center items-center p-2.5 text-white rounded-full"
+              onClick={() => fileRef.current?.click()}
+            >
+              <FontAwesomeIcon icon={faImage} />
+            </div>
+            <button
+              className="bg-green-600 hover:bg-green-800 text-white font-bold p-2 w-9 rounded-full focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              <img className="w-full h-full" src={send.src} alt="" />
+            </button>
+          </div>
+          <input
+            type="file"
+            ref={fileRef}
+            multiple
+            onChange={handleChange}
+            className="hidden"
+          />
+        </form>
+      </div>
     )
   );
 };

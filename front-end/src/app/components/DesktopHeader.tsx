@@ -1,51 +1,47 @@
 "use client";
-import { faAnglesRight, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BACKEND_SERVER_IP } from "../layout";
-import { setIsLoggedIn, setUser } from "../features/appSlice";
+import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import Auth from "./Auth";
 import MessagesButton from "./MessagesButton";
+import logo from "../images/logo.svg";
 const Header = () => {
-  const [hamburgerMenuCollapsed, setHamburgerMenuCollapsed] = useState(false);
   const user = useSelector((shop: any) => shop.app.user);
   return (
-    <div className="w-[100vw] hidden md:flex justify-around items-center h-[90px] secondary">
+    <div className="w-[100vw] hidden md:flex justify-around items-center h-[10vh] secondary">
       <Link
         href="/"
-        className="h-10 justify-start items-center gap-1.5 inline-flex"
+        className="flex h-10 items-center gap-1.5"
       >
-        <div className="w-10 h-10 relative" />
-        <div className="text-center text-white text-xl font-bold leading-[30px]">
+        <img src={logo.src} alt="" />
+        <div className="text-center text-white text-xl font-bold">
           orea
         </div>
       </Link>
-      <div className="h-6 justify-center items-center gap-5 inline-flex">
-          <Link
-            href="/posts"
-            className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal"
-          >
-            Jobs
-          </Link>
+      <div className="flex h-6 justify-center items-center gap-5">
+        <Link
+          href="/posts"
+          className="text-center text-white"
+        >
+          Jobs
+        </Link>
         <MessagesButton />
         <Link
           href="/freelancers"
-          className="justify-center items-center gap-1 flex"
+          className="flex justify-center items-center gap-1"
         >
-          <div className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal">
+          <div className="text-center text-white">
             Freelancers
           </div>
         </Link>
-        <div className="justify-center items-center gap-1 flex">
-          <div className="text-center text-white text-base font-normal font-['Helvetica Neue'] leading-normal">
+        <div className="flex justify-center items-center gap-1">
+          <div className="text-center text-white">
             Resources
           </div>
         </div>
       </div>
-      <div className="flex gap-2 justify-between">
+      <div className="flex text-sm gap-2 justify-between">
         {!user.isLoggedIn && (
           <Link
             href="/auth"
@@ -70,7 +66,7 @@ const Header = () => {
           className="px-10 py-3 text-white gap-2 bg-green-600 flex rounded-xl"
         >
           Create a Listing
-          <div className="justify-center items-center flex">
+          <div className="flex justify-center items-center">
             <FontAwesomeIcon icon={faAnglesRight} />
           </div>
         </Link>

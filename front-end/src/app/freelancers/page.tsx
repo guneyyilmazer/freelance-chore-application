@@ -11,23 +11,29 @@ import FilterSideBar from "../components/FilterSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { filterType } from "../types";
 import FilterSideBarr from "../components/FilterSideBarr";
-import { setSearchFilter } from "../features/appSlice";
+import { setMobileFilterMenu, setSearchFilter } from "../features/appSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import star from "../images/Star.svg";
 import {
   faAngleUp,
   faCaretLeft,
   faCaretRight,
+  faFilter,
   faLocation,
   faLocationArrow,
   faLocationPin,
   faLocationPinLock,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
+import MobileFilterMenu from "../components/MobileFilterMenu";
 const page = () => {
+  const mobileFilterMenu = useSelector(
+    (shop: any) => shop.app.mobileFilterMenu
+  );
   const dispatch = useDispatch();
   const [allPages, setAllPages] = useState<number[]>([]);
   const [lastPage, setLastPage] = useState(true);
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const [page, setPage] = useState(
     searchParams.get("page") &&
       Number(searchParams.get("page")) > 0 &&
@@ -87,14 +93,28 @@ const page = () => {
     );
   };
   return (
-    <div className="w-[100vw] relative bg-white flex-col items-center inline-flex">
-      <div className="text-black w-full m-14 justify-start text-[40px] font-bold font-['Helvetica Neue'] leading-[48px]">
-        <span className="m-12">Freelancers</span>
+    <div className="w-[100vw] relative bg-white flex flex-col items-center">
+      {mobileFilterMenu && (
+        <div className="md:hidden">
+          <MobileFilterMenu page="freelancers" />
+        </div>
+      )}
+      <div className="w-full hidden md:block my-10 md:m-14 text-center md:text-start text-[40px] font-bold leading-[48px]">
+        <span className="md:m-12">Freelancers</span>
       </div>
       <div className="flex justify-around w-[90%]">
-        <FilterSideBarr page="freelancers" />
+        <div className="hidden md:flex">
+          <FilterSideBarr page="freelancers" />
+        </div>
         <div className="flex flex-col w-full items-center">
-          <div className="w-[954px]">
+          <button
+            onClick={() => dispatch(setMobileFilterMenu(true))}
+            className="text-lg mb-3 w-full flex justify-end items-center text-green-600"
+          >
+            <span className="mr-1">Filter</span>
+            <FontAwesomeIcon icon={faFilter} />
+          </button>
+          <div className="w-full">
             <input
               onChange={handleChange}
               placeholder="Search freelancers by name"
@@ -102,34 +122,38 @@ const page = () => {
             />
             <div className="text-slate-500 w-full text-sm" />
           </div>
-          <div className="flex mt-5 mb-2 flex-col gap-10">
+          <div className="flex w-full mt-5 mb-2 flex-col gap-10">
             {freelancers.map((item: user) => (
               <Link
                 href={`/user?id=${item._id}`}
-                className="w-[954px] h-[308px] flex bg-white rounded-lg shadow border border-gray-200"
+                className="h-[308px] flex items-center md:items-start flex-col md:flex-row bg-white rounded-lg shadow border border-gray-200"
               >
-                <div className="m-3 flex flex-col justify-center items-center">
+                <div className="m-3 w-[90%] md:w-64 flex flex-row md:flex-col justify-between md:justify-start items-center">
                   <img
-                    className="w-48 h-[212px] left-[16px] rounded-lg"
+                    className="w-32 md:w-48 h-32 md:h-[212px] left-[16px] rounded-lg"
                     src={
                       item.profilePicture
                         ? item.profilePicture
                         : DefaultProfilePicture.src
                     }
                   />
-                  <div className="text-center my-4 px-9 py-3.5 rounded-lg bg-green-600 text-white text-sm">
-                    Send a Message
+                  <div>
+                    <div className="w-[190px] md:w-full text-center my-4 px-9 py-3.5 rounded-lg bg-green-600 text-white text-sm">
+                      Send a Message
+                    </div>
                   </div>
                 </div>
-                <div className="m-5 flex flex-col">
-                  <div className="text-slate-800 text-xl font-bold">
-                    {item.username}
-                  </div>
-                  <div className="mt-3">
-                    <span className="text-slate-800 text-lg font-bold">
-                      {item.freelancerDetails?.hourlyWage + "$"}
-                    </span>
-                    <span className="text-slate-800 text-lg">/hr</span>
+                <div className="md:m-5 w-[90%] md:w-full flex justify-center md:justify-start flex-col">
+                  <div className="flex md:flex-col justify-between items-center md:items-start">
+                    <div className="text-slate-800 text-xl font-bold">
+                      {item.username}
+                    </div>
+                    <div className="mt-3">
+                      <span className="text-slate-800 text-lg font-bold">
+                        {item.freelancerDetails?.hourlyWage + "$"}
+                      </span>
+                      <span className="text-slate-800 text-lg">/hr</span>
+                    </div>
                   </div>
                   <div className="text-slate-800 text-sm my-2">
                     {item.freelancerDetails?.jobType.cleaning &&
@@ -141,14 +165,14 @@ const page = () => {
                     {item.freelancerDetails?.jobType.plumbing && "Plumber"}
                     {item.freelancerDetails?.jobType.dogWalking && "Dog Walker"}
                   </div>
-                  <div className="flex items-center gap-6">
-                    <div className="flex justify-center items-center">
+                  <div className="flex md:items-center gap-6">
+                    <div className="flex md:justify-center items-center">
                       <FontAwesomeIcon icon={faLocationPinLock} />
                       <div className="text-slate-600">
                         {item.location.city + "/" + item.location.state}
                       </div>
                     </div>
-                    <div className="flex justify-center items-center gap-1">
+                    <div className="flex md:justify-center items-center gap-1">
                       <div className="text-zinc-900 text-sm">4.8</div>
                       <img src={star.src} alt="" />
                     </div>

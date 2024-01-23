@@ -146,14 +146,13 @@ const LoadUser = async (req, res) => {
 
 const FindUsers = async (req, res) => {
   try {
-    const { username, freelancer } = req.body;
+    const { username } = req.body;
 
     const Users = await UserModel.find({
       username: {
         $regex: username,
         $options: "i",
       },
-      "accountType.freelancer": freelancer,
     })
       .limit(50)
       .select("username")

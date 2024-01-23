@@ -79,7 +79,7 @@ const Messages = () => {
 
   useEffect(() => {
     loadRoom();
-  }, [page]);
+  }, [page, chattingWith]);
   const scrollDown = () => {
     messageContainerRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -211,27 +211,14 @@ const Messages = () => {
       Room is empty.
     </div>
   ) : !loadedFirstMessages ? (
-    <div className="flex justify-center">
-      <FontAwesomeIcon
-        className="text-white text-center"
-        spin
-        style={{ height: "60px", width: "60px", display: "block" }}
-        icon={faCircleNotch}
-      />
+    <div className="flex w-[60px] h-[60px] mt-20 items-center justify-center">
+      <FontAwesomeIcon className="text-center" spin icon={faCircleNotch} />
     </div>
   ) : (
-    <div
-      onScroll={handleScroll}
-      className="flex h-[75vh] flex-col overflow-auto"
-    >
+    <div onScroll={handleScroll} className="flex flex-col w-[97%]">
       {loading && !loadedAllMessages && (
-        <div className="flex justify-center">
-          <FontAwesomeIcon
-            className="text-white text-center"
-            spin
-            style={{ height: "25px", width: "25px" }}
-            icon={faCircleNotch}
-          />
+        <div className="flex w-[25px] h-[25px] mt-4 items-center justify-center">
+          <FontAwesomeIcon className="text-center" spin icon={faCircleNotch} />
         </div>
       )}
       <div className="absolute mb-1 w-100 bottom-0 start-0 text-dark flex justify-center items-center">

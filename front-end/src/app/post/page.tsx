@@ -124,52 +124,56 @@ const page = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       {post ? (
-        <div className="flex flex-col justify-around my-20">
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-5">
-              <div className="text-4xl font-bold">{post?.title}</div>
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-2">
-                  <div>
-                    <img src={location.src} alt="" />
+        <div className="flex flex-col items-center md:items-start md:justify-around my-20">
+          <div className="flex flex-col md:flex-row w-full items-center md:items-start justify-center md:justify-between">
+            <div className="flex flex-col md:flex-row md:justify-between w-[90%] md:w-full gap-5">
+              <div className="">
+                <div className="text-4xl mb-7 md:m-0 font-bold">
+                  {post?.title}
+                </div>
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <img src={location.src} alt="" />
+                    </div>
+                    <div className="text-lg">
+                      {post?.location.state + "/" + post?.location.city}
+                    </div>
                   </div>
-                  <div className="text-lg">
-                    {post?.location.state + "/" + post?.location.city}
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <img src={briefcase.src} alt="" />
+                    </div>
+                    <div className="text-lg">Contract</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <img src={dollar.src} alt="" />
+                    </div>
+                    <div className="text-lg">
+                      {post?.price != -1 && "Price: " + post?.price}
+                      {post?.hourly != -1 && post?.hourly + "$ hr"}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <div>
+                      <img src={clock.src} alt="" />
+                    </div>
+                    <div className="text-lg">
+                      Posted {post.postedTimeAgoText}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div>
-                    <img src={briefcase.src} alt="" />
-                  </div>
-                  <div className="text-lg">Contract</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div>
-                    <img src={dollar.src} alt="" />
-                  </div>
-                  <div className="text-lg">
-                    {post?.price != -1 && "Price: " + post?.price}
-                    {post?.hourly != -1 && post?.hourly + "$ hr"}
-                  </div>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <div>
-                    <img src={clock.src} alt="" />
-                  </div>
-                  <div className="text-lg">Posted {post.postedTimeAgoText}</div>
-                </div>
-              </div>
-              <div className="flex items-center py-5">
-                <button
-                  onClick={applyToPost}
-                  className="flex px-10 py-3 text-white font-semibold text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
-                >
-                  Apply Now
-                </button>
-                <div className="pl-1 flex-col gap-2 inline-flex">
+                <div className="flex gap-1 justify-between md:justify-start items-center py-5">
+                  <button
+                    onClick={applyToPost}
+                    className="flex grow shrink md:px-10 py-3 text-white font-semibold md:text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
+                  >
+                    Apply Now
+                  </button>
                   <button
                     onClick={savePost}
-                    className="p-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 text-sm text-green-600 border-green-600 flex justify-center items-center"
+                    className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
                   >
                     <div className="text-md group-hover:hidden">
                       <img src={bookmark.src} alt="" />
@@ -181,112 +185,102 @@ const page = () => {
                   </button>
                 </div>
               </div>
-            </div>
-            <div className="w-[430px] h-[350px] flex flex-col bg-slate-50 p-5 rounded-xl gap-4">
-              <div className="flex flex-col gap-2">
-                <div className="text-sm">Job Categories</div>
-                <div className="flex gap-2">
-                  <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
-                    <div className="text-slate-800 text-xs">
-                      {post.type.cleaning && "Cleaning"}
-                      {post.type.cuttingGrass && "Cutting Grass"}
-                      {post.type.moving && "Moving"}
-                      {post.type.plumbing && "Plumbing"}
-                      {post.type.dogWalking && "Dog Walking"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="text-sm">Skills</div>
-                <div className="flex">
-                  <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
-                    <div className="text-slate-800 text-xs">
-                      {post.type.cleaning && "Cleaning"}
-                      {post.type.cuttingGrass && "Cutting Grass"}
-                      {post.type.moving && "Moving"}
-                      {post.type.plumbing && "Plumbing"}
-                      {post.type.dogWalking && "Dog Walking"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex-col justify-start items-start gap-1 flex">
-                <div className="text-sm">Experience Level</div>
-                <div className="text-slate-600 text-sm">
-                  {post.skillLevel.charAt(0).toUpperCase() +
-                    post.skillLevel.slice(1)}
-                </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-sm">Share this Job</div>
-                <div className="flex pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg items-center">
-                  <div className="text-gray-500 text-xs">
-                    {window.location.href}
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert("The link has been copied to your clipboard!");
-                  }}
-                  className="text-start mt-2 text-green-600 text-sm"
-                >
-                  Copy Link
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center">
-            <div className="flex flex-col justify-center items-center my-20">
-              <div className="flex mb-5 justify-start w-full">
-                <div className="text-lg font-bold">Overview</div>
-              </div>
-              <div className="w-[1000px] text-black text-base">
-                {post?.description}
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full flex justify-center">
-            <div className="flex flex-col px-14 py-7 rounded-lg shadow border border-gray-200">
-              <div className="flex justify-between items-center gap-6">
-                <div className="flex items-center gap-6">
-                  <img
-                    className="w-[100px] h-[100px] rounded-full"
-                    src={
-                      postUser?.profilePicture
-                        ? postUser.profilePicture
-                        : DefaultProfilePicture.src
-                    }
-                  />
-                  <div className="flex flex-col">
-                    <div className="text-lg font-bold">
-                      {postUser?.username}
-                    </div>
-                    <div className="flex flex-col justify-center items-center">
-                      <div className="flex justify-center">
-                        <div className="mr-1">
-                          <img src={star.src} alt="" />
-                        </div>
-                        <div className="text-slate-600">
-                          4.8 | 5 rating based on 37 reviews
-                        </div>
-                      </div>
-                      <div className="w-full text-slate-600">
-                        Based in:{" "}
-                        {postUser?.location.state +
-                          "/" +
-                          postUser?.location.city}
+              <div className="md:w-[430px] md:h-[350px] flex flex-col bg-slate-50 p-5 rounded-xl gap-4">
+                <div className="flex flex-col gap-2">
+                  <div className="text-sm">Job Categories</div>
+                  <div className="flex gap-2">
+                    <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
+                      <div className="text-slate-800 text-xs">
+                        {post.type.cleaning && "Cleaning"}
+                        {post.type.cuttingGrass && "Cutting Grass"}
+                        {post.type.moving && "Moving"}
+                        {post.type.plumbing && "Plumbing"}
+                        {post.type.dogWalking && "Dog Walking"}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex py-2.5 px-3 bg-green-600 rounded-lg shadow border justify-center items-center">
-                  <div className="text-center text-white text-sm">
-                    Contact Me About This Job
+                <div className="flex flex-col gap-2">
+                  <div className="text-sm">Skills</div>
+                  <div className="flex">
+                    <div className="px-2 py-1 rounded-lg shadow border border-slate-800 justify-center items-center gap-1 flex">
+                      <div className="text-slate-800 text-xs">
+                        {post.type.cleaning && "Cleaning"}
+                        {post.type.cuttingGrass && "Cutting Grass"}
+                        {post.type.moving && "Moving"}
+                        {post.type.plumbing && "Plumbing"}
+                        {post.type.dogWalking && "Dog Walking"}
+                      </div>
+                    </div>
                   </div>
+                </div>
+                <div className="flex-col justify-start items-start gap-1 flex">
+                  <div className="text-sm">Experience Level</div>
+                  <div className="text-slate-600 text-sm">
+                    {post.skillLevel.charAt(0).toUpperCase() +
+                      post.skillLevel.slice(1)}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-sm">Share this Job</div>
+                  <div className="flex pl-3 pr-[17px] py-[11px] bg-emerald-100 bg-opacity-40 rounded-lg items-center">
+                    <div className="text-gray-500 text-xs">
+                      {window.location.href}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      alert("The link has been copied to your clipboard!");
+                    }}
+                    className="text-start mt-2 text-green-600 text-sm"
+                  >
+                    Copy Link
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-[90%] md:justify-center md:items-center">
+            <div className="flex flex-col md:justify-center md:items-center my-20">
+              <div className="text-lg font-bold">Overview</div>
+              <div className="md:w-[1000px]">{post?.description}</div>
+            </div>
+          </div>
+
+          <div className="w-full flex flex-col items-center justify-center">
+            <div className="flex flex-col px-4 md:px-14 py-7 rounded-lg border border-gray-200 md:flex-row items-center gap-6">
+              <div className="flex items-center gap-6">
+                <img
+                  className="w-16 h-16 md:w-[100px] md:h-[100px] rounded-full"
+                  src={
+                    postUser?.profilePicture
+                      ? postUser.profilePicture
+                      : DefaultProfilePicture.src
+                  }
+                />
+                <div className="flex flex-col">
+                  <div className="text-lg font-bold">{postUser?.username}</div>
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex justify-center">
+                      <div className="mr-1">
+                        <img src={star.src} alt="" />
+                      </div>
+                      <div className="text-slate-600">
+                        4.8 | 5 rating based on 37 reviews
+                      </div>
+                    </div>
+                    <div className="w-full text-slate-600">
+                      Based in:{" "}
+                      {postUser?.location.state + "/" + postUser?.location.city}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex py-2.5 px-3 bg-green-600 rounded-lg shadow border justify-center items-center">
+                <div className="text-center text-white text-sm">
+                  Contact Me About This Job
                 </div>
               </div>
             </div>
