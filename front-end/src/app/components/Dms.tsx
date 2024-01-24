@@ -13,6 +13,7 @@ import SearchBar from "@/app/components/SearchBar";
 const DirectMessages = () => {
   const dispatch = useDispatch();
   const user = useSelector((shop: any) => shop.app.user);
+  const globalChattingWith = useSelector((shop: any) => shop.app.chattingWith);
   const [rooms, setRooms] = useState<DirectMessagesRoom[]>();
   const loadPrivateRooms = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/loadPrivateRooms`, {
@@ -27,6 +28,9 @@ const DirectMessages = () => {
       setRooms(response.rooms);
     }
   };
+  useEffect(()=>{
+    localStorage.setItem("chattingWith",globalChattingWith)
+  },[globalChattingWith])
   useEffect(() => {
     loadPrivateRooms();
   }, []);

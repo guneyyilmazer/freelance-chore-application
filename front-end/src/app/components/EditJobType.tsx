@@ -3,7 +3,17 @@ import { BACKEND_SERVER_IP } from "../layout";
 import Cookies from "js-cookie";
 import { JobType } from "../types";
 
-const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:JobType,id:string}) => {
+const EditDesc = ({
+  show,
+  setShow,
+  type,
+  id,
+}: {
+  show: boolean;
+  setShow: any;
+  type: JobType;
+  id: string;
+}) => {
   const typeRef = useRef<HTMLSelectElement>(null);
   const handleUserKeyPress = (event: KeyboardEvent) => {
     if (event.key == "Escape") {
@@ -53,45 +63,50 @@ const EditDesc = ({ show, setShow, type, id }: {show:boolean,setShow:any,type:Jo
     setShow(!show);
   };
   return (
-    <div ref={ref} className="flex my-5 flex-col">
-      <label htmlFor="types">Choose a gig type:</label>
-
-      <select
-        ref={typeRef}
-        className="shadow p-3 appearance-none border"
-        name="jobs"
-        id="jobs"
-      >
-        <option
-          selected={type.cuttingGrass ? true : false}
-          value="cuttingGrass"
-        >
-          Grass Cutting
-        </option>
-        <option selected={type.cleaning ? true : false} value="cleaning">
-          Cleaning
-        </option>
-        <option selected={type.plumbing ? true : false} value="plumbing">
-          Plumbing
-        </option>
-        <option
-          selected={type.moving ? true : false}
-          value="moving"
-        >
-          Moving
-        </option>
-        <option
-          selected={type.dogWalking ? true : false}
-          value="dogWalking"
-        >
-          Dog Walking
-        </option>
-      </select>
-      <div>
-
-      <button className="bg-green-800 mt-2 p-2 px-4 rounded-md text-white" onClick={handleClick}>Save</button>
+    <div className="w-[100vw] h-[100vh] absolute left-0 top-0 flex items-center justify-center bg-white bg-opacity-80">
+      <div ref={ref} className="flex justify-center flex-col gap-2">
+        <label className="text-2xl" htmlFor="types">
+          Choose a gig type:
+        </label>
+        <div className="flex items-center gap-2">
+          <select
+            ref={typeRef}
+            className="shadow p-2 px-4 appearance-none border"
+            name="jobs"
+            id="jobs"
+          >
+            <option
+              selected={type.cuttingGrass ? true : false}
+              value="cuttingGrass"
+            >
+              Grass Cutting
+            </option>
+            <option selected={type.cleaning ? true : false} value="cleaning">
+              Cleaning
+            </option>
+            <option selected={type.plumbing ? true : false} value="plumbing">
+              Plumbing
+            </option>
+            <option selected={type.moving ? true : false} value="moving">
+              Moving
+            </option>
+            <option
+              selected={type.dogWalking ? true : false}
+              value="dogWalking"
+            >
+              Dog Walking
+            </option>
+          </select>
+          <div>
+            <button
+              className="bg-green-600 p-2 px-4 rounded-md text-white"
+              onClick={handleClick}
+            >
+              Save
+            </button>
+          </div>
+        </div>
       </div>
-
     </div>
   );
 };

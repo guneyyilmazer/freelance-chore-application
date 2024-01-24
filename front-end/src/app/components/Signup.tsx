@@ -19,6 +19,7 @@ const Signup = () => {
           username: usernameRef.current!.value,
           email: emailRef.current!.value,
           password: passwordRef.current!.value,
+          type: { hirer: true },
         }),
       });
       const response = await res.json();
@@ -37,34 +38,53 @@ const Signup = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit}>
-      <h2 className="text-white text-center">Signup</h2>
+    <form
+      className="flex flex-col h-[70vh] md:w-[50vw] shadow p-5 px-12 justify-center"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="text-center font-semibold my-4 text-xl">
+        Signup as a hirer account
+      </h2>
+      <label className="text-lg" htmlFor="username">
+        Username
+      </label>
       <input
         type="text"
         ref={usernameRef}
-        className="mt-2"
+        className="my-2"
         placeholder="Enter username"
         name=""
-        id=""
+        id="username"
       />
+      <label className="text-lg" htmlFor="email">
+        Email
+      </label>
+
       <input
         type="email"
         ref={emailRef}
-        className="mt-2"
+        className="my-2"
         placeholder="Enter email"
         name=""
-        id=""
+        id="email"
       />
+      <label className="text-lg" htmlFor="password">
+        Password
+      </label>
+
       <input
         type="password"
         ref={passwordRef}
-        className="mt-2"
+        className="my-2"
         placeholder="Enter password"
         name=""
-        id=""
+        id="password"
       />
-      <div className="mt-3 text-center">
-        <button className="p-2" type="submit">
+      <div className="my-2 text-center">
+        <button
+          className="p-2 py-3 rounded-lg text-white bg-green-600"
+          type="submit"
+        >
           Signup
         </button>
       </div>

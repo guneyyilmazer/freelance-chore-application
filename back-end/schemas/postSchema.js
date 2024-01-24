@@ -9,6 +9,20 @@ const jobTypesSchema = new mongoose.Schema({
 });
 const postSchema = new mongoose.Schema(
   {
+    completed: { type: Boolean, default: false },
+    completedDate: Date,
+    hired: { type: Boolean, default: false },
+    hiredFreelancer: String,
+    reviews: {
+      freelancerReview: {
+        star: { type: Number, min: 0, max: 5 },
+        text: String,
+      },
+      hirerReview: {
+        star: { type: Number, min: 0, max: 5 },
+        text: String,
+      },
+    },
     applicants: [String],
     user: { type: String, required: true },
     title: { type: String, required: true },
@@ -61,7 +75,7 @@ postSchema.statics.createPost = async function (
     location,
     hourly: hourly != 0 ? Number(hourly) : -1,
     skillLevel,
-    availability
+    availability,
   });
 };
 postSchema.statics.deletePost = async function (userId, id) {

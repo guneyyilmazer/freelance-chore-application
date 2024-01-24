@@ -2,17 +2,21 @@
 import React, { useEffect, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ImagePreview from "../components/ImagePreview";
 import Link from "next/link";
 import EditDesc from "../components/EditDesc";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBookBookmark,
+  faBriefcase,
+  faCheck,
   faLocation,
   faLocationDot,
   faPen,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import EditJobType from "../components/EditJobType";
 import { post, user } from "../types";
 import AuthButtons from "./AuthButtons";
@@ -29,6 +33,8 @@ import clock from "../images/clock.svg";
 import bookmark from "../images/bookmark.svg";
 import bookmarkWhite from "../images/bookmark-white.svg";
 import star from "../images/star.svg";
+import { setChattingWith } from "../features/appSlice";
+import EditAvailability from "../components/EditAvailability";
 const page = () => {
   const [preview, setPreview] = useState(false);
   const [previewPictures, setPreviewPictures] = useState<string[]>();
@@ -37,16 +43,18 @@ const page = () => {
   const [editLocationShow, setEditLocationShow] = useState(false);
   const [wageEditShow, setWageEditShow] = useState(false);
   const [descEditShow, setDescEditShow] = useState(false);
+  const [availabilityEditShow, setAvailabilityEditShow] = useState(false);
   const [typeEditShow, setTypeEditShow] = useState(false);
   const router = useRouter();
   useEffect(() => {
     getPost();
   }, []);
+  const dispatch = useDispatch();
   const [post, setPost] = useState<post>();
   const searchParams = useSearchParams();
   const user = useSelector((shop: any) => shop.app.user);
   const [postUser, setPostUser] = useState<user>();
-
+  const [applied, setApplied] = useState(false);
   const getPost = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/post/getPost`, {
       headers: {
@@ -61,6 +69,8 @@ const page = () => {
     const { post } = await res.json();
     setPost(post);
     setPreviewPictures(post.pictures);
+    if (post.applicants.filter((id: string) => user.userId == id).length != 0)
+      setApplied(true);
   };
   const savePost = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/savePost`, {
@@ -95,6 +105,7 @@ const page = () => {
     });
     const data = await res.json();
     if (res.status == 200) alert("Successfully applied!");
+    getPost();
     //@ts-ignore
     if (data.error)
       //@ts-ignore
@@ -124,39 +135,94 @@ const page = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       {post ? (
-        <div className="flex flex-col items-center md:items-start md:justify-around my-20">
-          <div className="flex flex-col md:flex-row w-full items-center md:items-start justify-center md:justify-between">
-            <div className="flex flex-col md:flex-row md:justify-between w-[90%] md:w-full gap-5">
+        <div className="flex flex-col w-[100vw] items-center justify-center my-20">
+          <div className="flex flex-col md:flex-row w-[90%] md:w-[70%] items-center justify-center">
+            <div className="flex flex-col md:flex-row w-full md:justify-between gap-5">
               <div className="">
-                <div className="text-4xl mb-7 md:m-0 font-bold">
-                  {post?.title}
+                <div className="text-4xl flex items-center mb-7 md:mb-5 font-bold">
+                  <div>{post?.title}</div>
+                  {post.user == user.userId && !titleEditShow && (
+                    <button
+                      onClick={() => setTitleEditShow(true)}
+                      className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                    >
+                      <FontAwesomeIcon className="text-sm" icon={faPen} />
+                    </button>
+                  )}
                 </div>
                 <div className="flex flex-col gap-6">
                   <div className="flex items-center gap-2">
-                    <div>
+                    <div className="w-7 flex justify-center items-center">
                       <img src={location.src} alt="" />
                     </div>
                     <div className="text-lg">
                       {post?.location.state + "/" + post?.location.city}
                     </div>
+                    {post.user == user.userId && !editLocationShow && (
+                      <button
+                        onClick={() => setEditLocationShow(true)}
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                      >
+                        <FontAwesomeIcon className="text-sm" icon={faPen} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="text-[18px] flex justify-center w-7 items-center">
+                      <FontAwesomeIcon icon={faBookmark} />
+                    </div>
+                    <div className="text-lg">
+                      {post.type.cleaning && "Cleaning"}
+                      {post.type.cuttingGrass && "Cutting Grass"}
+                      {post.type.moving && "Moving"}
+                      {post.type.plumbing && "Plumbing"}
+                      {post.type.dogWalking && "Dog Walking"}
+                    </div>
+                    {post.user == user.userId && !typeEditShow && (
+                      <button
+                        onClick={() => setTypeEditShow(true)}
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                      >
+                        <FontAwesomeIcon className="text-sm" icon={faPen} />
+                      </button>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <div>
+                    <div className="w-7 flex justify-center items-center">
                       <img src={briefcase.src} alt="" />
                     </div>
-                    <div className="text-lg">Contract</div>
+                    <div className="text-lg">
+                      {post.availability.fullTime && "Full Time"}
+                      {post.availability.partTime && "Part Time"}
+                    </div>
+                    {post.user == user.userId && !availabilityEditShow && (
+                      <button
+                        onClick={() => setAvailabilityEditShow(true)}
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                      >
+                        <FontAwesomeIcon className="text-sm" icon={faPen} />
+                      </button>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <div>
+                    <div className="w-7 flex justify-center items-center">
                       <img src={dollar.src} alt="" />
                     </div>
                     <div className="text-lg">
-                      {post?.price != -1 && "Price: " + post?.price}
+                      {post?.price != -1 && "Price: " + post?.price + "$"}
                       {post?.hourly != -1 && post?.hourly + "$ hr"}
                     </div>
+                    {post.user == user.userId && !wageEditShow && (
+                      <button
+                        onClick={() => setWageEditShow(true)}
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                      >
+                        <FontAwesomeIcon className="text-sm" icon={faPen} />
+                      </button>
+                    )}
                   </div>
                   <div className="flex gap-2 items-center">
-                    <div>
+                    <div className="w-7 flex justify-center items-center">
                       <img src={clock.src} alt="" />
                     </div>
                     <div className="text-lg">
@@ -164,26 +230,46 @@ const page = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-1 justify-between md:justify-start items-center py-5">
-                  <button
-                    onClick={applyToPost}
-                    className="flex grow shrink md:px-10 py-3 text-white font-semibold md:text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
-                  >
-                    Apply Now
-                  </button>
-                  <button
-                    onClick={savePost}
-                    className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
-                  >
-                    <div className="text-md group-hover:hidden">
-                      <img src={bookmark.src} alt="" />
-                    </div>
-                    <div className="text-md hidden group-hover:block">
-                      <img src={bookmarkWhite.src} alt="" />
-                    </div>
-                    Save This Job
-                  </button>
-                </div>
+                {user.userId != post.user ? (
+                  <div className="flex gap-1 justify-between md:justify-start items-center py-5">
+                    {!applied ? (
+                      <button
+                        onClick={applyToPost}
+                        className="flex grow shrink md:px-10 py-3 text-white font-semibold md:text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
+                      >
+                        Apply Now
+                      </button>
+                    ) : (
+                      <Link
+                        href={"/appliedposts"}
+                        className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
+                      >
+                        See All Posts You Have Applied To
+                      </Link>
+                    )}
+                    <button
+                      onClick={savePost}
+                      className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
+                    >
+                      <div className="text-md group-hover:hidden">
+                        <img src={bookmark.src} alt="" />
+                      </div>
+                      <div className="text-md hidden group-hover:block">
+                        <img src={bookmarkWhite.src} alt="" />
+                      </div>
+                      Save This Job
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-10">
+                    <Link
+                      className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 text-green-600 border-green-600 flex justify-center items-center"
+                      href={`post/applicants?id=${post._id}`}
+                    >
+                      See Who Applied To Your Post
+                    </Link>
+                  </div>
+                )}
               </div>
               <div className="md:w-[430px] md:h-[350px] flex flex-col bg-slate-50 p-5 rounded-xl gap-4">
                 <div className="flex flex-col gap-2">
@@ -228,24 +314,40 @@ const page = () => {
                       {window.location.href}
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(window.location.href);
-                      alert("The link has been copied to your clipboard!");
-                    }}
-                    className="text-start mt-2 text-green-600 text-sm"
-                  >
-                    Copy Link
-                  </button>
+                  <div className="w-full flex items-center mt-2 gap-3 text-green-600 text-sm">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                        alert("The link has been copied to your clipboard!");
+                      }}
+                    >
+                      Copy Link
+                    </button>
+                    <Link
+                      href={`/post/applicants?id=${searchParams.get("id")}`}
+                    >
+                      See Applicants
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex w-[90%] md:justify-center md:items-center">
-            <div className="flex flex-col md:justify-center md:items-center my-20">
-              <div className="text-lg font-bold">Overview</div>
-              <div className="md:w-[1000px]">{post?.description}</div>
+          <div className="flex w-[90%] md:w-[70%]">
+            <div className="flex flex-col my-20">
+              <div className="flex">
+                <div className="text-lg font-bold">Overview</div>
+                {post.user == user.userId && !descEditShow && (
+                  <button
+                    onClick={() => setDescEditShow(true)}
+                    className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
+                  >
+                    <FontAwesomeIcon className="text-sm" icon={faPen} />
+                  </button>
+                )}
+              </div>
+              <div className="">{post?.description}</div>
             </div>
           </div>
 
@@ -278,13 +380,54 @@ const page = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex py-2.5 px-3 bg-green-600 rounded-lg shadow border justify-center items-center">
-                <div className="text-center text-white text-sm">
-                  Contact Me About This Job
-                </div>
-              </div>
+
+              <AuthButtons user={user} post={post} />
             </div>
           </div>
+          {titleEditShow && (
+            <EditTitle
+              show={titleEditShow}
+              setShow={setTitleEditShow}
+              id={post._id}
+            />
+          )}
+          {typeEditShow && (
+            <EditJobType
+              show={typeEditShow}
+              setShow={setTypeEditShow}
+              type={post.type}
+              id={post._id}
+            />
+          )}
+          {editLocationShow && (
+            <EditLocation
+              show={editLocationShow}
+              setShow={setEditLocationShow}
+              id={post._id}
+            />
+          )}
+          {wageEditShow && (
+            <EditWageType
+              show={wageEditShow}
+              setShow={setWageEditShow}
+              id={post._id}
+            />
+          )}
+          {availabilityEditShow && (
+            <EditAvailability
+              show={availabilityEditShow}
+              setShow={setAvailabilityEditShow}
+              id={post._id}
+            />
+          )}
+          {descEditShow && (
+            <EditDesc
+              show={descEditShow}
+              text={post.description}
+              setShow={setDescEditShow}
+              id={post._id}
+            />
+          )}
         </div>
       ) : (
         <Page404 />

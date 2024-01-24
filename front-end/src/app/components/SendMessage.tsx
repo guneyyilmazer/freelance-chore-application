@@ -76,7 +76,7 @@ const SendMessage = () => {
           </div>
           <div className="flex gap-2 justify-center items-center">
             <div
-              className="bg-green-600 hover:bg-green-800 text-xl flex justify-center items-center p-2.5 text-white rounded-full"
+              className="bg-green-600 hover:bg-green-800 text-lg md:text-xl flex justify-center items-center p-2.5 text-white rounded-full"
               onClick={() => fileRef.current?.click()}
             >
               <FontAwesomeIcon icon={faImage} />

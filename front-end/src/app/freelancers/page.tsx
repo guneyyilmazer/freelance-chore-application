@@ -45,7 +45,7 @@ const page = () => {
   const filter: filterType = useSelector((shop: any) => shop.app.searchFilter);
   useEffect(() => {
     getFreelancers();
-  }, [filter]);
+  }, [filter,page]);
   const [freelancers, setFreelancers] = useState([]);
   const getFreelancers = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/loadFreelancers`, {
@@ -109,7 +109,7 @@ const page = () => {
         <div className="flex flex-col w-full items-center">
           <button
             onClick={() => dispatch(setMobileFilterMenu(true))}
-            className="text-lg mb-3 w-full flex justify-end items-center text-green-600"
+            className="text-lg my-5 w-full md:hidden flex justify-end items-center text-green-600"
           >
             <span className="mr-1">Filter</span>
             <FontAwesomeIcon icon={faFilter} />
@@ -128,7 +128,7 @@ const page = () => {
                 href={`/user?id=${item._id}`}
                 className="h-[308px] flex items-center md:items-start flex-col md:flex-row bg-white rounded-lg shadow border border-gray-200"
               >
-                <div className="m-3 w-[90%] md:w-64 flex flex-row md:flex-col justify-between md:justify-start items-center">
+                <div className="m-3 w-[95%] md:w-64 flex flex-row md:flex-col justify-between md:justify-start items-center">
                   <img
                     className="w-32 md:w-48 h-32 md:h-[212px] left-[16px] rounded-lg"
                     src={
@@ -173,7 +173,7 @@ const page = () => {
                       </div>
                     </div>
                     <div className="flex md:justify-center items-center gap-1">
-                      <div className="text-zinc-900 text-sm">4.8</div>
+                      <div className="text-zinc-900 text-sm">{item.freelancerDetails?.starAverage}</div>
                       <img src={star.src} alt="" />
                     </div>
                   </div>

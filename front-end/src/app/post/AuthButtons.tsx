@@ -1,8 +1,12 @@
+"use client"
 import React from "react";
-import { user,post } from "../types";
+import { user, post } from "../types";
 import Link from "next/link";
+import { setChattingWith } from "../features/appSlice";
+import { useDispatch } from "react-redux";
 
 const AuthButtons = ({ user, post }: { user: user; post: post }) => {
+  const dispatch = useDispatch()
   return (
     <div>
       {user.userId != post.user && (
@@ -10,9 +14,10 @@ const AuthButtons = ({ user, post }: { user: user; post: post }) => {
           <Link
             href="/messages"
             onClick={() => {
+              dispatch(setChattingWith(post.user))
               localStorage.setItem("chattingWith", post.user);
             }}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="flex py-2.5 px-3 text-white text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
           >
             Send A Message
           </Link>

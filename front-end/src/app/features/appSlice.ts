@@ -35,7 +35,7 @@ const initialState: {
   user: {
     userId: Cookies.get("userId") ? (Cookies.get("userId") as string) : "",
     location: { state: "", city: "" },
-    accountType: { hirer: true },
+    accountType: {},
     username: "",
     profilePicture: "",
     isLoggedIn: false,

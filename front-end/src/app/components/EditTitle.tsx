@@ -52,21 +52,27 @@ const EditDesc = ({ show, setShow, id }: any) => {
     setShow(!show);
   };
   return (
-    <div ref={ref} className="flex flex-col my-2 break-words">
-      <span className="text-xl">Edit Title</span>
+    <div className="absolute w-[100vw] h-[100vh] left-0 top-0 bg-white bg-opacity-80 flex justify-center items-center">
+      <div ref={ref} className="flex flex-col break-words">
+        <span className="text-2xl font-semibold">New Title</span>
 
-      <div className="flex items-center">
-      <input
-        type="text"
-        className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        ref={titleRef}
-      />
-        <button
-          className="bg-green-800 mx-1 px-4 py-2 rounded-md text-white"
-          onClick={handleClick}
-        >
-          Save
-        </button>
+        <div className="flex items-center">
+          <div>
+            <input
+              type="text"
+              className="shadow appearance-none border my-1 rounded w-full px-3 py-2 leading-tight focus:outline-none focus:shadow-outline"
+              ref={titleRef}
+            />
+          </div>
+          <div>
+            <button
+              className="bg-green-600 mx-1 px-3 py-2 rounded-md text-white"
+              onClick={handleClick}
+            >
+              Save
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

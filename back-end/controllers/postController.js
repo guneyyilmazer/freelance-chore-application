@@ -2,20 +2,21 @@ const PostModel = require("../schemas/postSchema");
 const UserModel = require("../schemas/userSchema");
 const { jobTypes } = require("../jobTypes");
 require("dotenv").config();
-const dateDifferenceInMonths = (dateInitial, dateFinal) =>
-  Math.max(
-    (dateFinal.getFullYear() - dateInitial.getFullYear()) * 12 +
-      dateFinal.getMonth() -
-      dateInitial.getMonth(),
-    0
-  );
-const dateDifferenceInDays = (dateInitial, dateFinal) =>
-  (dateFinal - dateInitial) / 86_400_000;
-const dateDifferenceInHours = (dateInitial, dateFinal) =>
-  (dateFinal - dateInitial) / 3_600_000;
-const dateDifferenceInMinutes = (dateInitial, dateFinal) =>
-  (dateFinal - dateInitial) / 60_000;
+
 const getPostedTimeAgoText = (createdAt) => {
+  const dateDifferenceInMonths = (dateInitial, dateFinal) =>
+    Math.max(
+      (dateFinal.getFullYear() - dateInitial.getFullYear()) * 12 +
+        dateFinal.getMonth() -
+        dateInitial.getMonth(),
+      0
+    );
+  const dateDifferenceInDays = (dateInitial, dateFinal) =>
+    (dateFinal - dateInitial) / 86_400_000;
+  const dateDifferenceInHours = (dateInitial, dateFinal) =>
+    (dateFinal - dateInitial) / 3_600_000;
+  const dateDifferenceInMinutes = (dateInitial, dateFinal) =>
+    (dateFinal - dateInitial) / 60_000;
   const rightNow = new Date();
   const postedMonthsAgo =
     dateDifferenceInMonths(createdAt, rightNow) < 1
@@ -65,6 +66,7 @@ const getPosts = async (req, res) => {
       price,
       hourly,
       availability,
+      sort,
     } = req.body;
     if (
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
@@ -97,8 +99,14 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
+          hired: false,
+          completed: false,
           availability: availability.random ? { $not: /^0.*/ } : availability,
         })
+          .skip((page - 1) * amount)
+          .limit(amount)
+
+          .sort(sort != 0 ? { createdAt: sort }:{})
       : await PostModel.find({
           hourly:
             hourly && hourly != 0 && hourly != -1 && hourly != -2
@@ -119,11 +127,14 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
-        availability: availability.random ? { $not: /^0.*/ } : availability,
-
+          hired: false,
+          completed: false,
+          availability: availability.random ? { $not: /^0.*/ } : availability,
         })
           .skip((page - 1) * amount)
-          .limit(amount);
+          .limit(amount)
+          .sort(sort != 0 ? { createdAt: sort }:{});
+
     const lastPosts = !type.random
       ? await PostModel.find({
           [typeString]: true,
@@ -147,7 +158,11 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
+          hired: false,
+          completed: false,
         })
+          .skip((page - 1) * amount)
+          .select("title")
       : await PostModel.find({
           hourly:
             hourly && hourly != 0 && hourly != -1 && hourly != -2
@@ -169,6 +184,8 @@ const getPosts = async (req, res) => {
 
           "location.state": state != "" ? state : { $not: /^0.*/ },
           "location.city": city != "" ? city : { $not: /^0.*/ },
+          hired: false,
+          completed: false,
         })
           .skip((page - 1) * amount)
           .select("title");
@@ -189,6 +206,12 @@ const getPosts = async (req, res) => {
         price: post.price,
         picture: post.picture,
         pictures: post.pictures,
+        availability: post.availability,
+        applicants: post.applicants,
+        completed: post.completed,
+        hiredFreelancer: post.hiredFreelancer,
+        hired: post.hired,
+        reviews: post.reviews,
         createdAt: {
           year: post.createdAt.getFullYear(),
           month: post.createdAt.getMonth() + 1,
@@ -216,8 +239,6 @@ const getPosts = async (req, res) => {
   }
 };
 const getPost = async (req, res) => {
-  const rightNow = new Date();
-
   try {
     const { _id } = req.body;
     let post = await PostModel.findOne({ _id });
@@ -233,6 +254,12 @@ const getPost = async (req, res) => {
       price: post.price,
       picture: post.picture,
       pictures: post.pictures,
+      availability: post.availability,
+      applicants: post.applicants,
+      completed: post.completed,
+      hiredFreelancer: post.hiredFreelancer,
+      hired: post.hired,
+      reviews: post.reviews,
       createdAt: {
         year: post.createdAt.getFullYear(),
         month: post.createdAt.getMonth() + 1,
@@ -333,6 +360,30 @@ const changeTitle = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+const changeAvailability = async (req, res) => {
+  try {
+    const { id, availability } = req.body;
+    if (!availability.partTime && !availability.fullTime)
+      throw new Error("Value can't be empty.");
+    const doesItExist = await PostModel.findOne({ _id: id });
+    if (!doesItExist) {
+      res.status(400).json({ error: "Post doesn't exist." });
+    }
+    if (doesItExist.user != req.userId) {
+      res.status(401).json({ error: process.env.AUTHORIZATION_DENIED });
+    }
+    const post = await PostModel.findOneAndUpdate(
+      { _id: id },
+      { availability },
+      { new: true }
+    );
+    res.status(200).json({
+      msg: `Successfully updated availability value, new value: ${post.availability}`,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 const changeType = async (req, res) => {
   try {
     const { id, newType } = req.body;
@@ -427,11 +478,13 @@ const changeLocation = async (req, res) => {
 const applyToPost = async (req, res) => {
   try {
     const { id } = req.body;
-    const { applicants } = await PostModel.findOne({ _id: id });
-    if (applicants.filter((id) => id == req.userId).length > 0) {
+    const post = await PostModel.findOne({ _id: id });
+    if (post.applicants.filter((id) => id == req.userId).length > 0) {
       throw new Error("Already applied!");
     }
-    const newApplicants = [...applicants, req.userId];
+    if (req.userId == post.user)
+      throw new Error("Can't apply to your own post!");
+    const newApplicants = [...post.applicants, req.userId];
     await PostModel.findOneAndUpdate(
       { _id: id },
       { applicants: newApplicants }
@@ -457,6 +510,70 @@ const getApplicants = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+const hire = async (req, res) => {
+  try {
+    const { postId, freelancerId } = req.body;
+    const post = await PostModel.findOne({ _id: postId });
+    if (!post) throw new Error("Post not found!");
+    if (post.user != req.userId) {
+      throw new Error(process.env.AUTHORIZATION_DENIED);
+    } else if (post.hiredFreelancer) {
+      throw new Error("Already hired someone!");
+    } else {
+      await PostModel.findOneAndUpdate(
+        { _id: postId },
+        { hired: true, hiredFreelancer: freelancerId }
+      );
+    }
+    res.status(200).json({ msg: "Successfully hired!" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const completeContract = async (req, res) => {
+  try {
+    const completedDate = new Date();
+    const { postId, freelancerId } = req.body;
+    const post = await PostModel.findOne({ _id: postId });
+    if (!post) throw new Error("Post not found!");
+    if (post.user != req.userId) {
+      throw new Error(process.env.AUTHORIZATION_DENIED);
+    } else {
+      await PostModel.findOneAndUpdate(
+        { _id: postId },
+        { completed: true, completedDate }
+      );
+    }
+    res.status(200).json({ msg: "Successfully closed the contract!" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const leaveReview = async (req, res) => {
+  try {
+    const { id, star, text } = req.body;
+    const post = await PostModel.findOne({ _id: id });
+    if (!post) throw new Error("Post not found!");
+    if (post.user != req.userId && post.hiredFreelancer != req.userId) {
+      throw new Error(process.env.AUTHORIZATION_DENIED);
+    } else if (post.user == req.userId) {
+      //if you are the hirer
+      await PostModel.findOneAndUpdate(
+        { _id: id },
+        { "reviews.hirerReview": { star, text } }
+      );
+    } else if (post.hiredFreelancer == req.userId) {
+      //if you are the freelancer
+      await PostModel.findOneAndUpdate(
+        { _id: id },
+        { "reviews.freelancerReview": { star, text } }
+      );
+    }
+    res.status(200).json({ msg: "Successfully left a review!" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 module.exports = {
   getPosts,
   getPost,
@@ -464,10 +581,15 @@ module.exports = {
   createPost,
   deletePost,
   changeTitle,
+  changeAvailability,
   changeType,
   changeDescription,
   changePrice,
   changeLocation,
   applyToPost,
   getApplicants,
+  getPostedTimeAgoText,
+  hire,
+  leaveReview,
+  completeContract,
 };

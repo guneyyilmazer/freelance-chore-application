@@ -88,7 +88,7 @@ const PostCreateForm = () => {
       titleRef.current?.value == "" ||
       descRef.current?.value == "" ||
       (!priceRef.current?.value && !hourlyRef.current?.value) ||
-      skillLevelRef.current?.value == "" ||
+      skillLevelRef.current?.value == "default" ||
       selectedState == "" ||
       selectedCity == "" ||
       typeRef.current?.value == ""
@@ -212,7 +212,7 @@ const PostCreateForm = () => {
             name="skillLevel"
             id="skillLevel"
           >
-            <option disabled selected>
+            <option value="default" disabled selected>
               {" "}
               Select A Skill Level{" "}
             </option>

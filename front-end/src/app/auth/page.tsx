@@ -8,22 +8,21 @@ const AuthPage = () => {
   const searchParams = useSearchParams();
 
   const [showLogin, setShowLogin] = useState(false);
-  const [showFreelancer, setShowFreelancer] = useState(searchParams.get("type")=="freelancer"?true:false);
+  const [showFreelancer, setShowFreelancer] = useState(
+    searchParams.get("type") == "freelancer" ? true : false
+  );
   return !showLogin && !showFreelancer ? (
     <div
-      style={{ height: "100svh" }}
+      style={{ height: "100vh" }}
       className="flex flex-col justify-center items-center"
     >
       <Signup />
-      <div>
-        <button
-          className="mt-3 bg-black w-50 h-20 text-white"
-          onClick={() => setShowLogin(!showLogin)}
-        >
+      <div className="flex gap-2">
+        <button className="p-2 py-3" onClick={() => setShowLogin(!showLogin)}>
           Have an account already?
         </button>
         <button
-          className="mt-3 mx-2 bg-black w-50 h-20 text-white"
+          className="p-2 py-3"
           onClick={() => setShowFreelancer(!showFreelancer)}
         >
           Sign up as a freelancer
@@ -32,8 +31,8 @@ const AuthPage = () => {
     </div>
   ) : showLogin ? (
     <div
-      style={{ height: "100svh" }}
-      className="flex justify-center align-center"
+      style={{ height: "100vh" }}
+      className="flex justify-center items-center"
     >
       <Login />
     </div>

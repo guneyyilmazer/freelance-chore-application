@@ -68,7 +68,16 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username && email && password) {
+    if (
+      username &&
+      email &&
+      password &&
+      jobType != "" &&
+      stateRef.current?.value != "default" &&
+      cityRef.current?.value != "default" &&
+      aboutMe != "" &&
+      wage
+    ) {
       const res = await fetch(`${BACKEND_SERVER_IP}/user/signup`, {
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +129,7 @@ const Signup = () => {
               id=""
             />
             <h3 className="text-sm">Email</h3>
-            
+
             <input
               type="email"
               onChange={(e) => setEmail(e.target.value)}
@@ -237,7 +246,7 @@ const Signup = () => {
             )}
             <div className="mt-3 text-center">
               <button
-                className="p-2 bg-green-900 text-white rounded-lg"
+                className="p-2 bg-green-600 text-white rounded-lg"
                 type="submit"
               >
                 Signup
@@ -250,7 +259,7 @@ const Signup = () => {
       {formIndex == 0 && (
         <button
           onClick={() => setFormIndex(1)}
-          className="p-3 text-lg my-3 bg-green-900 text-white rounded-lg"
+          className="p-3 text-lg my-3 bg-green-600 text-white rounded-lg"
         >
           Next
         </button>

@@ -34,77 +34,86 @@ const EditDesc = ({ show, setShow, id }: any) => {
     };
   }, [onClickOutside]);
   const handleClick = async () => {
-    const res = await fetch(`${BACKEND_SERVER_IP}/post/changePrice`, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
-      },
+    if (!priceRef.current?.value && !hourlyRef.current?.value) {
+      alert("Must enter a value.");
+    } else {
+      const res = await fetch(`${BACKEND_SERVER_IP}/post/changePrice`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+        },
 
-      method: "PATCH",
-      body: JSON.stringify({
-        id,
-        price: priceRef.current ? priceRef.current.value : -1,
-        hourly: hourlyRef.current ? hourlyRef.current.value : -1,
-      }),
-    });
-    const response = await res.json();
-    if (!response.error) {
-      alert("Wage has been changed successfully!");
-      window.location.reload();
+        method: "PATCH",
+        body: JSON.stringify({
+          id,
+          price: priceRef.current ? priceRef.current.value : -1,
+          hourly: hourlyRef.current ? hourlyRef.current.value : -1,
+        }),
+      });
+      const response = await res.json();
+      if (!response.error) {
+        alert("Wage has been changed successfully!");
+        window.location.reload();
+      }
+      setShow(!show);
     }
-    setShow(!show);
   };
   return (
-    <div ref={ref} className="break-words">
-      {chosen == "" && (
-        <select
-          className="shadow p-3 appearance-none border"
-          onChange={(e) => setChosen(e.target.value)}
-        >
-          <option selected disabled>
-            Select a wage type
-          </option>
-          <option value="hourly">Hourly</option>
-          <option value="price">Price</option>
-        </select>
-      )}
-      {chosen == "hourly" ? (
-        <div className="flex">
-          <input
-            ref={hourlyRef}
-            placeholder="Enter new hourly wage."
-            className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="number"
-          />
-          <div className="flex items-center">
-            <button
-              className="bg-green-800 mx-1 p-2 px-4 rounded-md text-white"
-              onClick={handleClick}
+    <div className="w-[100vw] h-[100vh] absolute left-0 top-0 bg-white bg-opacity-80 flex justify-center items-center">
+      <div ref={ref} className="break-words">
+        {chosen == "" && (
+          <div className="flex flex-col gap-2 items-center">
+            <h3 className="text-2xl">Select a wage type</h3>
+            <select
+              className="shadow p-3 appearance-none border"
+              onChange={(e) => setChosen(e.target.value)}
             >
-              Save
-            </button>
+              <option selected disabled>
+                Select a wage type
+              </option>
+              <option value="hourly">Hourly</option>
+              <option value="price">Price</option>
+            </select>
           </div>
-        </div>
-      ) : chosen == "price" ? (
-        <div className="flex">
-          <input
-            className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            ref={priceRef}
-            placeholder="Enter new price."
-            type="number"
-          />
-          <div className="flex items-center">
-            <button
-              className="bg-green-800 mx-1 p-2 px-4 rounded-md text-white"
-              onClick={handleClick}
-            >
-              Save
-            </button>
+        )}
+        {chosen == "hourly" ? (
+          <div className="flex">
+            <input
+              ref={hourlyRef}
+              placeholder="Enter new hourly wage."
+              className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="number"
+            />
+            <div className="flex items-center">
+              <button
+                className="bg-green-600 mx-1 p-2 px-4 rounded-md text-white"
+                onClick={handleClick}
+              >
+                Save
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        ""
-      )}
+        ) : chosen == "price" ? (
+          <div className="flex">
+            <input
+              className="shadow appearance-none border my-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              ref={priceRef}
+              placeholder="Enter new price."
+              type="number"
+            />
+            <div className="flex items-center">
+              <button
+                className="bg-green-600 mx-1 p-2 px-4 rounded-md text-white"
+                onClick={handleClick}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 "use client";
-import Posts from "../components/Posts";
 import { useDispatch, useSelector } from "react-redux";
 import FilterSideBar from "../components/FilterSideBarr";
 import { BACKEND_SERVER_IP } from "../layout";
@@ -7,7 +6,6 @@ import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { post } from "../types";
-import searchNormal from "../images/search-normal.svg";
 import location from "../images/location.svg";
 import Link from "next/link";
 import bookmark from "../images/bookmark.svg";
@@ -32,6 +30,7 @@ const page = () => {
   const [posts, setPosts] = useState([]);
   const [allPages, setAllPages] = useState([1]);
   const [lastPage, setLastPage] = useState(false);
+  const [sort, setSort] = useState(-1);
   const [page, setPage] = useState<number>(
     searchParams.get("page") &&
       Number(searchParams.get("page")) > 0 &&
@@ -50,6 +49,7 @@ const page = () => {
       body: JSON.stringify({
         page,
         amount: 10,
+        sort,
         type: filter.jobType,
         hourlyBetween: filter.hourlyBetween,
         city: filter.selectedCity,
@@ -92,7 +92,7 @@ const page = () => {
   };
   useEffect(() => {
     getPosts();
-  }, [filter]);
+  }, [filter,page,sort]);
   return (
     <div>
       <div className="flex">
@@ -113,9 +113,20 @@ const page = () => {
                   <div>Showing {posts.length} results</div>
                 </div>
                 <div className="flex flex-col">
+                  <span className="font-semibold">Sort By:</span>
                   <div className="hidden md:flex">
-                    <span className="text-slate-500">Sort By: </span>
-                    <span className="text-slate-800">Most Relevant</span>
+                    <select
+                      onChange={(e) => {
+                        e.target.value == "newest" && setSort(-1);
+                        e.target.value == "oldest" && setSort(1);
+                        e.target.value == "mostRelevant" && setSort(0);
+                      }}
+                      className="appearance-none p-2 border-2"
+                    >
+                      <option value="newest">Newest</option>
+                      <option value="oldest">Oldest</option>
+                      <option value="mostRelevant">Most Relevant</option>
+                    </select>
                     <div className="ml-2">^</div>
                   </div>
                   <button
@@ -130,56 +141,58 @@ const page = () => {
               {/*  POSTS */}
               <div className="flex flex-wrap w-full justify-between">
                 {posts.map((post: post) => (
-                  <Link
-                    href={`/post?id=${post._id}`}
-                    className="h-[240px] hover:opacity-60 mb-4 w-[450px] p-6 bg-white rounded-lg shadow border border-gray-200 flex flex-col justify-center gap-5"
-                  >
-                    <div className="flex flex-col">
-                      <div className="text-black my-2 text-lg font-medium">
-                        {post.type.cleaning && "Cleaning Specialist"}
-                        {post.type.cuttingGrass && "Grass Cutting Specialist"}
-                        {post.type.moving && "Moving Specialist"}
-                        {post.type.plumbing && "Plumber"}
-                        {post.type.dogWalking && "Dog Walker"}
-                      </div>
-                      <div className="flex items-center">
-                        <div className="px-2 py-1 mr-2 bg-emerald-100 bg-opacity-80 rounded-sm flex">
-                          <div className="text-green-600 text-xs font-medium">
-                            {post.hourly != -1 && "HOURLY"}
-                            {post.price != -1 && "FIXED PRICE"}
+                  <div className="relative flex items-center">
+                    <Link
+                      href={`/post?id=${post._id}`}
+                      className="h-[240px] hover:opacity-60 mb-4 w-[450px] p-6 bg-white rounded-lg shadow border border-gray-200 flex flex-col justify-center gap-5"
+                    >
+                      <div className="flex flex-col">
+                        <div className="text-black my-2 text-lg font-medium">
+                          {post.type.cleaning && "Cleaning Specialist"}
+                          {post.type.cuttingGrass && "Grass Cutting Specialist"}
+                          {post.type.moving && "Moving Specialist"}
+                          {post.type.plumbing && "Plumber"}
+                          {post.type.dogWalking && "Dog Walker"}
+                        </div>
+                        <div className="flex items-center">
+                          <div className="px-2 py-1 mr-2 bg-emerald-100 bg-opacity-80 rounded-sm flex">
+                            <div className="text-green-600 text-xs font-medium">
+                              {post.hourly != -1 && "HOURLY"}
+                              {post.price != -1 && "FIXED PRICE"}
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-slate-600 text-sm font-normal">
-                          {post.hourly != -1 &&
-                            "Hourly Pay: " + post.hourly + "$"}
-                          {post.price != -1 && "Price: " + post.price + "$"}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex">
-                      <div className="flex flex-col w-full">
-                        <div>Posted {post.postedTimeAgoText}</div>
-                        <div className="flex items-center my-2">
-                          <img src={location.src} alt="" />
-                          <div className="text-gray-400 ml-1 text-sm font-normal">
-                            {post.location.state + "/" + post.location.city}
+                          <div className="text-slate-600 text-sm font-normal">
+                            {post.hourly != -1 &&
+                              "Hourly Pay: " + post.hourly + "$"}
+                            {post.price != -1 && "Price: " + post.price + "$"}
                           </div>
                         </div>
                       </div>
-                      <button
-                        onClick={() => {
-                          savePost(post._id);
-                        }}
-                        className="m-1 z-10"
-                      >
-                        <img src={bookmark.src} alt="" />
-                      </button>
-                    </div>
-                    <div>
-                      {post.description.slice(0, 100)}{" "}
-                      {post.description.length > 100 && "..."}
-                    </div>
-                  </Link>
+                      <div className="flex">
+                        <div className="flex flex-col w-full">
+                          <div>Posted {post.postedTimeAgoText}</div>
+                          <div className="flex items-center my-2">
+                            <img src={location.src} alt="" />
+                            <div className="text-gray-400 ml-1 text-sm font-normal">
+                              {post.location.state + "/" + post.location.city}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        {post.description.slice(0, 100)}{" "}
+                        {post.description.length > 100 && "..."}
+                      </div>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        savePost(post._id);
+                      }}
+                      className="m-1 absolute right-[20px] hover:opacity-50 z-10"
+                    >
+                      <img src={bookmark.src} alt="" />
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

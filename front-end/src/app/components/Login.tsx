@@ -32,30 +32,42 @@ const Login = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col justify-center">
-      <h2 className="text-white text-center">Login</h2>
-      <input
-        type="text"
-        ref={usernameRef}
-        className="mt-3 py-2"
-        placeholder="Enter username"
-        name=""
-        id=""
-      />
-      <input
-        type="password"
-        ref={passwordRef}
-        className="mt-2 py-2"
-        placeholder="Enter password"
-        name=""
-        id=""
-      />
-      <div className="mt-4 flex justify-center">
-        <button className="py-2" type="submit">
-          Login
-        </button>
-      </div>
-    </form>
+    <div className="flex flex-col h-[40vh] md:w-[50vw] shadow p-5 px-12 justify-center">
+      <form onSubmit={handleSubmit} className="flex flex-col justify-center">
+        <h2 className="text-xl font-semibold text-center my-5">Login</h2>
+        <label className="text-lg" htmlFor="username">
+          Username
+        </label>
+
+        <input
+          type="text"
+          ref={usernameRef}
+          className="my-2"
+          placeholder="Enter username"
+          name=""
+          id="username"
+        />
+        <label className="text-lg" htmlFor="password">
+          Password
+        </label>
+        <input
+          type="password"
+          ref={passwordRef}
+          className="my-2"
+          placeholder="Enter password"
+          name=""
+          id="password"
+        />
+        <div className="mt-4 flex justify-center">
+          <button
+            className="bg-green-600 px-5 py-3 text-white rounded-lg"
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

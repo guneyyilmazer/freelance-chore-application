@@ -105,11 +105,11 @@ const Room = () => {
           <Dms />
         </div>
       ) : (
-        <div className="w-[10vw] flex justify-center">
+        <div className="md:w-[10vw] flex justify-center">
           <div>
             <button
               onClick={() => dispatch(setMobileDmSideBar(true))}
-              className="m-2 text-xl"
+              className="m-2 absolute left-0 md:static text-xl"
             >
               <FontAwesomeIcon icon={faBars} />
             </button>

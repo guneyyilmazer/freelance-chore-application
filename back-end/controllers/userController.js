@@ -1,6 +1,7 @@
 const UserModel = require("../schemas/userSchema");
 const PostModel = require("../schemas/postSchema");
 const jwt = require("jsonwebtoken");
+const { getPostedTimeAgoText } = require("./postController");
 const { jobTypes } = require("../jobTypes");
 require("dotenv").config();
 
@@ -12,7 +13,7 @@ const genToken = (userId, username) => {
 
 const Signup = async (req, res) => {
   try {
-    let { type, location, freelancerDetails, username, email, password } =
+    let { type, location, freelancerDetails, username, email, password,accountType } =
       req.body;
     if (!freelancerDetails.hourlyWage || freelancerDetails.hourlyWage == 0)
       freelancerDetails.hourlyWage = 15;
@@ -23,7 +24,7 @@ const Signup = async (req, res) => {
         freelancerDetails,
         username,
         email,
-        password
+        password,
       );
       const token = genToken(userId, username);
       res.status(200).json({ AuthValidation: token });
@@ -59,6 +60,7 @@ const getFreelancers = async (req, res) => {
     ) {
       throw new Error("Job type is invalid");
     }
+
     const typeString = "freelancerDetails.jobType." + Object.keys(type)[0];
     const freelancers = !type.random
       ? await UserModel.find({
@@ -76,9 +78,12 @@ const getFreelancers = async (req, res) => {
               : wage == 0 || !wage
               ? { $gt: 0 }
               : -1,
-        }).select(
-          "username _id profilePicture location freelancerDetails accountType"
-        )
+        })
+          .select(
+            "username _id profilePicture location freelancerDetails accountType"
+          )
+          .skip((page - 1) * amount)
+          .limit(amount)
       : await UserModel.find({
           "location.state": state != "" ? state : { $not: /^0.*/ },
           username: username
@@ -100,13 +105,85 @@ const getFreelancers = async (req, res) => {
           )
           .skip((page - 1) * amount)
           .limit(amount);
+    const lastFreelancers = !type.random
+      ? await UserModel.find({
+          [typeString]: true,
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          username: username
+            ? { $regex: username, $options: "i" }
+            : { $not: /^0.*/ },
+          "location.city": city != "" ? city : { $not: /^0.*/ },
+          "freelancerDetails.hourlyWage":
+            wage && wage != 0 && wage != -1 && wage != -2
+              ? wage
+              : wage == -2
+              ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
+              : wage == 0 || !wage
+              ? { $gt: 0 }
+              : -1,
+        })
+          .select(
+            "username _id profilePicture location freelancerDetails accountType"
+          )
+          .skip((page - 1) * amount)
+      : await UserModel.find({
+          "location.state": state != "" ? state : { $not: /^0.*/ },
+          username: username
+            ? { $regex: username, $options: "i" }
+            : { $not: /^0.*/ },
+
+          "location.city": city != "" ? city : { $not: /^0.*/ },
+          "freelancerDetails.hourlyWage":
+            wage && wage != 0 && wage != -1 && wage != -2
+              ? wage
+              : wage == -2
+              ? { $gt: hourlyBetween[0], $lt: hourlyBetween[1] }
+              : wage == 0 || !wage
+              ? { $gt: 0 }
+              : -1,
+        })
+          .select(
+            "username _id profilePicture location freelancerDetails accountType"
+          )
+          .skip((page - 1) * amount)
+    const freelancerWithStars = freelancers.map(async (freelancer) => {
+      const posts = await PostModel.find({
+        hiredFreelancer: freelancer._id,
+      }).select("reviews");
+      const postsWithStars = posts.filter(
+        (post) => typeof post.reviews.hirerReview.star == "number"
+      );
+      const stars = postsWithStars.map((post) => post.reviews.hirerReview.star);
+      const starAverage =
+        posts.length != 0
+          ? stars.reduce((acc, current) => acc + current) / stars.length
+          : 0;
+      return {
+        username: freelancer.username,
+        _id: freelancer._id,
+        profilePicture: freelancer.profilePicture,
+        location: freelancer.location,
+        freelancerDetails: {
+          jobType: freelancer.freelancerDetails.jobType,
+          hourlyWage: freelancer.freelancerDetails.hourlyWage,
+          aboutMe: freelancer.freelancerDetails.aboutMe,
+          starAverage: starAverage,
+        },
+        accountType: freelancer.accountType,
+      };
+    });
+    console.log("freelancers length"+freelancers.length)
+    console.log("lastfreelancers length"+lastFreelancers.length)
     const lastPage =
-      freelancers.length <= amount || !freelancers.length ? true : false;
+      lastFreelancers.length < amount || !lastFreelancers.length ? true : false;
     const pagesCount =
       freelancers.length / amount < 1
         ? 1
         : Math.floor(freelancers.length / amount);
-    res.status(200).json({ freelancers, lastPage, pagesCount });
+    const freelancersWithStarsFinal = await Promise.all(freelancerWithStars);
+    res
+      .status(200)
+      .json({ freelancers: freelancersWithStarsFinal, lastPage, pagesCount });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -114,15 +191,34 @@ const getFreelancers = async (req, res) => {
 
 const LoadUser = async (req, res) => {
   try {
+    //only for freelancer
     const { userId, token } = req.body;
     if (userId) {
+      //only this condition returns star average
       const inDB = await UserModel.findOne({ _id: userId });
+
+      //change this if you want to change the endpoint to load hirer accounts as well
+      const posts = await PostModel.find({ hiredFreelancer: userId });
+      const postsWithStars = posts.filter(
+        (post) => typeof post.reviews.hirerReview.star == "number"
+      );
+      const stars = postsWithStars.map((post) => post.reviews.hirerReview.star);
+      const starAverage =
+        posts.length != 0
+          ? stars.reduce((acc, current) => acc + current) / stars.length
+          : 0;
+
       res.status(200).json({
         username: inDB.username,
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
         location: inDB.location,
-        freelancerDetails: inDB.freelancerDetails,
+        freelancerDetails: {
+          jobType: inDB.freelancerDetails.jobType,
+          hourlyWage: inDB.freelancerDetails.hourlyWage,
+          aboutMe: inDB.freelancerDetails.aboutMe,
+          starAverage: starAverage,
+        },
         accountType: inDB.accountType,
       });
     } else if (token) {
@@ -134,7 +230,11 @@ const LoadUser = async (req, res) => {
         userId: inDB._id,
         profilePicture: inDB.profilePicture,
         location: inDB.location,
-        freelancerDetails: inDB.freelancerDetails,
+        freelancerDetails: {
+          jobType: inDB.freelancerDetails.jobType,
+          hourlyWage: inDB.freelancerDetails.hourlyWage,
+          aboutMe: inDB.freelancerDetails.aboutMe,
+        },
         accountType: inDB.accountType,
       });
     }
@@ -250,14 +350,112 @@ const getSavedPosts = async (req, res) => {
     });
     const posts = user.freelancerDetails.savedPosts.map(async (id) => {
       const post = await PostModel.findOne({ _id: id });
-      return post;
+      const postWithDates = {
+        location: post.location,
+        _id: post._id,
+        user: post.user,
+        title: post.title,
+        description: post.description,
+        type: post.type,
+        skillLevel: post.skillLevel,
+        hourly: post.hourly,
+        price: post.price,
+        picture: post.picture,
+        pictures: post.pictures,
+        availability: post.availability,
+        applicants: post.applicants,
+        completed: post.completed,
+        hiredFreelancer: post.hiredFreelancer,
+        hired: post.hired,
+        reviews: post.reviews,
+        createdAt: {
+          year: post.createdAt.getFullYear(),
+          month: post.createdAt.getMonth() + 1,
+          day: post.createdAt.getDate(),
+          hour: post.createdAt.getHours(),
+          minutes: post.createdAt.getMinutes(),
+        },
+        updatedAt: {
+          year: post.updatedAt.getFullYear(),
+          month: post.updatedAt.getMonth() + 1,
+          day: post.updatedAt.getDate(),
+          hour: post.updatedAt.getHours(),
+          minutes: post.updatedAt.getMinutes(),
+        },
+        postedTimeAgoText: getPostedTimeAgoText(post.createdAt),
+      };
+      return postWithDates;
     });
     const savedPosts = await Promise.all(posts);
+    
     res.status(200).json({ posts: savedPosts });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
+const getAppliedPosts = async (req, res) => {
+  try {
+    const { page, amount } = req.body;
+    const posts = await PostModel.find({
+      applicants: req.userId,
+    })
+      .skip((page - 1) * amount)
+      .limit(amount);
+
+    const lastPosts = await PostModel.find({
+      applicants: req.userId,
+    })
+      .skip((page - 1) * amount)
+      .select("title");
+
+    const lastPage =
+      lastPosts.length < amount || !lastPosts.length ? true : false;
+    const pagesCount = posts.length / amount;
+    const postsWithDates = posts.map((post) => {
+      return {
+        location: post.location,
+        _id: post._id,
+        user: post.user,
+        title: post.title,
+        description: post.description,
+        type: post.type,
+        skillLevel: post.skillLevel,
+        hourly: post.hourly,
+        price: post.price,
+        picture: post.picture,
+        pictures: post.pictures,
+        availability: post.availability,
+        completed: post.completed,
+        hired: post.hired,
+        hiredFreelancer: post.hiredFreelancer,
+        reviews: post.reviews,
+        createdAt: {
+          year: post.createdAt.getFullYear(),
+          month: post.createdAt.getMonth() + 1,
+          day: post.createdAt.getDate(),
+          hour: post.createdAt.getHours(),
+          minutes: post.createdAt.getMinutes(),
+        },
+        updatedAt: {
+          year: post.updatedAt.getFullYear(),
+          month: post.updatedAt.getMonth() + 1,
+          day: post.updatedAt.getDate(),
+          hour: post.updatedAt.getHours(),
+          minutes: post.updatedAt.getMinutes(),
+        },
+        postedTimeAgoText: getPostedTimeAgoText(post.createdAt),
+      };
+    });
+    res.status(200).json({
+      posts: postsWithDates,
+      lastPage,
+      pagesCount: pagesCount < 1 ? 1 : Math.floor(pagesCount),
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 const savePost = async (req, res) => {
   try {
     const { id } = req.body;
@@ -278,13 +476,138 @@ const savePost = async (req, res) => {
 const deleteSavedPost = async (req, res) => {
   try {
     const { id } = req.body;
-    const { savedPosts } = await UserModel.findOne({ _id: req.userId });
-    const newSavedPosts = savedPosts.filter((post) => post != id);
+    const { freelancerDetails } = await UserModel.findOne({ _id: req.userId });
+    const newSavedPosts = freelancerDetails.savedPosts.filter(
+      (post) => post != id
+    );
     await UserModel.findOneAndUpdate(
       { _id: req.userId },
-      { savedPosts: newSavedPosts }
+      { "freelancerDetails.savedPosts": newSavedPosts }
     );
     res.status(200).json({ msg: "Successfully deleted post from saved list." });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const getPostsThisHirerShared = async (req, res) => {
+  try {
+    const { id, completed, hired, page, amount } = req.body;
+    const posts = await PostModel.find({ user: id, completed, hired }).skip(
+      (page - 1) * amount
+    );
+    const lastPosts = await PostModel.find({ user: id, completed, hired })
+      .skip((page - 1) * amount)
+      .select("title");
+    const lastPage =
+      lastPosts.length < amount || !lastPosts.length ? true : false;
+    const pagesCount = posts.length / amount;
+
+    const postsWithDates = posts.map((post) => {
+      return {
+        location: post.location,
+        _id: post._id,
+        user: post.user,
+        title: post.title,
+        description: post.description,
+        type: post.type,
+        skillLevel: post.skillLevel,
+        hourly: post.hourly,
+        price: post.price,
+        picture: post.picture,
+        pictures: post.pictures,
+        availability: post.availability,
+        applicants: post.applicants,
+        completed: post.completed,
+        hired: post.hired,
+        hiredFreelancer: post.hiredFreelancer,
+        reviews: post.reviews,
+        createdAt: {
+          year: post.createdAt.getFullYear(),
+          month: post.createdAt.getMonth() + 1,
+          day: post.createdAt.getDate(),
+          hour: post.createdAt.getHours(),
+          minutes: post.createdAt.getMinutes(),
+        },
+        updatedAt: {
+          year: post.updatedAt.getFullYear(),
+          month: post.updatedAt.getMonth() + 1,
+          day: post.updatedAt.getDate(),
+          hour: post.updatedAt.getHours(),
+          minutes: post.updatedAt.getMinutes(),
+        },
+        postedTimeAgoText: getPostedTimeAgoText(post.createdAt),
+      };
+    });
+    res.status(200).json({
+      posts: postsWithDates,
+      lastPage,
+      pagesCount: pagesCount < 1 ? 1 : Math.floor(pagesCount),
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+const getThisFreelancersHiredPosts = async (req, res) => {
+  //posts that this freelancer has been hired in
+  try {
+    const { id, completed, page, amount } = req.body;
+    const posts = await PostModel.find({
+      hiredFreelancer: id,
+      completed,
+      hired: true,
+    }).skip((page - 1) * amount);
+    const lastPosts = await PostModel.find({
+      hiredFreelancer: id,
+      completed,
+      hired: true,
+    })
+      .skip((page - 1) * amount)
+      .select("title");
+    const lastPage =
+      lastPosts.length < amount || !lastPosts.length ? true : false;
+    const pagesCount = posts.length / amount;
+
+    const postsWithDates = posts.map((post) => {
+      return {
+        location: post.location,
+        _id: post._id,
+        user: post.user,
+        title: post.title,
+        description: post.description,
+        type: post.type,
+        skillLevel: post.skillLevel,
+        hourly: post.hourly,
+        price: post.price,
+        picture: post.picture,
+        pictures: post.pictures,
+        availability: post.availability,
+        applicants: post.applicants,
+        hired: post.hired,
+        completed: post.completed,
+        hiredFreelancer: post.hiredFreelancer,
+        reviews: post.reviews,
+        createdAt: {
+          year: post.createdAt.getFullYear(),
+          month: post.createdAt.getMonth() + 1,
+          day: post.createdAt.getDate(),
+          hour: post.createdAt.getHours(),
+          minutes: post.createdAt.getMinutes(),
+        },
+        updatedAt: {
+          year: post.updatedAt.getFullYear(),
+          month: post.updatedAt.getMonth() + 1,
+          day: post.updatedAt.getDate(),
+          hour: post.updatedAt.getHours(),
+          minutes: post.updatedAt.getMinutes(),
+        },
+        postedTimeAgoText: getPostedTimeAgoText(post.createdAt),
+      };
+    });
+    res.status(200).json({
+      posts: postsWithDates,
+      lastPage,
+      pagesCount: pagesCount < 1 ? 1 : Math.floor(pagesCount),
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -300,5 +623,9 @@ module.exports = {
   UpdateEmail,
   ChangeProfile,
   getSavedPosts,
+  getAppliedPosts,
   savePost,
+  deleteSavedPost,
+  getPostsThisHirerShared,
+  getThisFreelancersHiredPosts,
 };

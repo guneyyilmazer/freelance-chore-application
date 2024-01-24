@@ -8,6 +8,13 @@ export type post = {
     hour: string;
     minutes: string;
   };
+  hired: boolean;
+  completed: boolean;
+  completedDate:string,
+  reviews: {
+    hirerReview: { text: string; star: number };
+    freelancerReview: { text: string; star: number };
+  };
   updatedAt: string;
   postedTimeAgoText: string;
   _id: string;
@@ -19,6 +26,7 @@ export type post = {
   price: number;
   hourly: number;
   skillLevel: string;
+  availability: { partTime?: true; fullTime?: true };
   location: {
     state: string;
     city: string;

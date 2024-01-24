@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import Cookies from "js-cookie";
 import Loading from "./Loading";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
 const EditDesc = ({ show, setShow, id }: any) => {
   const [states, setStates] = useState<string[]>([]);
@@ -89,94 +91,107 @@ const EditDesc = ({ show, setShow, id }: any) => {
     }
   };
   const handleClick = async () => {
-    const res = await fetch(`${BACKEND_SERVER_IP}/post/changeLocation`, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
-      },
+    if (selectedState == "" || selectedCity == "")
+      alert("Both state and city need to be selected");
+    else {
+      const res = await fetch(`${BACKEND_SERVER_IP}/post/changeLocation`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${Cookies.get("Auth_Token")}`,
+        },
 
-      method: "PATCH",
-      body: JSON.stringify({
-        id,
-        location: { state: selectedState, city: selectedCity },
-      }),
-    });
-    const response = await res.json();
-    if (!response.error) {
-      alert(response.msg);
-      window.location.reload();
+        method: "PATCH",
+        body: JSON.stringify({
+          id,
+          location: { state: selectedState, city: selectedCity },
+        }),
+      });
+      const response = await res.json();
+      if (!response.error) {
+        alert(response.msg);
+        window.location.reload();
+      }
+      setShow(!show);
     }
-    setShow(!show);
   };
   return (
-    <div ref={ref} className="break-words">
-      {states.length != 0 ? (
-        <div className="flex my-3 flex-col">
-          <label htmlFor="types">Choose your state</label>
-          <select
-            onChange={(e) => {
-              setSelectedState(e.target.value);
-              setSelectedCity("");
-              setCities([]);
-            }}
-            className="shadow break-words p-3 appearance-none border"
-            name="jobs"
-            id="jobs"
-          >
-            <option
-              value={selectedState != "" ? (selectedState as string) : "empty"}
-              disabled
-              selected
+    <div className="w-[100vw] h-[100vh] absolute left-0 top-0 bg-white bg-opacity-80 flex justify-center items-center">
+      <div ref={ref} className="break-words">
+        {states.length != 0 ? (
+          <div className="flex flex-col">
+            <label className="text-2xl mb-2" htmlFor="state">
+              Choose your state
+            </label>
+            <select
+              onChange={(e) => {
+                setSelectedState(e.target.value);
+                setSelectedCity("");
+                setCities([]);
+              }}
+              className="shadow break-words p-3 appearance-none border"
+              name="location"
+              id="state"
             >
-              {selectedState != "" ? selectedState : "Select"}
-            </option>
-            {states.map((item: any) => (
-              <option value={item.name}>{item.name}</option>
-            ))}
-          </select>
-        </div>
-      ) : (
-        <div className="my-3">
-          <Loading />
-        </div>
-      )}
-      {cities.length != 0 ? (
-        <div className="flex flex-col">
-          <label htmlFor="types">Choose your city</label>
-          <select
-            onChange={(e) => {
-              setSelectedCity(e.target.value);
-            }}
-            className="shadow p-3 appearance-none border"
-            name="jobs"
-            id="jobs"
-          >
-            <option
-              value={selectedCity != "" ? (selectedCity as string) : "empty"}
-              disabled
-              selected
+              <option
+                value={
+                  selectedState != "" ? (selectedState as string) : "empty"
+                }
+                disabled
+                selected
+              >
+                {selectedState != "" ? selectedState : "Select"}
+              </option>
+              {states.map((item: any) => (
+                <option value={item.name}>{item.name}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div className="flex text-3xl justify-center">
+            <FontAwesomeIcon spin icon={faCircleNotch} />
+          </div>
+        )}
+        {cities.length != 0 ? (
+          <div className="flex mt-5 flex-col">
+            <label className="text-2xl mb-2" htmlFor="city">
+              Choose your city
+            </label>
+
+            <select
+              onChange={(e) => {
+                setSelectedCity(e.target.value);
+              }}
+              className="shadow p-3 appearance-none border"
+              name="location"
+              id="city"
             >
-              {selectedCity != "" ? selectedCity : "Select"}
-            </option>
-            {cities.map((item: string) => (
-              <option value={item}>{item}</option>
-            ))}
-          </select>
+              <option
+                value={selectedCity != "" ? (selectedCity as string) : "empty"}
+                disabled
+                selected
+              >
+                {selectedCity != "" ? selectedCity : "Select"}
+              </option>
+              {cities.map((item: string) => (
+                <option value={item}>{item}</option>
+              ))}
+            </select>
+          </div>
+        ) : selectedState != "" ? (
+          <div className="flex my-5 text-3xl justify-center">
+            <FontAwesomeIcon spin icon={faCircleNotch} />
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="flex mt-5 justify-center items-center">
+          <button
+            className="bg-green-800 my-2 p-2 px-4 rounded-md text-white"
+            onClick={handleClick}
+          >
+            Save
+          </button>
         </div>
-      ) : selectedState != "" ? (
-        <div className="my-3">
-          <Loading />
-        </div>
-      ) : (
-        ""
-      )}
-      <div className="flex justify-center items-center">
-        <button
-          className="bg-green-800 my-2 p-2 px-4 rounded-md text-white"
-          onClick={handleClick}
-        >
-          Save
-        </button>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const Header = () => {
         </div>
       )}
       {hamburgerMenu && (
-        <div className="absolute flex flex-col items-center top-0 left-0 secondary z-20 w-[100vw] h-[100vh] text-white">
+        <div className="absolute flex flex-col items-center top-0 left-0 secondary z-[100] w-[100vw] h-[100vh] text-white">
           <div className="w-[90%]">
             <div className="h-[10vh] flex justify-between items-center">
               <Link
@@ -89,16 +89,65 @@ const Header = () => {
                   Freelancers
                 </Link>
               </li>
-              <li>
-                {" "}
-                <Link
-                  href="/resources"
-                  onClick={() => setHamburgerMenu(false)}
-                  className="text-center text-white"
-                >
-                  Resources
-                </Link>
-              </li>
+              {!user.isLoggedIn && (
+                <li>
+                  <Link
+                    href="/auth/signupfreelancer"
+                    className="flex justify-center text-white items-center gap-1"
+                  >
+                    Signup As Freelancer
+                  </Link>
+                </li>
+              )}
+              {user.accountType.hirer && (
+                <li>
+                  <Link className="mt-2" href="/dashboard/hirer/posts">
+                    Posts Shared
+                  </Link>{" "}
+                </li>
+              )}
+              {user.accountType.freelancer && (
+                <>
+                  <li>
+                    <Link className="mt-2" href={`/user?id=${user.userId}`}>
+                      Profile
+                    </Link>{" "}
+                  </li>
+
+                  <li>
+                    <Link
+                      className="mt-2"
+                      href="/dashboard/freelancer/appliedposts"
+                    >
+                      Applied Posts
+                    </Link>{" "}
+                  </li>
+                  <li>
+                    <Link
+                      className="mt-2"
+                      href="/dashboard/freelancer/completedjobs"
+                    >
+                      Completed Jobs
+                    </Link>{" "}
+                  </li>
+                  <li>
+                    <Link
+                      className="mt-2"
+                      href="/dashboard/freelancer/ongoingjobs"
+                    >
+                      Ongoing Jobs
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="mt-2"
+                      href="/dashboard/freelancer/savedposts"
+                    >
+                      Saved Posts
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
             <div className="flex flex-col text-center gap-5">
               <Link
