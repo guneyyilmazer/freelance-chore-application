@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { setUser, setIsLoggedIn } from "../features/appSlice";
 import { useDispatch } from "react-redux";
@@ -47,30 +47,41 @@ const verify = async () => {
   });
   return (await res.json()) as verified | notVerified;
 };
- /* eslint-disable react/display-name */
-export default function WithAuth (HocComponent: any) {
-  const [state, setState] = useState(0);
-  const router = useRouter();
-  const dispatch = useDispatch();
-  useMemo(async () => {
-    const res = await verify();
-    if (!res.valid) {
-      setState(1);
-      /* router.push("/auth"); */
-    } else {
-      await logUserIn(dispatch);
+/* eslint-disable react/display-name */
+export default function WithAuth(HocComponent: any) {
+  // Move the state and other declarations inside the component function
+  return function AuthComponent(props: any) {
+    const [state, setState] = useState(0);
+    const router = useRouter();
+    const dispatch = useDispatch();
 
-      setState(2);
-    }
-  }, []);
-  return (props: any) => {
-    return state == 2 ? (
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const res = await verify();
+          if (!res.valid) {
+            setState(1);
+            // router.push("/auth");
+          } else {
+            await logUserIn(dispatch);
+            setState(2);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          // Handle the error as needed
+        }
+      };
+
+      fetchData();
+    }, [dispatch]);
+
+    return state === 2 ? (
       // Using a count state prevents the Auth Page flashing up on reload. Because it returns with inital state value first time this function gets run.
       <HocComponent {...props} />
-    ) : state == 1 ? (
+    ) : state === 1 ? (
       <></>
     ) : (
-      /* router.replace("/auth") */
+      // router.replace("/auth")
       <></>
     );
   };
