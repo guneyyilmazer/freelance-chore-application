@@ -3,7 +3,7 @@ import React from "react";
 import PostCreateForm from "../../components/PostCreateForm";
 import { useSelector } from "react-redux";
 
-const page = () => {
+const Page = () => {
   const user = useSelector((shop:any)=>shop.app.user)
   if (!user.isLoggedIn) window.location.replace("/auth")
   return (
@@ -13,4 +13,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

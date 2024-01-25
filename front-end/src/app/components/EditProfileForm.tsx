@@ -226,7 +226,7 @@ const EditProfile = () => {
                     Selected State: {selectedState}
                   </option>
                   {states.map((item: any) => (
-                    <option value={item.name}>{item.name}</option>
+                    <option key={item.name} value={item.name}>{item.name}</option>
                   ))}
                 </select>
               </div>
@@ -245,7 +245,7 @@ const EditProfile = () => {
                     Selected City: {cities[0]}
                   </option>
                   {cities.map((item: string) => (
-                    <option value={item}>{item}</option>
+                    <option key={item} value={item}>{item}</option>
                   ))}
                 </select>
               </div>

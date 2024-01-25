@@ -77,7 +77,7 @@ const HireTheseFreelancers = () => {
           </Link>
           <Link href="/freelancers?type=dogWalking" className="relative">
             <div className="text-white absolute m-7 text-sm">
-              Don't have time to walk your dogs?
+              Don&apos;t have time to walk your dogs?
             </div>
             <div className="text-white absolute mt-14 m-7 text-2xl font-bold leading-9">
               Dog Walkers

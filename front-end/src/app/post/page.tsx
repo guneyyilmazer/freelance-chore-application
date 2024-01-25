@@ -35,7 +35,7 @@ import bookmarkWhite from "../images/bookmark-white.svg";
 import star from "../images/star.svg";
 import { setChattingWith } from "../features/appSlice";
 import EditAvailability from "../components/EditAvailability";
-const page = () => {
+const Page = () => {
   const [preview, setPreview] = useState(false);
   const [previewPictures, setPreviewPictures] = useState<string[]>();
   const [previewPicturesIndex, setPreviewPicturesIndex] = useState(0);
@@ -436,4 +436,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

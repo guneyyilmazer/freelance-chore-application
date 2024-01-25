@@ -142,7 +142,7 @@ const EditDesc = ({ show, setShow, id }: any) => {
                 {selectedState != "" ? selectedState : "Select"}
               </option>
               {states.map((item: any) => (
-                <option value={item.name}>{item.name}</option>
+                <option key={item.name} value={item.name}>{item.name}</option>
               ))}
             </select>
           </div>
@@ -173,7 +173,7 @@ const EditDesc = ({ show, setShow, id }: any) => {
                 {selectedCity != "" ? selectedCity : "Select"}
               </option>
               {cities.map((item: string) => (
-                <option value={item}>{item}</option>
+                <option key={item} value={item}>{item}</option>
               ))}
             </select>
           </div>

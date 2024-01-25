@@ -64,7 +64,7 @@ const Features = () => {
               />
               <div className="w-[302px] text-white font-light">
                 We guarantee upfront, transparent pricing for every job. Know
-                exactly what you'll pay before you hire.
+                exactly what you&apos;ll pay before you hire.
               </div>
             </div>
           </div>

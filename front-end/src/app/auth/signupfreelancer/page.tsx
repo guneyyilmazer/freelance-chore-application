@@ -1,7 +1,11 @@
 import React from "react";
 import SignUpAsAFreelancer from "../../components/SignupAsAFreelancer";
-const page = () => {
-  return <SignUpAsAFreelancer />;
+const Page = () => {
+  return (
+    <div>
+      <SignUpAsAFreelancer />
+    </div>
+  );
 };
 
-export default page;
+export default Page;

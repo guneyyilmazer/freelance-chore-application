@@ -10,7 +10,7 @@ import AuthButtons from "./AuthButtons";
 import location from "../images/location.svg";
 import star from "../images/Star.svg";
 import { post } from "../types";
-const page = () => {
+const Page = () => {
   const client = useSelector((shop: any) => shop.app.user);
   const [user, setUser] = useState<user>();
   const searchParams = useSearchParams();
@@ -40,11 +40,11 @@ const page = () => {
   const [lastPage, setLastPage] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState<number>(
-    searchParams.get("page") &&
+    searchParams.get("page") ?
       Number(searchParams.get("page")) > 0 &&
       !lastPage
       ? Number(searchParams.get("page"))
-      : 1
+      : 1:1
   );
   useEffect(() => {
     user && getPosts();
@@ -136,8 +136,8 @@ const page = () => {
 
           <div className="mt-10">
             <h3 className="text-xl font-bold">Work History</h3>
-            {posts && posts.map((post: post) => (
-              <div>
+            {posts && posts.map((post: post,index:number) => (
+              <div key={index}>
                 <div className="h-px my-2 bg-slate-200"></div>
                 <div className="font-bold">{post.title}</div>
                 <div>
@@ -185,4 +185,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -93,9 +93,9 @@ const Header = () => {
                 <li>
                   <Link
                     href="/auth/signupfreelancer"
-                    className="flex justify-center text-white items-center gap-1"
+                    className="text-white gap-1"
                   >
-                    Signup As Freelancer
+                    Signup As A Freelancer
                   </Link>
                 </li>
               )}

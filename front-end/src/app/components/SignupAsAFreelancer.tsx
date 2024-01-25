@@ -212,7 +212,7 @@ const Signup = () => {
                     Select Your State{" "}
                   </option>
                   {states.map((item: any) => (
-                    <option value={item.name}>{item.name}</option>
+                    <option key={item.name} value={item.name}>{item.name}</option>
                   ))}
                 </select>
               </div>
@@ -233,7 +233,7 @@ const Signup = () => {
                     Select Your City{" "}
                   </option>
                   {cities.map((item: string) => (
-                    <option value={item}>{item}</option>
+                    <option key={item} value={item}>{item}</option>
                   ))}
                 </select>
               </div>

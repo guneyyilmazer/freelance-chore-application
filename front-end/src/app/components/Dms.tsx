@@ -64,6 +64,7 @@ const DirectMessages = () => {
               : true;
           return (
             <div
+            key={index}
               onClick={() => {
                 dispatch(setChattingWith(chattingWith.userId));
               }}

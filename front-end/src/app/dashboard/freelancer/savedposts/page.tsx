@@ -8,7 +8,7 @@ import bookmark from "../../../images/bookmark.svg";
 import location from "../../../images/location.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faX } from "@fortawesome/free-solid-svg-icons";
-const page = () => {
+const Page = () => {
   const [savedPosts, setSavedPosts] = useState([]);
   useEffect(() => {
     getPosts();
@@ -58,8 +58,8 @@ const page = () => {
           </div>
           {/*  POSTS */}
           <div className="flex flex-wrap w-full justify-between">
-            {savedPosts.map((post: post) => (
-              <div className="relative flex items-center">
+            {savedPosts.map((post: post,index:number) => (
+              <div key={index} className="relative flex items-center">
                 <Link
                   href={`/post?id=${post._id}`}
                   className="h-[240px] hover:opacity-60 mb-4 w-full md:w-[450px] p-6 bg-white rounded-lg shadow border border-gray-200 flex flex-col justify-center gap-5"
@@ -119,4 +119,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

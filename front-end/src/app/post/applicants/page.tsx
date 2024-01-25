@@ -11,7 +11,7 @@ import star from "../../images/Star.svg";
 import DefaultProfilePicture from "../../images/default.jpeg";
 import { useSelector } from "react-redux";
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const [applicants, setApplicants] = useState<user[]>();
   const client = useSelector((shop: any) => shop.app.user);
@@ -88,8 +88,8 @@ const page = () => {
             )}{" "}
           </div>
           <div className="flex flex-col gap-5 mt-5">
-            {applicants.map((item: user) => (
-              <div>
+            {applicants.map((item: user,index:number) => (
+              <div key={index}>
                 <div className="h-[308px] flex items-center md:items-start flex-col md:flex-row bg-white rounded-lg shadow border border-gray-200">
                   <div className="m-3 w-[95%] md:w-full flex flex-row md:flex-col justify-between md:justify-start items-center">
                     <img
@@ -170,4 +170,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -16,12 +16,16 @@ const initialState: {
   room: string;
 } = {
   mobileFilterMenu: false,
-  mobileDmSideBar:
-    localStorage.getItem("mobileDmSideBar") == "false" ? false : true,
-  mobileChattingWithUserSideBar:
-    localStorage.getItem("mobileChattingWithUserSideBar") == "false"
+  mobileDmSideBar: typeof window !== "undefined"
+    ? localStorage.getItem("mobileDmSideBar") == "false"
       ? false
-      : true,
+      : true
+    : true,
+  mobileChattingWithUserSideBar: typeof window !== "undefined"
+    ? localStorage.getItem("mobileChattingWithUserSideBar") == "false"
+      ? false
+      : true
+    : true,
   searchFilter: {
     username: "",
     availability: "random",
@@ -44,9 +48,10 @@ const initialState: {
   loading: true,
   loadedFirstMessages: false,
   socket: {},
-  chattingWith: localStorage.getItem("chattingWith")
+  chattingWith: typeof window !== "undefined"?
+  localStorage.getItem("chattingWith")
     ? (localStorage.getItem("chattingWith") as string)
-    : "",
+    : "":"",
   room:
     typeof window !== "undefined"
       ? (window.localStorage.getItem("room") as string)

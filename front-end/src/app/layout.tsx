@@ -7,10 +7,6 @@ const inter = Inter({ subsets: ["latin"] });
 import "./css/styles.css";
 import { Providers } from "./Providers";
 import Footer from "./components/Footer";
-import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { setIsLoggedIn, setUser } from "./features/appSlice";
-import { useDispatch } from "react-redux";
 export const BACKEND_SERVER_IP = "http://localhost:4000";
 export const SOCKET_IO_IP = "http://localhost:3001";
 export const categories: categories = {

@@ -3,11 +3,9 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { BACKEND_SERVER_IP } from "../layout";
 import Cookies from "js-cookie";
 import { user } from "../types/UserTypes";
-import SearchBar from "../components/SearchBar";
 import DefaultProfilePicture from "../images/default.jpeg";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import FilterSideBar from "../components/FilterSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { filterType } from "../types";
 import FilterSideBarr from "../components/FilterSideBarr";
@@ -26,7 +24,7 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import MobileFilterMenu from "../components/MobileFilterMenu";
-const page = () => {
+const Page = () => {
   const mobileFilterMenu = useSelector(
     (shop: any) => shop.app.mobileFilterMenu
   );
@@ -35,17 +33,17 @@ const page = () => {
   const [lastPage, setLastPage] = useState(true);
   const searchParams = useSearchParams();
   const [page, setPage] = useState(
-    searchParams.get("page") &&
-      Number(searchParams.get("page")) > 0 &&
-      !lastPage
-      ? Number(searchParams.get("page"))
+    searchParams.get("page")
+      ? Number(searchParams.get("page")) > 0 && !lastPage
+        ? Number(searchParams.get("page"))
+        : 1
       : 1
   );
   const router = useRouter();
   const filter: filterType = useSelector((shop: any) => shop.app.searchFilter);
   useEffect(() => {
     getFreelancers();
-  }, [filter,page]);
+  }, [filter, page]);
   const [freelancers, setFreelancers] = useState([]);
   const getFreelancers = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/loadFreelancers`, {
@@ -123,8 +121,9 @@ const page = () => {
             <div className="text-slate-500 w-full text-sm" />
           </div>
           <div className="flex w-full mt-5 mb-2 flex-col gap-10">
-            {freelancers.map((item: user) => (
+            {freelancers.map((item: user, index: number) => (
               <Link
+                key={index}
                 href={`/user?id=${item._id}`}
                 className="h-[308px] flex items-center md:items-start flex-col md:flex-row bg-white rounded-lg shadow border border-gray-200"
               >
@@ -173,7 +172,9 @@ const page = () => {
                       </div>
                     </div>
                     <div className="flex md:justify-center items-center gap-1">
-                      <div className="text-zinc-900 text-sm">{item.freelancerDetails?.starAverage}</div>
+                      <div className="text-zinc-900 text-sm">
+                        {item.freelancerDetails?.starAverage}
+                      </div>
                       <img src={star.src} alt="" />
                     </div>
                   </div>
@@ -191,7 +192,7 @@ const page = () => {
                 className="px-2 appearance-none border shadow"
               >
                 {allPages.map((page) => (
-                  <option className="bg-slate-200" value={page}>
+                  <option key={page} className="bg-slate-200" value={page}>
                     {page}
                   </option>
                 ))}
@@ -235,4 +236,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

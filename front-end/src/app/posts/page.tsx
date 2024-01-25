@@ -19,7 +19,7 @@ import {
   faCaretRight,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
-const page = () => {
+const Page = () => {
   const dispatch = useDispatch();
   const filter = useSelector((shop: any) => shop.app.searchFilter);
   const mobileFilterMenu = useSelector(
@@ -32,11 +32,11 @@ const page = () => {
   const [lastPage, setLastPage] = useState(false);
   const [sort, setSort] = useState(-1);
   const [page, setPage] = useState<number>(
-    searchParams.get("page") &&
+    searchParams.get("page") ?
       Number(searchParams.get("page")) > 0 &&
       !lastPage
       ? Number(searchParams.get("page"))
-      : 1
+      : 1:1
   );
   const getPosts = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/post`, {
@@ -140,8 +140,8 @@ const page = () => {
               </div>
               {/*  POSTS */}
               <div className="flex flex-wrap w-full justify-between">
-                {posts.map((post: post) => (
-                  <div className="relative flex items-center">
+                {posts.map((post: post,index:number) => (
+                  <div key={index} className="relative flex items-center">
                     <Link
                       href={`/post?id=${post._id}`}
                       className="h-[240px] hover:opacity-60 mb-4 w-[450px] p-6 bg-white rounded-lg shadow border border-gray-200 flex flex-col justify-center gap-5"
@@ -205,7 +205,7 @@ const page = () => {
                   className="px-2 appearance-none border shadow"
                 >
                   {allPages.map((page) => (
-                    <option className="bg-slate-200" value={page}>
+                    <option key={page} className="bg-slate-200" value={page}>
                       {page}
                     </option>
                   ))}
@@ -249,4 +249,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

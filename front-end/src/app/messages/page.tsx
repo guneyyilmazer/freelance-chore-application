@@ -1,7 +1,7 @@
 import React from "react";
 import Room from "../components/Room";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <Room />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

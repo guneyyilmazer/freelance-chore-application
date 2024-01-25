@@ -76,7 +76,7 @@ const TopFreelancersInYourCity = () => {
       <div className="flex justify-around w-[90%]">
         {/* cards */}
         {freelancers.map((item: user) => (
-          <div className="w-[300px] h-[350px] flex flex-col items-center bg-white rounded-lg">
+          <div key={item.userId} className="w-[300px] h-[350px] flex flex-col items-center bg-white rounded-lg">
             <img
               className="w-full p-2 h-[215px] rounded-lg"
               src={

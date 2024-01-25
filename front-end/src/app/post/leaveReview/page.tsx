@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const textRef = useRef<HTMLTextAreaElement>(null);
   const [star, setStar] = useState(5);
@@ -52,4 +52,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

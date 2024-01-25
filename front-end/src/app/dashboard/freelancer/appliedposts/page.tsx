@@ -15,17 +15,17 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter, useSearchParams } from "next/navigation";
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [allPages, setAllPages] = useState([1]);
   const [lastPage, setLastPage] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState<number>(
-    searchParams.get("page") &&
-      Number(searchParams.get("page")) > 0 &&
-      !lastPage
-      ? Number(searchParams.get("page"))
+    searchParams.get("page")
+      ? Number(searchParams.get("page")) > 0 && !lastPage
+        ? Number(searchParams.get("page"))
+        : 1
       : 1
   );
   useEffect(() => {
@@ -58,7 +58,9 @@ const page = () => {
         <div className="w-[90%] flex flex-col">
           <div className="flex justify-between w-full my-20 items-center">
             <div className="flex flex-col">
-              <div className="text-xl font-bold">All Jobs You Have Applied To</div>
+              <div className="text-xl font-bold">
+                All Jobs You Have Applied To
+              </div>
               <div>Showing {posts.length} results</div>
             </div>
             <div className="flex flex-col">
@@ -71,8 +73,8 @@ const page = () => {
           </div>
           {/*  POSTS */}
           <div className="flex flex-wrap w-full justify-between">
-            {posts.map((post: post) => (
-              <div className="flex items-center">
+            {posts.map((post: post, index: number) => (
+              <div key={index} className="flex items-center">
                 <Link
                   href={`/post?id=${post._id}`}
                   className="h-[240px] hover:opacity-60 mb-4 w-full md:w-[450px] p-6 bg-white rounded-lg shadow border border-gray-200 flex flex-col justify-center gap-5"
@@ -129,7 +131,7 @@ const page = () => {
             className="px-2 appearance-none border shadow"
           >
             {allPages.map((page) => (
-              <option className="bg-slate-200" value={page}>
+              <option key={page} className="bg-slate-200" value={page}>
                 {page}
               </option>
             ))}
@@ -170,4 +172,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

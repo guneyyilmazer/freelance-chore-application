@@ -261,7 +261,9 @@ const PostCreateForm = () => {
                 {selectedState != "" ? selectedState : "Select State"}
               </option>
               {states.map((item: any) => (
-                <option value={item.name}>{item.name}</option>
+                <option key={item.name} value={item.name}>
+                  {item.name}
+                </option>
               ))}
             </select>
           </div>
@@ -289,7 +291,9 @@ const PostCreateForm = () => {
                 {selectedCity != "" ? selectedCity : "Select City"}
               </option>
               {cities.map((item: string) => (
-                <option value={item}>{item}</option>
+                <option key={item} value={item}>
+                  {item}
+                </option>
               ))}
             </select>
           </div>
@@ -324,8 +328,9 @@ const PostCreateForm = () => {
           <div className="flex flex-col">
             Choose The Main Picture
             <div className="flex flex-row">
-              {pictures.map((item) => (
+              {pictures.map((item, index: number) => (
                 <img
+                  key={index}
                   onClick={() => setMainPicture(item)}
                   className="w-20 h-20 m-1 hover:opacity-50 cursor-pointer"
                   src={item}
