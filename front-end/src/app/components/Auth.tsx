@@ -47,23 +47,23 @@ const verify = async () => {
   });
   return (await res.json()) as verified | notVerified;
 };
- /* eslint-disable react/display-name */
-export default function WithAuth (HocComponent: any) {
-  const [state, setState] = useState(0);
-  const router = useRouter();
-  const dispatch = useDispatch();
-  useMemo(async () => {
-    const res = await verify();
-    if (!res.valid) {
-      setState(1);
-      /* router.push("/auth"); */
-    } else {
-      await logUserIn(dispatch);
-
-      setState(2);
-    }
-  }, []);
+/* eslint-disable react/display-name */
+export default function WithAuth(HocComponent: any) {
   return (props: any) => {
+    const [state, setState] = useState(0);
+    const router = useRouter();
+    const dispatch = useDispatch();
+    useMemo(async () => {
+      const res = await verify();
+      if (!res.valid) {
+        setState(1);
+        /* router.push("/auth"); */
+      } else {
+        await logUserIn(dispatch);
+
+        setState(2);
+      }
+    }, []);
     return state == 2 ? (
       // Using a count state prevents the Auth Page flashing up on reload. Because it returns with inital state value first time this function gets run.
       <HocComponent {...props} />
@@ -74,4 +74,4 @@ export default function WithAuth (HocComponent: any) {
       <></>
     );
   };
-};
+}

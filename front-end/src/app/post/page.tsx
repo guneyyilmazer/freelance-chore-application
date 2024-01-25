@@ -32,7 +32,7 @@ import dollar from "../images/dollar-circle.svg";
 import clock from "../images/clock.svg";
 import bookmark from "../images/bookmark.svg";
 import bookmarkWhite from "../images/bookmark-white.svg";
-import star from "../images/star.svg";
+import star from "../images/Star.svg";
 import { setChattingWith } from "../features/appSlice";
 import EditAvailability from "../components/EditAvailability";
 const Page = () => {
@@ -144,8 +144,7 @@ const Page = () => {
                   {post.user == user.userId && !titleEditShow && (
                     <button
                       onClick={() => setTitleEditShow(true)}
-                      className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                    >
+                      className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                       <FontAwesomeIcon className="text-sm" icon={faPen} />
                     </button>
                   )}
@@ -161,8 +160,7 @@ const Page = () => {
                     {post.user == user.userId && !editLocationShow && (
                       <button
                         onClick={() => setEditLocationShow(true)}
-                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                      >
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                         <FontAwesomeIcon className="text-sm" icon={faPen} />
                       </button>
                     )}
@@ -181,8 +179,7 @@ const Page = () => {
                     {post.user == user.userId && !typeEditShow && (
                       <button
                         onClick={() => setTypeEditShow(true)}
-                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                      >
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                         <FontAwesomeIcon className="text-sm" icon={faPen} />
                       </button>
                     )}
@@ -198,8 +195,7 @@ const Page = () => {
                     {post.user == user.userId && !availabilityEditShow && (
                       <button
                         onClick={() => setAvailabilityEditShow(true)}
-                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                      >
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                         <FontAwesomeIcon className="text-sm" icon={faPen} />
                       </button>
                     )}
@@ -215,8 +211,7 @@ const Page = () => {
                     {post.user == user.userId && !wageEditShow && (
                       <button
                         onClick={() => setWageEditShow(true)}
-                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                      >
+                        className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                         <FontAwesomeIcon className="text-sm" icon={faPen} />
                       </button>
                     )}
@@ -235,22 +230,19 @@ const Page = () => {
                     {!applied ? (
                       <button
                         onClick={applyToPost}
-                        className="flex grow shrink md:px-10 py-3 text-white font-semibold md:text-sm bg-green-600 rounded-lg shadow border justify-center items-center"
-                      >
+                        className="flex grow shrink md:px-10 py-3 text-white font-semibold md:text-sm bg-green-600 rounded-lg shadow border justify-center items-center">
                         Apply Now
                       </button>
                     ) : (
                       <Link
                         href={"/appliedposts"}
-                        className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
-                      >
+                        className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center">
                         See All Posts You Have Applied To
                       </Link>
                     )}
                     <button
                       onClick={savePost}
-                      className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center"
-                    >
+                      className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 md:text-sm text-green-600 border-green-600 flex justify-center items-center">
                       <div className="text-md group-hover:hidden">
                         <img src={bookmark.src} alt="" />
                       </div>
@@ -264,8 +256,7 @@ const Page = () => {
                   <div className="mt-10">
                     <Link
                       className="grow shrink md:px-10 py-3 gap-2 group rounded-lg border hover:text-white hover:bg-green-600 text-green-600 border-green-600 flex justify-center items-center"
-                      href={`post/applicants?id=${post._id}`}
-                    >
+                      href={`post/applicants?id=${post._id}`}>
                       See Who Applied To Your Post
                     </Link>
                   </div>
@@ -319,13 +310,11 @@ const Page = () => {
                       onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
                         alert("The link has been copied to your clipboard!");
-                      }}
-                    >
+                      }}>
                       Copy Link
                     </button>
                     <Link
-                      href={`/post/applicants?id=${searchParams.get("id")}`}
-                    >
+                      href={`/post/applicants?id=${searchParams.get("id")}`}>
                       See Applicants
                     </Link>
                   </div>
@@ -341,8 +330,7 @@ const Page = () => {
                 {post.user == user.userId && !descEditShow && (
                   <button
                     onClick={() => setDescEditShow(true)}
-                    className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600"
-                  >
+                    className="ms-2 flex justify-center items-center w-7 h-7 text-white rounded-full bg-green-600">
                     <FontAwesomeIcon className="text-sm" icon={faPen} />
                   </button>
                 )}
