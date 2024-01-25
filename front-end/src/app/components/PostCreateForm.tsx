@@ -120,7 +120,7 @@ const PostCreateForm = () => {
       const response = await res.json();
       if (!response.error) {
         alert("Post created successfully!");
-        window.location.replace("/posts");
+        router.replace("/posts");
       }
     }
   };

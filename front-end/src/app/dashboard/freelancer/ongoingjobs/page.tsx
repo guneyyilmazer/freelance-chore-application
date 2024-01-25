@@ -24,11 +24,11 @@ const Page = () => {
   const [lastPage, setLastPage] = useState(false);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState<number>(
-    searchParams.get("page") ?
-      Number(searchParams.get("page")) > 0 &&
-      !lastPage
-      ? Number(searchParams.get("page"))
-      : 1:1
+    searchParams.get("page")
+      ? Number(searchParams.get("page")) > 0 && !lastPage
+        ? Number(searchParams.get("page"))
+        : 1
+      : 1
   );
   useEffect(() => {
     getPosts();
@@ -68,16 +68,13 @@ const Page = () => {
         <div className="w-[90%] flex flex-col">
           <div className="flex justify-between w-full my-20 items-center">
             <div className="flex flex-col">
-              <div className="text-xl font-bold">
-                Your Ongoing Jobs
-              </div>
+              <div className="text-xl font-bold">Your Ongoing Jobs</div>
               <div>Showing {posts.length} results</div>
             </div>
-           
           </div>
           {/*  POSTS */}
           <div className="flex flex-wrap w-full justify-between">
-            {posts.map((post: post,index:number) => (
+            {posts.map((post: post, index: number) => (
               <div key={index} className="flex items-center">
                 <Link
                   href={`/post?id=${post._id}`}

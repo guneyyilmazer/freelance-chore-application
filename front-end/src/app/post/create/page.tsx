@@ -1,11 +1,12 @@
-"use client"
+"use client";
 import React from "react";
 import PostCreateForm from "../../components/PostCreateForm";
 import { useSelector } from "react-redux";
 
 const Page = () => {
-  const user = useSelector((shop:any)=>shop.app.user)
-  if (!user.isLoggedIn) window.location.replace("/auth")
+  const user = useSelector((shop: any) => shop.app.user);
+  if (!user.isLoggedIn && typeof window != "undefined")
+    window.location.replace("/auth");
   return (
     <div>
       <PostCreateForm />
