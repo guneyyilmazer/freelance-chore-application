@@ -38,7 +38,8 @@ userSchema.statics.signup = async function (
   freelancerDetails,
   username,
   email,
-  password
+  password,
+  profilePicture
 ) {
   if (!validator.isEmail(email)) {
     throw new Error(process.env.ERR_NOT_VALID_EMAIL);
@@ -66,6 +67,7 @@ userSchema.statics.signup = async function (
     username,
     email,
     password: hash,
+    profilePicture,
   });
   return user._id;
 };

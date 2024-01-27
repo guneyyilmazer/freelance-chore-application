@@ -1,3 +1,4 @@
+"use client";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -8,10 +9,10 @@ import Cookies from "js-cookie";
 import DefaultProfilePicture from "../images/default.jpeg";
 import star from "../images/Star.svg";
 import tickCircle from "../images/tick-circle.svg";
+import Link from "next/link";
 const TopFreelancersInYourCity = () => {
   const client = useSelector((shop: any) => shop.app.user);
   const [user, setUser] = useState<user>();
-  console.log(client);
   useEffect(() => {
     getUser();
   }, []);
@@ -36,6 +37,7 @@ const TopFreelancersInYourCity = () => {
       setUser(response);
     }
   };
+  console.log(client)
   const getFreelancers = async () => {
     const res = await fetch(`${BACKEND_SERVER_IP}/user/loadFreelancers`, {
       headers: {
@@ -62,21 +64,13 @@ const TopFreelancersInYourCity = () => {
       <div className="text-center flex w-full justify-center my-[40px] text-white text-[32px] font-bold font-['Helvetica Neue'] leading-[44px]">
         Top Freelancers In Your City
       </div>
-      <div className=" w-[88%] flex justify-end mb-5 text-white">
-        <div className="w-[100px] flex justify-around">
-          <span>01/04</span>
-          <button>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <button>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-        </div>
-      </div>
       <div className="flex justify-around w-[90%]">
         {/* cards */}
         {freelancers.map((item: user) => (
-          <div key={item.userId} className="w-[300px] h-[350px] flex flex-col items-center bg-white rounded-lg">
+          <div
+            key={item.userId}
+            className="w-[300px] h-[350px] flex flex-col items-center bg-white rounded-lg"
+          >
             <img
               className="w-full p-2 h-[215px] rounded-lg"
               src={
@@ -102,7 +96,9 @@ const TopFreelancersInYourCity = () => {
                   </div>
                 </div>
                 <div className="flex rounded-lg justify-center items-center">
-                  <div className="text-zinc-900 text-sm">4.8</div>
+                  <div className="text-zinc-900 text-sm">
+                    {item.freelancerDetails?.starAverage}
+                  </div>
                   <img src={star.src} alt="" />
                 </div>
               </div>
@@ -110,10 +106,10 @@ const TopFreelancersInYourCity = () => {
                 <div className="flex gap-1 items-center">
                   <img src={tickCircle.src} alt="" />
                   <div className="text-slate-600 text-xs">
-                    85 Jobs Completed{" "}
+                    Verified{" "}
                   </div>
                 </div>
-                <div className="text-green-600 text-sm">View Profile</div>
+                <Link href={`/user?id=${item._id}`} className="text-green-600 text-sm">View Profile</Link>
               </div>
             </div>
           </div>

@@ -25,7 +25,7 @@ const Header = () => {
                 <img src={logo.src} alt="" />
               </div>
               <div className="text-white text-xl font-bold leading-[30px]">
-                orea
+                New Chore
               </div>
             </Link>
             <button
@@ -51,7 +51,7 @@ const Header = () => {
                   <img src={logo.src} alt="" />
                 </div>
                 <div className="text-white text-xl font-bold leading-[30px]">
-                  orea
+                  New Chore
                 </div>
               </Link>
               <button

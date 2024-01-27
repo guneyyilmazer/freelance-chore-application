@@ -38,7 +38,7 @@ const initialState: {
   },
   user: {
     userId: Cookies.get("userId") ? (Cookies.get("userId") as string) : "",
-    location: { state: "", city: "" },
+    location: { state: "Alaska", city: "Akutan" },
     accountType: {},
     username: "",
     profilePicture: "",

@@ -56,7 +56,7 @@ postSchema.statics.createPost = async function (
   availability
 ) {
   if (!jobTypes.filter((item) => item == type)) {
-    throw new Error(process.env.JOB_TYPE_INVALID);
+    throw new Error(process.env.INVALID_JOB_TYPE);
   }
   if (
     ["entry", "intermediate", "expert"].filter((item) => item == skillLevel)
@@ -81,7 +81,7 @@ postSchema.statics.createPost = async function (
 postSchema.statics.deletePost = async function (userId, id) {
   const post = await this.findOne({ _id: id });
   if (!post) {
-    throw new Error(process.env.POST_NOT_FOUND);
+    throw new Error(process.env.NOT_FOUND_POST);
   }
   if (post.user != userId) {
     throw new Error(process.env.AUTHORIZATION_DENIED);

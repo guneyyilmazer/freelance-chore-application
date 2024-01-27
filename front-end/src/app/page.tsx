@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import Hero from "./components/Hero";
 import { BACKEND_SERVER_IP } from "./layout";
@@ -12,32 +11,12 @@ import Features from "./components/Features";
 import ForClientsAndFreelancers from "./components/ForClientsAndFreelancers";
 import HireTheseFreelancers from "./components/HireTheseFreelancers";
 import TopFreelancersInYourCity from "./components/TopFreelancersInYourCity";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "New Chore",
+  description: "by yilmazer.dev",
+};
 export default function Home() {
-  const client = useSelector((shop: any) => shop.app.user);
-  const [user, setUser] = useState<user>();
-  console.log(client);
-  useEffect(() => {
-    getUser();
-  }, []);
-  const [freelancers, setFreelancers] = useState([]);
-  const getUser = async () => {
-    const res = await fetch(`${BACKEND_SERVER_IP}/user/loadUser`, {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${Cookies.get("Auth_Token")}`,
-      },
-      body: JSON.stringify({
-        userId: client.userId,
-      }),
-
-      method: "POST",
-    });
-    const response = await res.json();
-    if (!response.error) {
-      setUser(response);
-    }
-  };
-
   return (
     <main className="">
       <div className="secondary pt-[60px]">

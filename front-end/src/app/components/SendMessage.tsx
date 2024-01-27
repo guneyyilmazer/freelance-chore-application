@@ -82,10 +82,10 @@ const SendMessage = () => {
               <FontAwesomeIcon icon={faImage} />
             </div>
             <button
-              className="bg-green-600 hover:bg-green-800 text-white font-bold p-2 w-9 rounded-full focus:outline-none focus:shadow-outline"
+              className="bg-green-600 hover:bg-green-800 text-white font-bold w-10 h-10 flex items-center justify-center rounded-full focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              <img className="w-full h-full" src={send.src} alt="" />
+              <img className="w-[60%] h-[60%]" src={send.src} alt="" />
             </button>
           </div>
           <input

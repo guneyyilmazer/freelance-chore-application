@@ -72,7 +72,7 @@ const getPosts = async (req, res) => {
       !jobTypes.filter((item) => item == Object.keys(type)[0]).length &&
       !type.random
     ) {
-      throw new Error("Job type is invalid");
+      throw new Error(process.env.INVALID_JOB_TYPE);
     }
 
     const typeString = "type." + Object.keys(type)[0];

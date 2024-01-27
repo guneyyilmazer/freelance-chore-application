@@ -5,14 +5,16 @@ import Cookies from "js-cookie";
 import { BACKEND_SERVER_IP } from "../layout";
 import { useSearchParams } from "next/navigation";
 import Loading from "./Loading";
+import getBase64 from "./GetBase64";
 
 const Signup = () => {
   const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [formIndex, setFormIndex] = useState(0);
   const [selectedState, setSelectedState] = useState(""); //SELECT STATE IN FUNCTION
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [picture, setPicture] = useState("");
   const [password, setPassword] = useState("");
   const [jobType, setJobType] = useState({});
   const [wage, setWage] = useState<number>(15);
@@ -60,11 +62,15 @@ const Signup = () => {
       }
     );
     const response = await res.json();
-    console.log(response);
-    if (!response.error) setCities(response.data);
+    if (!response.error) {
+      if (response.data.length == 0) {
+        setCities(["Centre"]);
+      } else {
+        setCities(response.data);
+      }
+    }
   };
 
-  const searchParams = useSearchParams();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -85,6 +91,7 @@ const Signup = () => {
         method: "POST",
         body: JSON.stringify({
           type: { freelancer: true },
+          profilePicture: picture,
           username: username,
           email: email,
           password: password,
@@ -189,6 +196,24 @@ const Signup = () => {
               onChange={(e) => setAboutMe(e.target.value)}
               rows={10}
             ></textarea>
+            <div className="mt-4">
+              <h4 className="text-lg">Profile Picture</h4>
+              <input
+                type="file"
+                multiple
+                onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const base64 = await getBase64(e.target.files![0]);
+                  setPicture(base64);
+                }}
+                className="text-sm text-slate-500
+        file:mr-4 file:py-2 file:px-4
+        file:rounded-full file:border-0
+        file:text-sm file:font-semibold
+        file:bg-violet-50 file:text-violet-700
+        hover:file:bg-violet-100
+        "
+              />
+            </div>
           </>
         )}
 
@@ -212,7 +237,9 @@ const Signup = () => {
                     Select Your State{" "}
                   </option>
                   {states.map((item: any) => (
-                    <option key={item.name} value={item.name}>{item.name}</option>
+                    <option key={item.name} value={item.name}>
+                      {item.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -233,7 +260,9 @@ const Signup = () => {
                     Select Your City{" "}
                   </option>
                   {cities.map((item: string) => (
-                    <option key={item} value={item}>{item}</option>
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -244,6 +273,7 @@ const Signup = () => {
             ) : (
               ""
             )}
+
             <div className="mt-3 text-center">
               <button
                 className="p-2 bg-green-600 text-white rounded-lg"

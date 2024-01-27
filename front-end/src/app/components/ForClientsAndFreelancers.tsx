@@ -27,7 +27,7 @@ const ForClientsAndFreelancers = () => {
                   For Clients
                 </div>
                 <div className="md:w-[370px] flex justify-center items-center text-gray-200">
-                  Orea lets you find and hire skilled professionals for any task
+                  New Chore lets you find and hire skilled professionals for any task
                   at hand. Explore a world where your needs are met with
                   precision.
                 </div>
@@ -54,7 +54,7 @@ const ForClientsAndFreelancers = () => {
                     <img src={ticksquare.src} />
                   </div>
                   <div className="text-sm text-gray-200 font-light">
-                    Orea stands behind the quality of service. We ensure the job
+                    New Chore stands behind the quality of service. We ensure the job
                     meets your expectations.
                   </div>
                 </div>
@@ -74,7 +74,7 @@ const ForClientsAndFreelancers = () => {
                 href="/freelancers"
                 className="px-10 py-3.5 md:absolute top-[500px] bg-green-600 text-white md:text-sm rounded-lg"
               >
-                Discover Orea for Clients
+                Discover New Chore for Clients
               </Link>
             </div>
             <div className="w-full md:hidden mt-10 flex justify-center items-center">
@@ -102,7 +102,7 @@ const ForClientsAndFreelancers = () => {
               For Freelancers
             </div>
             <div className="md:w-[308px] mt-[120px] md:mt-[228px] text-gray-200">
-              As a service provider, Orea lets you showcase your skills and
+              As a service provider, New Chore lets you showcase your skills and
               connect with clients seeking your expertise.
             </div>
             <div className="w-16 h-16 flex justify-center items-center left-[20px] md:left-[24px] top-[35px] absolute">
@@ -120,7 +120,7 @@ const ForClientsAndFreelancers = () => {
               href="/posts"
               className="px-10 py-3.5 mt-[24px] mb-8 md:m-0 md:absolute top-[500px] bg-green-600 rounded-lg flex justify-center items-center md:text-sm text-white"
             >
-              Discover Orea for Freelancers
+              Discover New Chore for Freelancers
             </Link>
           </div>
         </div>

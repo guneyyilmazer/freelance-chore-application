@@ -11,40 +11,28 @@ const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const user = useSelector((shop: any) => shop.app.user);
   return (
-    <div className="w-[100vw] hidden md:flex justify-around items-center h-[10vh] secondary">
+    <div className="w-[100vw] text-white hidden md:flex justify-around items-center h-[10vh] secondary">
       <Link href="/" className="flex h-10 items-center gap-1.5">
         <img src={logo.src} alt="" />
-        <div className="text-center text-white text-xl font-bold">orea</div>
+        <div className="text-xl font-bold">New Chore</div>
       </Link>
       <div className="flex h-6 justify-center items-center gap-5">
-        <Link href="/posts" className="text-center text-white">
-          Jobs
-        </Link>
+        <Link href="/posts">Jobs</Link>
         <MessagesButton />
-        <Link
-          href="/freelancers"
-          className="flex justify-center text-white items-center gap-1"
-        >
-          Freelancers
-        </Link>
+        <Link href="/freelancers">Freelancers</Link>
         {!user.isLoggedIn && (
-          <Link
-            href="/auth/signupfreelancer"
-            className="flex justify-center text-white items-center gap-1"
-          >
-            Signup As Freelancer
-          </Link>
+          <Link href="/auth/signupfreelancer">Signup As Freelancer</Link>
         )}
         {user.isLoggedIn && (
-          <div className="relative" onMouseLeave={() => setShowDropdown(false)}>
-            <button
-              onMouseEnter={() => setShowDropdown(true)}
-              className="flex justify-center text-white items-center gap-1"
-            >
+          <div
+            className="flex flex-col items-center text-white relative"
+            onMouseLeave={() => setShowDropdown(false)}
+          >
+            <button onMouseEnter={() => setShowDropdown(true)}>
               Dashboard
             </button>
             {showDropdown && (
-              <div className="absolute z-50 secondary p-3 left-[-30px]">
+              <div className="absolute z-50 mt-5 rounded-xl secondary p-3">
                 {user.accountType.hirer && (
                   <div className="flex flex-col items-center text-white w-32">
                     <Link className="mt-2" href="/dashboard/hirer/posts">

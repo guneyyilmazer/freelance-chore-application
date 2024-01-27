@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 import "./css/styles.css";
 import { Providers } from "./Providers";
 import Footer from "./components/Footer";
-export const BACKEND_SERVER_IP = "http://localhost:4000";
-export const SOCKET_IO_IP = "http://localhost:3001";
+export const BACKEND_SERVER_IP = "https://newchore.com/backend";
+export const SOCKET_IO_IP = "https://newchore.com/socket.io";
 export const categories: categories = {
   cleaning: { value: { cleaning: true }, name: "cleaning" },
   cuttingGrass: { value: { cuttingGrass: true }, name: "cuttingGrass" },
@@ -39,10 +39,7 @@ type categories = {
   dogWalking: { value: { dogWalking: true }; name: string };
 };
 
-/* export const metadata: Metadata = {
-  title: "Freelance Chore App",
-  description: "Created By Guney Yilmazer",
-}; */
+
 
 export default function RootLayout({
   children,

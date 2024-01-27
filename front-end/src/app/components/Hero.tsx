@@ -278,7 +278,7 @@ const Hero = () => {
                 </span>
                 <span className="text-gray-50 text-base">
                   {" "}
-                  who are using Orea to hire.
+                  who are using New Chore to hire.
                 </span>
               </div>
             </div>
@@ -290,7 +290,7 @@ const Hero = () => {
                 </span>
                 <span className="text-gray-50 text-base">
                   {" "}
-                  who are using Orea to hire.
+                  who are using New Chore to hire.
                 </span>
               </div>
               <div className="flex w-full justify-end relative">

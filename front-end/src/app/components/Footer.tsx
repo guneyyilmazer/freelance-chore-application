@@ -28,7 +28,7 @@ const Footer = () => {
                 </div>
                 <div className="md:w-96 text-gray-100 font-light">
                   Hire from over 1000 people for variety of tasks. Find the
-                  right fit for your job using Orea.
+                  right fit for your job using New Chore.
                 </div>
               </div>
               <div className="mt-[50px] md:mt-[32px]">
@@ -52,7 +52,7 @@ const Footer = () => {
                     <div>About</div>
                     <div>Changelog</div>
                     <div>Documentation</div>
-                    <div>Why Orea</div>
+                    <div>Why New Chore</div>
                     <div>Careers</div>
                   </div>
                 </div>
@@ -61,7 +61,7 @@ const Footer = () => {
                     Community
                   </div>
                   <div className="flex flex-col text-gray-600 text-sm gap-4">
-                    <div>Orea Community</div>
+                    <div>New Chore Community</div>
                     <div>Discord</div>
                     <div>Help Center</div>
                     <div>Get Support</div>
@@ -72,7 +72,7 @@ const Footer = () => {
                     Resources
                   </div>
                   <div className="flex flex-col text-gray-600 text-sm gap-4">
-                    <div>Orea Blog</div>
+                    <div>New Chore Blog</div>
                     <div>Webinars</div>
                     <div>Podcasts</div>
                     <div>Podcasts</div>
@@ -92,7 +92,7 @@ const Footer = () => {
                     {" "}
                     <img src={logo.src} alt="" />
                   </div>
-                  <div className="text-green-950 text-xl font-bold">orea</div>
+                  <div className="text-green-950 text-xl font-bold">New Chore</div>
                 </div>
               </div>
 
@@ -102,7 +102,7 @@ const Footer = () => {
                     Contact us
                   </div>
                   <span className="text-green-600 text-sm font-medium underline">
-                    support@orea.com
+                    support@newchore.com
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
@@ -121,10 +121,10 @@ const Footer = () => {
                     {" "}
                     <img className="w-full h-full" src={logo.src} alt="" />
                   </div>
-                  <div className="text-green-950 text-xl font-bold">orea</div>
+                  <div className="text-green-950 text-xl font-bold">New Chore</div>
                 </div>
                 <div className="text-center absolute md:right-[400px] bottom-[25px] text-slate-800 text-sm">
-                  © 2024 with Orea
+                  © 2024 with New Chore
                 </div>
               </div>
             </div>

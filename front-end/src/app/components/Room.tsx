@@ -123,28 +123,47 @@ const Room = () => {
         <SendMessage />
       </div>
       {mobileChattingWithUserSideBar ? (
-        <div className="hidden md:block md:min-w-[25vw] relative">
-          <div
-            onClick={() => dispatch(setMobileChattingWithUserSideBar(false))}
-            className="m-4 absolute right-0 top-0 text-end"
-          >
-            <FontAwesomeIcon icon={faX} />
-          </div>
-          <div className="flex mt-14 flex-col items-center">
-            <img
-              className="w-32 h-32 rounded-full border-black border-4"
-              src={
-                chattingWithUser?.profilePicture
-                  ? chattingWithUser.profilePicture
-                  : DefaultProfilePicture.src
-              }
-              alt=""
-            />
-            <div className="text-3xl my-5 font-semibold">
-              {chattingWithUser?.username}
+        chattingWithUser ? (
+          <div className="hidden md:block md:min-w-[25vw] relative">
+            <div
+              onClick={() => dispatch(setMobileChattingWithUserSideBar(false))}
+              className="m-4 absolute right-0 top-0 text-end"
+            >
+              <FontAwesomeIcon icon={faX} />
+            </div>
+            <div className="flex mt-14 flex-col items-center">
+              <img
+                className="w-32 h-32 rounded-full border-black border-4"
+                src={
+                  chattingWithUser?.profilePicture
+                    ? chattingWithUser.profilePicture
+                    : DefaultProfilePicture.src
+                }
+                alt=""
+              />
+              <div className="text-3xl my-5 font-semibold">
+                {chattingWithUser?.username}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="hidden md:block md:min-w-[25vw] relative">
+            <div
+              onClick={() => dispatch(setMobileChattingWithUserSideBar(false))}
+              className="m-4 absolute right-0 top-0 text-end"
+            >
+              <FontAwesomeIcon icon={faX} />
+            </div>
+            <div className="flex mt-14 flex-col items-center">
+              <img
+                className="w-32 h-32 rounded-full border-black border-4"
+                src={DefaultProfilePicture.src}
+                alt=""
+              />
+              <div className="text-3xl my-5 font-semibold">Start a chat</div>
+            </div>
+          </div>
+        )
       ) : (
         <div className="w-[10vw] flex justify-center">
           <div>

@@ -7,6 +7,7 @@ import Auth from "./Auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "./Loading";
 import { categories } from "../layout";
+import { useSelector } from "react-redux";
 const PostCreateForm = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
@@ -31,8 +32,10 @@ const PostCreateForm = () => {
   const [selectedCity, setSelectedCity] = useState(
     searchParams.get("city") ? searchParams.get("city") : ""
   );
-  useEffect(() => console.log(selectedCity), [selectedCity]);
   const router = useRouter();
+  const user = useSelector((shop: any) => shop.app.user);
+  if (!user.isLoggedIn && typeof window != "undefined")
+    window.location.replace("/auth");
   const getStates = async () => {
     const res = await fetch(
       "https://countriesnow.space/api/v0.1/countries/states",

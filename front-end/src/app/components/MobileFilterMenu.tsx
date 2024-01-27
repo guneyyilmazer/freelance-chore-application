@@ -147,7 +147,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
     );
   }, [filter]);
   return (
+    /* ⬇ start of main div ⬇ */
     <div className="absolute z-20 top-0 left-0 w-[100vw] h-[100vh] bg-white overflow-y-auto flex flex-col items-center gap-10">
+      {/* ⬇ start of filter button div ⬇ */}
       <div className="flex justify-end w-[95%]">
         <button
           className="mt-5 mr-5 text-lg"
@@ -156,8 +158,11 @@ const FilterSideBar = ({ page }: { page: string }) => {
           <FontAwesomeIcon icon={faX} />
         </button>
       </div>
-      <div className="text-center text-3xl font-bold">Hourly Rate</div>
+      {/* ⬆ end of filter button div ⬆ */}
+
+      {/* ⬇ start of hourly rate div ⬇ */}
       <div className="flex flex-col text-xl font-semibold gap-10">
+        <div className="text-center text-3xl font-bold">Hourly Rate</div>
         <div className="flex items-center gap-3">
           <div className="w-6 h-6">
             <input
@@ -353,12 +358,15 @@ const FilterSideBar = ({ page }: { page: string }) => {
           <label htmlFor="over100">$100+ per hr </label>
         </div>
       </div>
+      {/* ⬆ end of hourly rate div ⬆ */}
+
+      {/* ⬇ start of location div ⬇ */}
       <div className="flex mt-10 flex-col">
         <div className="text-center text-3xl font-semibold">Location</div>
         <div>
           {states.length != 0 ? (
             <div className="flex my-3 flex-col">
-              <label htmlFor="types">Choose your state</label>
+              <label htmlFor="states">Choose your state</label>
               <select
                 onChange={(e) => {
                   setCities([]);
@@ -376,8 +384,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   });
                 }}
                 className="shadow break-words p-3 appearance-none border"
-                name="jobs"
-                id="jobs"
+                name="states"
+                id="states"
               >
                 <option
                   value={
@@ -391,7 +399,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   {filter.selectedState != "" ? filter.selectedState : "Select"}
                 </option>
                 {states.map((item: any) => (
-                  <option key={item.name} value={item.name}>{item.name}</option>
+                  <option key={item.name} value={item.name}>
+                    {item.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -402,7 +412,7 @@ const FilterSideBar = ({ page }: { page: string }) => {
           )}
           {cities.length != 0 ? (
             <div className="flex flex-col">
-              <label htmlFor="types">Choose your city</label>
+              <label htmlFor="cities">Choose your city</label>
               <select
                 onChange={(e) => {
                   setFilter((state: filterType) => {
@@ -419,8 +429,8 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   });
                 }}
                 className="shadow p-3 appearance-none border"
-                name="jobs"
-                id="jobs"
+                name="cities"
+                id="cities"
               >
                 <option
                   value={
@@ -434,7 +444,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
                   {filter.selectedCity != "" ? filter.selectedCity : "Select"}
                 </option>
                 {cities.map((item: string) => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </div>
@@ -447,6 +459,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
           )}
         </div>
       </div>
+      {/* ⬆ end of location div ⬆ */}
+
+      {/* ⬇ start of categories div ⬇ */}
       <div className="flex flex-col gap-4">
         <div className="text-center text-3xl font-semibold">Categories</div>
         <div className="flex flex-col text-lg gap-4">
@@ -581,6 +596,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
           </div>
         </div>
       </div>
+      {/* ⬆ end of categories div ⬆ */}
+
+      {/* ⬇ start of available for div ⬇ */}
       <div className="flex flex-col gap-4">
         <div className="font-semibold text-center text-3xl">Available For</div>
         <div className="flex items-center text-lg flex-col gap-4">
@@ -666,23 +684,9 @@ const FilterSideBar = ({ page }: { page: string }) => {
           </div>
         </div>
       </div>
-      <div className="justify-start items-start gap-[26px] inline-flex">
-        <div className="w-[147px] text-black text-base font-bold font-['Helvetica Neue'] leading-normal">
-          Earned Amount
-        </div>
-        <div className="w-6 h-6 justify-center items-center flex">
-          <div className="w-6 h-6 relative"></div>
-        </div>
-      </div>
-      <div className="justify-start items-start gap-[26px] inline-flex">
-        <div className="w-[147px] text-black text-base font-bold font-['Helvetica Neue'] leading-normal">
-          Hours Billed
-        </div>
-        <div className="w-6 h-6 justify-center items-center flex">
-          <div className="w-6 h-6 relative"></div>
-        </div>
-      </div>
+      {/* ⬆ end of available for div ⬆ */}
     </div>
+    /* ⬆ end of main div ⬆ */
   );
 };
 

@@ -1,12 +1,12 @@
-"use client";
 import React from "react";
 import PostCreateForm from "../../components/PostCreateForm";
 import { useSelector } from "react-redux";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Create Post",
+  description: "by yilmazer.dev",
+};
 const Page = () => {
-  const user = useSelector((shop: any) => shop.app.user);
-  if (!user.isLoggedIn && typeof window != "undefined")
-    window.location.replace("/auth");
   return (
     <div>
       <PostCreateForm />

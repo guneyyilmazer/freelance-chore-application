@@ -9,7 +9,7 @@ import Link from "next/link";
 const HireTheseFreelancers = () => {
   return (
     <div className="w-[100vw] h-[650px] relative bg-white flex flex-col justify-center items-center">
-      <div className="w-[90%]">
+      <div className="w-[90%] 2xl:w-[70vw]">
         <div className="mb-10 text-center text-black text-[32px] font-bold leading-[44px]">
           Hire These Freelancers and Even More
         </div>

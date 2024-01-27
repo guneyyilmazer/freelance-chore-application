@@ -13,21 +13,45 @@ const genToken = (userId, username) => {
 
 const Signup = async (req, res) => {
   try {
-    let { type, location, freelancerDetails, username, email, password,accountType } =
-      req.body;
-    if (!freelancerDetails.hourlyWage || freelancerDetails.hourlyWage == 0)
-      freelancerDetails.hourlyWage = 15;
-    if (username.length > 4) {
-      const userId = await UserModel.signup(
-        type,
-        location,
-        freelancerDetails,
-        username,
-        email,
-        password,
-      );
-      const token = genToken(userId, username);
-      res.status(200).json({ AuthValidation: token });
+    let {
+      type,
+      location,
+      freelancerDetails,
+      username,
+      email,
+      password,
+      profilePicture,
+    } = req.body;
+    if (type.freelancer) {
+      if (!freelancerDetails.hourlyWage || freelancerDetails.hourlyWage == 0)
+        freelancerDetails.hourlyWage = 15;
+      if (username.length > 4) {
+        const userId = await UserModel.signup(
+          type,
+          location,
+          freelancerDetails,
+          username,
+          email,
+          password,
+          profilePicture
+        );
+        const token = genToken(userId, username);
+        res.status(200).json({ AuthValidation: token });
+      }
+    } else if (type.hirer) {
+      if (username.length > 4) {
+        const userId = await UserModel.signup(
+          type,
+          location,
+          freelancerDetails,
+          username,
+          email,
+          password,
+          profilePicture
+        );
+        const token = genToken(userId, username);
+        res.status(200).json({ AuthValidation: token });
+      }
     } else {
       res
         .status(401)
@@ -64,6 +88,7 @@ const getFreelancers = async (req, res) => {
     const typeString = "freelancerDetails.jobType." + Object.keys(type)[0];
     const freelancers = !type.random
       ? await UserModel.find({
+          accountType: { freelancer: true },
           [typeString]: true,
           "location.state": state != "" ? state : { $not: /^0.*/ },
           username: username
@@ -85,6 +110,8 @@ const getFreelancers = async (req, res) => {
           .skip((page - 1) * amount)
           .limit(amount)
       : await UserModel.find({
+          accountType: { freelancer: true },
+
           "location.state": state != "" ? state : { $not: /^0.*/ },
           username: username
             ? { $regex: username, $options: "i" }
@@ -107,6 +134,7 @@ const getFreelancers = async (req, res) => {
           .limit(amount);
     const lastFreelancers = !type.random
       ? await UserModel.find({
+          accountType: { freelancer: true },
           [typeString]: true,
           "location.state": state != "" ? state : { $not: /^0.*/ },
           username: username
@@ -127,6 +155,7 @@ const getFreelancers = async (req, res) => {
           )
           .skip((page - 1) * amount)
       : await UserModel.find({
+          accountType: { freelancer: true },
           "location.state": state != "" ? state : { $not: /^0.*/ },
           username: username
             ? { $regex: username, $options: "i" }
@@ -145,7 +174,7 @@ const getFreelancers = async (req, res) => {
           .select(
             "username _id profilePicture location freelancerDetails accountType"
           )
-          .skip((page - 1) * amount)
+          .skip((page - 1) * amount);
     const freelancerWithStars = freelancers.map(async (freelancer) => {
       const posts = await PostModel.find({
         hiredFreelancer: freelancer._id,
@@ -172,8 +201,8 @@ const getFreelancers = async (req, res) => {
         accountType: freelancer.accountType,
       };
     });
-    console.log("freelancers length"+freelancers.length)
-    console.log("lastfreelancers length"+lastFreelancers.length)
+    console.log("freelancers length" + freelancers.length);
+    console.log("lastfreelancers length" + lastFreelancers.length);
     const lastPage =
       lastFreelancers.length < amount || !lastFreelancers.length ? true : false;
     const pagesCount =
@@ -387,7 +416,7 @@ const getSavedPosts = async (req, res) => {
       return postWithDates;
     });
     const savedPosts = await Promise.all(posts);
-    
+
     res.status(200).json({ posts: savedPosts });
   } catch (err) {
     res.status(400).json({ error: err.message });
